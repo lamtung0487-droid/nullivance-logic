@@ -107,3 +107,27 @@ the documents claim they say.
 4. Audit limits: the ~40 replay-layer propositions in `FiniteFO.lean` (231 KB) were
    verified at the level of build + axiom trail + statement labels, not re-derived
    line-by-line on paper; chapter 0/INTAKE prose was not re-audited this pass.
+
+## Resolution (same day, 2026-07-08, on user instruction)
+
+- **Major 1 (no VCS): FIXED.** `git init`; `.gitignore` extended
+  (`Nullivance/.lake/` ~6.9 GB, `.claude/settings.local.json`); root commit
+  `0eaf98f` (76 files); branch renamed to `main`.
+- **Major 2 (ARTIFACT.md drift): FIXED.** Module map now lists all 12 modules;
+  declaration count corrected to 650 (count of 2026-07-08); the [paper]-marker
+  paragraph now names the actual three unformalized results and records that
+  compactness/decidability are Lean-verified since 2026-07-04; correspondence table
+  extended (decidability, compactness, classical recovery, ND⊕ completeness,
+  proof-tree equivalence, finite-FO layer). `Basic.lean` module map updated to
+  12 modules; `lake build` re-run green (2001 jobs). In `main.tex`: stale changelog
+  comment annotated, and the appendix's [paper] enumeration completed with
+  `prop:complexity` (found missing during the fix pass); PDF rebuilt (14 pp.).
+- **Major 3 (CLAUDE.md toolchain drift): FIXED.** Toolchain section now states
+  v4.32.0-rc1 (pointing at `lean-toolchain` as source of truth) and mathlib as a
+  pinned dependency; `AGENTS.md` re-synced as an identical copy.
+- **Minor 2 (DC-only claim): FIXED.** Thm 4.25 Step 3 now carries an explicit note
+  that the DC-economy claim is paper-level; the Lean mirror uses `Classical.choice`.
+- **Minor 1 (RC toolchain pin) and Minor 3 (secondary-source verification of the
+  bifilter definitions): OPEN**, deliberate. Move to a stable Lean release when
+  mathlib supports one; check Arieli–Avron Thm 2.17 against the primary source
+  before submission.
