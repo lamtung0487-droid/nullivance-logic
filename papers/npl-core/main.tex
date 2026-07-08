@@ -1,0 +1,706 @@
+% =========================================================================
+% NPL core paper — draft v0.5 (2026-07-03): round-2 fixes (cref slip in Thm 6.4(iii),
+% collapse-theorem attribution via secondary, single label, opposite signs, abstract
+% trim) + post-2022 sweep engaged (bilkova2021constraint, villadsen2017formalizing)
+% + Prop 9.1(iii) inexpressibility of negative signs (Lean-verified).
+% v0.4 (superseded): full revision per panel review round 1
+% papers/npl-core/reviews/2026-07-03-referee-reports.md. Changes:
+%  [1] stale compactness remark deleted; bifilter comparison RESOLVED (Prop 9.1);
+%  [2] Contribution 1 rewritten (unsigned subsumed; negative signs provably
+%      outside the bifilter framework; tau-invariance stated honestly);
+%  [3] full 16-rule tableau table + explicit ND rule list printed;
+%  [4] \models_FOUR defined; indicator notation defined (\ind, \mathbf{1});
+%  [5] full compactness proof printed (non-Lean at the time; Lean-verified
+%      2026-07-04, marker upgraded to [L] — see Thm 6.4);
+%  [6] proof sketches added to all [L]-only results; [L] coverage made accurate;
+%  [7] artifact statement (toolchain, build, coverage policy);
+%  [8] draft residue removed; bibliographystyle plain; sect. 7 retitled;
+%  [9] Fitting engagement, neologism footnote, tau-invariance (Prop 3.4).
+% Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
+% =========================================================================
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[capitalize]{cleveref}
+\usepackage{microtype}
+% Allow long \texttt Lean identifiers to break at their (escaped) underscores.
+\newcommand{\lb}{\discretionary{}{}{}}
+\emergencystretch=3em
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% ----- notation -----
+\newcommand{\Frm}{\mathrm{Form}}
+\newcommand{\FOUR}{\mathbf{4}}
+\newcommand{\vT}{\mathbf{T}}
+\newcommand{\vF}{\mathbf{F}}
+\newcommand{\vB}{\mathbf{B}}
+\newcommand{\vN}{\mathbf{N}}
+\newcommand{\hmz}{\oplus}                       % harmonization (consensus)
+\newcommand{\lek}{\le_{k}}
+\newcommand{\tle}{\le_{t}}
+\newcommand{\proj}[1]{\pi_{#1}}
+\newcommand{\ind}[1]{\mathbf{1}[#1]}            % indicator
+\newcommand{\Tp}{T^{+}}\newcommand{\Tm}{T^{-}}
+\newcommand{\Fp}{F^{+}}\newcommand{\Fm}{F^{-}}
+\newcommand{\dershort}{\vdash_{\!A}}
+\newcommand{\ndder}{\vdash_{\mathrm{ND}}}
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\title{Nullivance Propositional Logic:\\
+Threshold-Signed Consequence on the Unit Square\\
+with a Machine-Checked Completeness Theorem\thanks{%
+Draft v0.5 (July 2026). Results marked [L] are verified in the Lean~4 artifact
+described in Appendix~\ref{app:lean}; results marked [paper] carry full proofs
+here and are not yet formalized. Panel-review history and revision log are kept
+with the source.}}
+\author{Trinh Tung Lam\thanks{Contact: \texttt{lamyofficialvn@gmail.com}.}}
+\date{July 2026 --- draft v0.5}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present the propositional core of \emph{nullivance logic} (NPL). Formulas
+take values in the unit square $[0,1]^2$ --- independent degrees of support
+for truth and for falsity; negation swaps the channels, conjunction and
+disjunction act as $(\min,\max)$ and $(\max,\min)$, and a
+\emph{harmonization} connective $\hmz$ acts as $(\min,\min)$: bilattice
+consensus as a first-class connective. A \emph{manifestation threshold}
+$\tau\in(0,1]$ induces four sign predicates $\Tp,\Tm,\Fp,\Fm$; consequence
+is defined uniformly in the threshold and shown threshold-invariant (a
+well-definedness property, not an added strength). Main results, each machine-checked in Lean~4 unless noted:
+(i)~thresholding commutes exactly with evaluation, projecting the continuous
+semantics onto the four-valued matrix $\FOUR$; (ii)~a four-signed analytic
+tableau calculus is sound and complete for signed consequence, over $\FOUR$
+and, via the exact projection, over the continuous semantics; consequence is
+decidable, compact and strongly complete for infinite
+premise sets; (iii)~NPL is paraconsistent --- explosion, disjunctive
+syllogism, and detachment for the material conditional all fail --- while
+harmonized contradictions $\varphi\hmz\lnot\varphi$ collapse to an unmanifest
+state; (iv)~$\hmz$ is not definable from the $\{\lnot,\wedge,\vee\}$ fragment,
+and the natural-deduction rule set of the source system is provably
+incomplete for it --- its rules constrain only the truth channel of $\hmz$;
+(v)~a generative tier beneath the semantics derives truth-objects from
+(intensity, structure) channel pairs through a replaceable stability
+function, with the logic provably independent of that choice. We position
+NPL against Belnap--Dunn logic, bilattice logics, and paraconsistent
+G\"odel logic: the semantic ingredients are known, the unsigned fragment is
+an instance of Arieli--Avron's logical-bilattice consequence, and the
+contribution is the signed architecture (which provably falls outside the
+bifilter framework, and is provably not internalizable in the object
+language), its exact projection, and the verified metatheory.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Two ideas drive nullivance logic.\footnote{The name derives from the
+system's founding concern with \emph{structured absence}: states that are
+null in intensity yet carry direction (Latin \emph{nullus} + valence). The
+source material calls the pre-logical version of this notion
+\emph{quasivance}; both terms are defined where they are used
+(\cref{sec:generative}) and are otherwise dispensable labels for the formal
+objects.} First, the epistemic state of a proposition has two independent
+coordinates: how strongly it is supported as true, and how strongly as
+false. This is the two-channel reading familiar from Belnap--Dunn
+four-valued logic \cite{belnap1977useful,belnap1977computer,
+dunn1976intuitive} and its continuous relatives; we inherit that literature
+rather than compete with it. Second, \emph{manifestation is thresholded}: a
+proposition manifests as true (false) only when the corresponding support
+clears a threshold $\tau$. Below both thresholds lies an unmanifest state;
+above both lies manifest contradiction. A designated connective $\hmz$
+(\emph{harmonization}) takes the consensus of both channels, and
+harmonizing a proposition with its own negation drives it into the
+unmanifest state instead of exploding.
+
+\paragraph{Honest positioning.} None of our semantic ingredients is new in
+isolation, and we say so precisely (\cref{sec:related}): the
+$\{\lnot,\wedge,\vee\}$ fragment of the continuous semantics coincides with
+the propositional base of paraconsistent G\"odel logic
+\cite{bilkova2022paraconsistent} and with product-bilattice semantics
+\cite{ginsberg1988multivalued,fitting1991bilattices}; $\hmz$ is the
+bilattice consensus $\otimes$, which at the four-valued level carries
+complete calculi \cite{arieli1996reasoning}; the projection core is the
+cutworthiness of $\alpha$-cuts \cite{klir1995fuzzy}; signed tableaux for
+finitely-valued logics are classical \cite{haehnle1994automated,
+priest2008introduction}. Moreover --- a comparison we performed rather than
+conjectured --- the \emph{unsigned} fragment of our consequence relation is
+an instance of Arieli--Avron's logical-bilattice consequence
+(\cref{prop:bifilter}). The contributions are:
+
+\begin{enumerate}
+\item \textbf{Signed consequence beyond designated values}
+  (\cref{def:consequence}, \cref{prop:bifilter}): four sign predicates read
+  the two channels against the threshold. The negative signs $\Tm,\Fm$ are
+  complements, and we prove their satisfaction sets are not bifilters; the
+  four-signed relation is therefore not a logical-bilattice matrix
+  consequence in the sense of \cite{arieli1996reasoning}, while its unsigned
+  fragment provably is. The relation is threshold-invariant
+  (\cref{prop:tau}), which we state as a well-definedness result.
+\item \textbf{Exact projection} (\cref{thm:projection}): thresholding
+  commutes with evaluation, collapsing continuous consequence onto the
+  finite matrix $\FOUR$ without loss.
+\item \textbf{A machine-checked completeness theorem}
+  (\cref{thm:complete-cont}), plus decidability (\cref{thm:decidable}) and
+  compactness and strong completeness
+  (\cref{thm:compactness}). To our knowledge no verified completeness
+  theorem exists for a consensus-bearing logic over $[0,1]^2$ with signed
+  consequence (search scope in \cref{sec:related}).
+\item \textbf{A calibrated failure map} (\cref{sec:profile}): explosion,
+  disjunctive syllogism, and detachment fail with machine-checked finite
+  countermodels; the natural-deduction rules of the source system are
+  derived rules of the calculus, yet the ND system they generate is
+  \emph{provably incomplete} ($\hmz$-self-duality is valid but underivable
+  --- \cref{prop:nd}); $\hmz$ is interderivable with $\wedge$ but not
+  congruent to it, and not definable from the FDE fragment
+  (\cref{prop:primitive}).
+\item \textbf{A verified generative tier} (\cref{sec:generative}):
+  truth-objects arise from (intensity, structure) channel pairs through an
+  axiomatized, replaceable stability function; independence of the logic
+  from that choice is witnessed by the artifact's import graph, and the
+  limitative facts (unmanifest projection, non-injectivity of
+  initialization) are machine-checked.
+\end{enumerate}
+
+Results carry [L:\,\lean{name}] markers naming the verifying Lean
+declaration; results not covered by the artifact are marked [paper] and
+carry full proofs here. The artifact policy is in
+Appendix~\ref{app:lean}.
+
+\section{Syntax}\label{sec:syntax}
+
+\begin{definition}[Language]\label{def:lang}
+Fix a countably infinite set of atoms $p_0,p_1,\dots$ (countability is used
+in \cref{thm:compactness}). Formulas:
+\[
+\varphi \;::=\; p \mid \lnot\varphi \mid \varphi\wedge\varphi \mid
+\varphi\vee\varphi \mid \varphi\hmz\varphi .
+\]
+$\varphi\Rightarrow\psi$ abbreviates $\lnot\varphi\vee\psi$; it is not a
+primitive and does not detach (\cref{prop:mp-fails}).
+[L:\,\lean{Nullivance.Syntax.Formula}]
+\end{definition}
+
+\section{Two-channel semantics and threshold signs}\label{sec:semantics}
+
+\begin{definition}[Truth-objects; models; valuation]\label{def:model}
+A \emph{truth-object} is a pair $(t,f)\in[0,1]^2$: independent degrees of
+support for truth and falsity. An \emph{NPL model} is $M=(v,\tau)$ with $v$
+assigning a truth-object to every atom and $\tau\in(0,1]$ the
+\emph{manifestation threshold}. $v$ extends to
+$V_M(\varphi)=(t_M(\varphi),f_M(\varphi))$ by
+\[
+\setlength{\arraycolsep}{2pt}
+\begin{array}{ll}
+V_M(\lnot\psi) = (f_M(\psi),\,t_M(\psi)), \quad &
+V_M(\psi\wedge\chi) = (\min(t,t'),\,\max(f,f')),\\[2pt]
+V_M(\psi\vee\chi) = (\max(t,t'),\,\min(f,f')), \quad &
+V_M(\psi\hmz\chi) = (\min(t,t'),\,\min(f,f')).
+\end{array}
+\]
+writing $(t,f)=V_M(\psi)$, $(t',f')=V_M(\chi)$. The
+$\{\lnot,\wedge,\vee\}$ clauses are the twist-product/bilattice clauses of
+\cite{bilkova2022paraconsistent,fitting1991bilattices}; $\hmz$ is consensus.
+[L:\,\lean{Nullivance.Continuous.TruthObj}, \lean{evalC}]
+\end{definition}
+
+\begin{definition}[Signs; states; consequence]\label{def:consequence}
+$M\models\Tp\varphi \iff t_M(\varphi)\ge\tau$;
+$M\models\Tm\varphi \iff t_M(\varphi)<\tau$;
+$M\models\Fp\varphi \iff f_M(\varphi)\ge\tau$;
+$M\models\Fm\varphi \iff f_M(\varphi)<\tau$.
+The two thresholds classify $\varphi$ into four \emph{states}: manifest true
+$\vT$, manifest false $\vF$, manifest contradiction $\vB$ ($\Tp$ and $\Fp$),
+unmanifest $\vN$ ($\Tm$ and $\Fm$). Unsigned satisfaction is $\Tp$;
+designated states are $\{\vT,\vB\}$. For a set $\Sigma$ of signed formulas:
+$\Sigma\models S\varphi$ iff every model (every valuation, every
+$\tau\in(0,1]$) satisfying $\Sigma$ satisfies $S\varphi$.
+[L:\,\lean{Nullivance.Continuous.SatC}, \lean{Metatheory.ConsequenceC}]
+\end{definition}
+
+\begin{proposition}[Threshold invariance]\label{prop:tau}
+For every fixed $\tau_0\in(0,1]$, the relation ``every valuation at
+threshold $\tau_0$ satisfying $\Sigma$ satisfies $S\varphi$'' coincides with
+$\models$. Quantifying over thresholds in \cref{def:consequence} is thus a
+well-definedness statement, not an added strength.
+[L:\,\lean{ConsequenceCAt}, \lean{consequenceCAt\_iff\_consequenceC}]
+\end{proposition}
+\begin{proof}[Proof sketch]
+Both lifting directions of \cref{sec:metatheory} are uniform in the
+threshold: a $\tau_0$-model projects to a $\FOUR$-valuation satisfying the
+same signed formulas, and a $\FOUR$-valuation embeds at the corners
+$\{0,1\}^2$, where $\ind{1\ge\tau_0}=1$ and $\ind{0\ge\tau_0}=0$ for
+\emph{every} $\tau_0\in(0,1]$. Hence each fixed-$\tau_0$ relation equals
+$\FOUR$-consequence (\cref{def:four}), hence equals $\models$.
+\end{proof}
+
+\begin{lemma}[Structural facts]\label{lem:structure}
+(i) $V_M(\varphi)\in[0,1]^2$ (induction; $[0,1]$ is closed under
+$\min,\max$). (ii) \emph{Latent collapse}:
+$V_M(\varphi\hmz\lnot\varphi)=(m,m)$ with
+$m=\min(t_M(\varphi),f_M(\varphi))$ --- both channels of the harmonized
+contradiction agree, so for $\tau>m$ it is in state $\vN$. (iii) $\hmz$ is
+commutative, associative, idempotent, self-dual under $\lnot$, with unit
+$(1,1)$ on the square. (iv) With
+$(t_1,f_1)\tle(t_2,f_2)\iff t_1\le t_2 \wedge f_2\le f_1$ and
+$(t_1,f_1)\lek(t_2,f_2)\iff t_1\le t_2\wedge f_1\le f_2$: $\wedge/\vee$ are
+the $\tle$ meet/join, $\hmz$ is the $\lek$ meet, and $(0,0),(1,1)$ are the
+$\lek$ extrema --- the square is a reduct of the product bilattice
+$[0,1]\odot[0,1]$ \cite{ginsberg1988multivalued} with $\hmz$ its consensus;
+the $\lek$-join (gullibility) is deliberately not a connective.
+[L:\,\lean{eval\_mem}, \lean{latent\_collapse}, \lean{oplus2\_*},
+\lean{le\_t}/\lean{le\_k} family]
+\end{lemma}
+
+\section{The four-valued matrix and exact projection}\label{sec:projection}
+
+\begin{definition}[$\FOUR$; $\FOUR$-consequence; projection]\label{def:four}
+$\FOUR=\{0,1\}^2\subseteq[0,1]^2$, corners $\vT=(1,0)$, $\vF=(0,1)$,
+$\vB=(1,1)$, $\vN=(0,0)$, closed under the clauses of \cref{def:model};
+the $\{\lnot,\wedge,\vee\}$ tables are the Belnap--Dunn tables with
+designated $\{\vT,\vB\}$ \cite{belnap1977useful,dunn1976intuitive}, and
+$\hmz$ restricts to consensus $\otimes$ \cite{arieli1996reasoning}. A
+$\FOUR$-valuation $w$ maps atoms to $\FOUR$ and extends by the same
+clauses; it satisfies $\Tp\varphi$ ($\Fp\varphi$) iff the first (second)
+bit of $w(\varphi)$ is $1$, and the negative signs are the complements.
+\emph{$\FOUR$-consequence} $\Sigma\models_{\FOUR}S\varphi$: every
+$\FOUR$-valuation satisfying $\Sigma$ satisfies $S\varphi$. The
+\emph{threshold projection} is
+$\proj{\tau}(x,y)=(\ind{x\ge\tau},\ind{y\ge\tau})$, where $\ind{\cdot}$ is
+the $\{0,1\}$-valued indicator.
+[L:\,\lean{Nullivance.Semantics.V4}, \lean{Metatheory.Consequence4},
+\lean{Nullivance.Continuous.proj}]
+\end{definition}
+
+\begin{theorem}[Exact projection]\label{thm:projection}
+For every model $M=(v,\tau)$ and formula $\varphi$:
+$\proj{\tau}(V_M(\varphi)) = V^{\FOUR}_{\proj{\tau}\circ v}(\varphi)$.
+Consequently $M\models S\varphi$ iff the projected $\FOUR$-valuation
+satisfies $S\varphi$. [L:\,\lean{exact\_projection}, \lean{sat\_projection}]
+\end{theorem}
+\begin{proof}[Proof sketch]
+Structural induction. The binary cases are the facts
+$\ind{\min(x,y)\ge\tau}=\min(\ind{x\ge\tau},\ind{y\ge\tau})$ and dually for
+$\max$ --- cutworthiness of the standard fuzzy operations
+\cite{klir1995fuzzy}; negation commutes with the two cuts because it swaps
+coordinates. The content is the use: consequence reduces \emph{exactly} to
+$\FOUR$, with no approximation.
+\end{proof}
+
+\section{The four-signed analytic calculus}\label{sec:calculus}
+
+\begin{definition}[Calculus]\label{def:calculus}
+A \emph{branch} is a finite set of signed formulas; \emph{closed} iff it
+contains $S\varphi$ and $\bar S\varphi$ for some $\varphi$ (opposite signs:
+$\overline{\Tp}=\Tm$, $\overline{\Fp}=\Fm$, and conversely
+$\overline{\Tm}=\Tp$, $\overline{\Fm}=\Fp$). The sixteen decomposition
+rules, one per sign--connective pair (comma = add both to the branch;
+$\mid$ = split the branch):
+
+\begin{center}
+\begin{tabular}{l@{\qquad}llll}
+\toprule
+ & $\Tp$ & $\Tm$ & $\Fp$ & $\Fm$ \\
+\midrule
+$\lnot\varphi$ &
+  $\Fp\varphi$ & $\Fm\varphi$ & $\Tp\varphi$ & $\Tm\varphi$ \\
+$\varphi\wedge\psi$ &
+  $\Tp\varphi,\Tp\psi$ & $\Tm\varphi\mid\Tm\psi$ &
+  $\Fp\varphi\mid\Fp\psi$ & $\Fm\varphi,\Fm\psi$ \\
+$\varphi\vee\psi$ &
+  $\Tp\varphi\mid\Tp\psi$ & $\Tm\varphi,\Tm\psi$ &
+  $\Fp\varphi,\Fp\psi$ & $\Fm\varphi\mid\Fm\psi$ \\
+$\varphi\hmz\psi$ &
+  $\Tp\varphi,\Tp\psi$ & $\Tm\varphi\mid\Tm\psi$ &
+  $\Fp\varphi,\Fp\psi$ & $\Fm\varphi\mid\Fm\psi$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The $\hmz$ row: the $\Tp$ column agrees with $\wedge$ (both truth channels
+are $\min$), while $\Fp(\varphi\hmz\psi)$ is \emph{conjunctive}, unlike the
+branching $\Fp(\varphi\wedge\psi)$ --- this is where $\hmz$ and $\wedge$
+part ways inside the proof system. $\Sigma\dershort S\varphi$ iff some
+tableau for $\Sigma\cup\{\bar S\varphi\}$ closes. The four signs are
+sets-as-signs \cite{haehnle1994automated}: $\Tp=\{\vT,\vB\}$,
+$\Tm=\{\vF,\vN\}$, $\Fp=\{\vF,\vB\}$, $\Fm=\{\vT,\vN\}$.
+[L:\,\lean{Nullivance.ProofTheory.Closes}: an inductive closability
+predicate with two closure and sixteen rule constructors; branching rules
+take two subderivations]
+\end{definition}
+
+\section{Soundness, completeness, decidability, compactness}\label{sec:metatheory}
+
+\begin{theorem}[Soundness and completeness over $\FOUR$]\label{thm:complete-four}
+For finite $\Sigma$:
+$\Sigma\dershort S\varphi \iff \Sigma\models_{\FOUR} S\varphi$.
+[L:\,\lean{derives\_iff\_consequence4}]
+\end{theorem}
+\begin{proof}[Proof sketch]
+\emph{Soundness}: induction on the closability derivation. A closed branch
+is unsatisfiable since opposite signs are exclusive; each rule preserves
+satisfiability downward by the local soundness equivalences read off the
+tables (e.g.\ the first bit of $w(\varphi\wedge\psi)$ is $1$ iff both
+conjuncts' first bits are). \emph{Completeness}: strong induction on the
+total size of undecomposed formulas in the branch. Compound members are
+decomposed by their rule (semantic equivalences justify that
+unsatisfiability passes to the children); when only literals remain, an
+unsatisfiable literal branch must contain an opposite-signed pair --- else
+the valuation reading the positive literals off the branch (the canonical
+valuation) satisfies it.
+\end{proof}
+
+\begin{theorem}[Lifting; continuous completeness]\label{thm:complete-cont}
+A finite branch is satisfiable continuously iff satisfiable over $\FOUR$.
+Hence for finite $\Sigma$:
+$\Sigma\dershort S\varphi \iff \Sigma\models S\varphi$.
+[L:\,\lean{satisfiable\_iff\_four}, \lean{derives\_iff\_consequenceC}]
+\end{theorem}
+\begin{proof}[Proof sketch]
+Left to right: project the model's valuation through $\proj{\tau}$;
+satisfaction transfers by \cref{thm:projection}. Right to left: embed a
+$\FOUR$-valuation at the corners with any threshold (cf.\
+\cref{prop:tau}); the projection of the embedded model is the original
+valuation, so satisfaction transfers back.
+\end{proof}
+
+\begin{theorem}[Decidability]\label{thm:decidable}
+For finite $\Sigma$, $\Sigma\dershort S\varphi$ (equivalently
+$\Sigma\models S\varphi$) is decidable.
+[L:\,\lean{consequence4Bool\_correct}, \lean{decidableDerives},
+\lean{decidableConsequenceC}]
+\end{theorem}
+\begin{proof}
+By \cref{thm:complete-four,thm:complete-cont} it suffices to decide
+$\models_{\FOUR}$. Evaluation depends only on the atoms occurring in a
+formula (structural induction --- the verified lemma), and the occurring
+atoms $A$ of $\Sigma\cup\{S\varphi\}$ are finitely many. Hence
+$\Sigma\models_{\FOUR}S\varphi$ holds iff it holds for the $4^{|A|}$
+valuations extending assignments $A\to\FOUR$ by $\vN$ elsewhere --- a
+finite computation on the tables. (Alternatively: fair tableau expansion
+terminates, by the usual subformula/finiteness argument, and decides
+$\dershort$.)
+\end{proof}
+
+\begin{proposition}[Finite complexity]\label{prop:complexity}
+\textnormal{[paper]}
+Finite signed FOUR consequence is coNP-complete.
+\end{proposition}
+\begin{proof}
+Non-consequence has a polynomial certificate: assign two bits to each atom
+occurring in $\Sigma\cup\{S\varphi\}$, evaluate bottom-up, and check that
+all premises hold while $S\varphi$ fails. For hardness, reduce Boolean
+tautology. Given a Boolean formula $\theta$, read it as an $\hmz$-free NPL
+formula $\theta^*$ and add, for every variable $p_i$, the premises
+$\Tp(p_i\vee\lnot p_i)$ and $\Tm(p_i\wedge\lnot p_i)$. These force $p_i$
+to be $\vT$ or $\vF$; $\vB$ violates the second premise and $\vN$ violates
+the first. By classical-corner recovery, $\Gamma_\theta\models_{\FOUR}
+\Tp\theta^*$ iff $\theta$ is a Boolean tautology. Boolean tautology is
+coNP-complete by the Cook--Karp theory
+\cite{cook1971complexity,karp1972reducibility}.
+\end{proof}
+
+\begin{theorem}[Compactness; strong completeness]\label{thm:compactness}
+\textnormal{[L:\,\lean{compactness\_satisfiable4\_set},
+\lean{compactness\_consequence4\_set},
+\lean{compactness\_consequenceC\_set},
+\lean{derivesSet\_iff\_consequenceCSet}]}
+(i) An arbitrary set $\Sigma$ of signed formulas is $\FOUR$-satisfiable iff
+every finite subset is. (ii) The same holds for continuous satisfiability.
+(iii) Reading $\Sigma\dershort S\varphi$ for infinite $\Sigma$ as ``some
+finite subset derives $S\varphi$'':
+$\Sigma\dershort S\varphi \iff \Sigma\models S\varphi$ for arbitrary
+$\Sigma$.
+\end{theorem}
+\begin{proof}
+(i) One direction is restriction. For the converse, fix the enumeration
+$p_0,p_1,\dots$ of atoms (\cref{def:lang}). A \emph{level-$n$ assignment}
+is $\sigma:\{p_0,\dots,p_{n-1}\}\to\FOUR$; call $\sigma$ \emph{good} iff
+for every finite $\Sigma_0\subseteq\Sigma$ some $\FOUR$-valuation extending
+$\sigma$ satisfies $\Sigma_0$. The empty assignment is good (hypothesis).
+If $\sigma$ is good, some one-point extension $\sigma\cup\{p_n\mapsto c\}$
+is good: otherwise, for each of the four values $c$ pick a finite
+$\Sigma_c$ witnessing failure; $\Sigma^*=\bigcup_c\Sigma_c$ is finite, so
+some $v\supseteq\sigma$ satisfies $\Sigma^*$; putting $c:=v(p_n)$, $v$
+extends $\sigma\cup\{p_n\mapsto c\}$ and satisfies
+$\Sigma_c\subseteq\Sigma^*$ --- contradiction. (The case split over $c$ is
+exhaustive: $\FOUR$ has exactly four elements.) By recursion along
+$\mathbb{N}$ choose a chain $\sigma_0\subseteq\sigma_1\subseteq\cdots$ of
+good assignments (countable dependent choice; we work classically). Define
+$v^*(p_n):=\sigma_{n+1}(p_n)$. For $S\varphi\in\Sigma$: the atoms of
+$\varphi$ lie among $p_0,\dots,p_{n-1}$ for some $n$; goodness of
+$\sigma_n$ with $\Sigma_0=\{S\varphi\}$ gives $w\supseteq\sigma_n$
+satisfying $S\varphi$; $w$ and $v^*$ agree on the atoms of $\varphi$, so
+by finite dependence (\cref{thm:decidable}'s lemma) they give $\varphi$
+the same value, and signed satisfaction reads only that value. So $v^*$
+satisfies $\Sigma$.
+(ii) Both transfer directions of \cref{thm:complete-cont} are memberwise
+and never use finiteness of the branch: a continuous model's projected
+valuation satisfies each member, and an embedded $\FOUR$-valuation's model
+satisfies each member.
+(iii) If some finite $\Sigma_0\dershort S\varphi$ then
+$\Sigma_0\models S\varphi$ (\cref{thm:complete-cont}), hence
+$\Sigma\models S\varphi$ (shrinking premises weakens the hypothesis of the
+universally quantified implication). Conversely if no finite subset
+derives, then by \cref{thm:complete-four} no finite
+$\Sigma_0\models_{\FOUR}S\varphi$, so every finite subset of
+$\Sigma\cup\{\bar S\varphi\}$ is satisfiable (failing $S\varphi$ is
+satisfying $\bar S\varphi$); by (i)--(ii) the whole of
+$\Sigma\cup\{\bar S\varphi\}$ is, so $\Sigma\not\models S\varphi$.
+\end{proof}
+
+\section{The behavioural profile of NPL}\label{sec:profile}
+
+\begin{corollary}[Conservativity; nontriviality]\label{cor:conservative}
+Unsigned NPL consequence is the all-$\Tp$ fragment of signed consequence
+(definitional), and on $\hmz$-free formulas it coincides with Belnap--Dunn
+FDE consequence: identical value space, operations, and designated set
+define the same matrix consequence \textnormal{[paper]}. Nontriviality:
+$\emptyset\not\dershort\Tp p$, by the constant-$\vN$ countermodel
+[L:\,\lean{consistency\_witness}]; note every formula evaluates to $\vN$
+under the constant-$\vN$ valuation, so NPL has no theorems --- like FDE.
+\end{corollary}
+
+\begin{corollary}[Paraconsistency]\label{cor:nonexplosion}
+$\{\Tp p,\ \Tp\lnot p\}\not\models \Tp q$: at $p\mapsto\vB$, $q\mapsto\vN$
+both premises hold ($t(p)=f(p)=1$) and the conclusion fails ($t(q)=0$).
+Explosion, ex falso, and disjunctive syllogism fail.
+[L:\,\lean{non\_explosion}]
+\end{corollary}
+
+\begin{proposition}[The material conditional does not detach]\label{prop:mp-fails}
+$\{\Tp p,\ \Tp(p\Rightarrow q)\}\not\models\Tp q$: same witness,
+$t(\lnot p\vee q)=\max(f(p),t(q))=\max(1,0)=1$ yet $t(q)=0$. Consequently
+$\vee$-elimination must be taken as a meta-rule (reasoning by cases), not
+routed through $\Rightarrow$.
+[L:\,\lean{modus\_ponens\_fails}, \lean{disj\_elim}]
+\end{proposition}
+
+\begin{proposition}[Derived rules; ND incompleteness]\label{prop:nd}
+Let $\ndder$ be the calculus generated by exactly the following rules
+(finite premise lists; the source system's rule set):
+assumption; $\wedge$-introduction and both eliminations; both
+$\vee$-introductions; $\vee$-elimination by cases (from
+$\Gamma\vdash\varphi\vee\psi$, $\varphi,\Gamma\vdash\chi$,
+$\psi,\Gamma\vdash\chi$ infer $\Gamma\vdash\chi$); $\lnot\lnot$-introduction
+and elimination; the four De~Morgan directions for $\wedge$ and $\vee$;
+$\hmz$-introduction and both $\hmz$-eliminations. Then:
+(a) every $\ndder$-rule is a derived rule of $\dershort$ (each is
+semantically valid --- the $\hmz$-rules because the truth channel of $\hmz$
+is $\min$ --- and \cref{thm:complete-four} packages validity as
+derivability); but
+(b) $\ndder$ is \emph{incomplete}: $\hmz$-self-duality
+$\lnot(p\hmz q)\models\lnot p\hmz\lnot q$ (a value identity,
+\cref{lem:structure}(iii)) is not $\ndder$-derivable.
+For (b): no rule of $\ndder$ constrains the falsity channel of $\hmz$ ---
+on the truth channel $\hmz$ and $\wedge$ agree --- so reading $\hmz$ as
+$\wedge$ throughout preserves the soundness of every rule; but the target's
+$\wedge$-reading, $\lnot(p\wedge q)\models\lnot p\wedge\lnot q$, fails at
+$p\mapsto\vT$, $q\mapsto\vF$. Self-duality is a falsity-channel fact, and
+the four-signed calculus is canonical precisely because its
+$F^{\pm}\hmz$ rules reach that channel.
+[L:\,\lean{ProofTheory.ND} (16 constructors), \lean{ND.sound\_w} (generic
+truth-channel soundness), \lean{nd\_sound}, \lean{nd\_incomplete}]
+\end{proposition}
+
+\begin{proposition}[$\hmz$ is not definable from $\{\lnot,\wedge,\vee\}$]\label{prop:primitive}
+The $\{\lnot,\wedge,\vee\}$ fragment is classically closed: a $\hmz$-free
+formula takes a classical value ($\vT$/$\vF$) whenever its atoms do
+(structural induction on the corner tables). Since
+$\vT\hmz\vF=\vN$ is not classical, no $\hmz$-free formula defines $\hmz$:
+harmonization strictly extends the expressive power of the FDE fragment.
+[L:\,\lean{classical\_closed}, \lean{oplus\_not\_definable}]
+\end{proposition}
+
+\begin{proposition}[Exact role of $\hmz$; non-congruence]\label{prop:oplus}
+$\Tp(\varphi\hmz\psi)$ and $\Tp(\varphi\wedge\psi)$ coincide in every model
+(both truth channels are $\min$), so the two formulas are interderivable;
+yet at $\varphi\mapsto\vB,\psi\mapsto\vT$: $\lnot(\varphi\wedge\psi)$ is
+designated ($\lnot\vB=\vB$) while $\lnot(\varphi\hmz\psi)$ is not
+($\lnot\vT=\vF$). Interderivability does not license replacement under
+$\lnot$; only value equivalence does. NPL is non-congruential by design.
+[L:\,\lean{conj\_oplus\_interderivable}, \lean{oplus\_conj\_Fpos\_fails},
+\lean{noncongruence\_witness}]
+\end{proposition}
+
+\begin{corollary}[Latent collapse, thresholded]\label{cor:latent}
+$V_M(\varphi\hmz\lnot\varphi)=(m,m)$ with $m=\min(t,f)$
+(\cref{lem:structure}(ii)); for $\tau>m$ the harmonized contradiction is
+unmanifest ($\vN$), not explosive. [L:\,\lean{latent\_collapse}]
+\end{corollary}
+
+\section{The generative tier}\label{sec:generative}
+
+Nothing in \cref{sec:syntax,sec:semantics,sec:projection,sec:calculus,%
+sec:metatheory,sec:profile} depends on how atoms acquire truth-objects; in
+the artifact this is a checkable property of the import graph (the module
+\lean{Generative} is imported by none of the core modules). This section
+adds the initialization theory.
+
+\begin{definition}[Generative frame; channels; quasivance]\label{def:genframe}
+A \emph{generative frame} is $F=(d,\Phi)$ with $d\ge 1$ and
+$\Phi:[0,1]^d\to[0,1]$ satisfying $\Phi(1{-}\Theta)=\Phi(\Theta)$ and
+$\Phi(\tfrac12,\dots,\tfrac12)=1$. A \emph{support channel}
+$c=(\alpha,\Theta)$ has \emph{existence intensity} $\alpha\in[0,1]$ and
+\emph{polarization structure} $\Theta\in[0,1]^d$; its effective intensity
+is $\alpha\cdot\Phi(\Theta)$. Two independent channels per atom
+(for/against) induce the truth-object
+$(\alpha_T\Phi(\Theta_T),\,\alpha_F\Phi(\Theta_F))\in[0,1]^2$ (interface
+theorem: products of $[0,1]$-values stay in $[0,1]$), so the core applies
+to any admissible $\Phi$; the canonical instance
+$\Phi_c(\Theta)=(\prod_k(1-2|\Theta_k-\tfrac12|))^{1/d}$ is verified
+admissible. A channel is \emph{quasivant} iff $\alpha=0$ with non-neutral
+$\Theta$: unmanifest yet structured --- the notion that motivated the
+system (structure at probability zero is invisible to entropy-based
+measures \cite{shannon1948mathematical}).
+[L:\,\lean{GenFrame}, \lean{GenState.init\_mem}, \lean{canonFrame},
+\lean{Channel.Quasivant}]
+\end{definition}
+
+\begin{proposition}[Quasivance at the interface]\label{prop:quasivance}
+(i) A quasivant state initializes to $(0,0)$ and projects to $\vN$ for
+every $\tau\in(0,1]$. (ii) \emph{Forgetfulness}: initialization is not
+injective; quasivant and non-quasivant states can initialize identically,
+so quasivance is not recoverable from the truth-object --- claims about
+$\vN$ in the core concern unmanifestness only. (iii) In the canonical
+frame, one fully polarized component annihilates effective intensity even
+at $\alpha=1$. (iv) Initialization is flip-covariant and surjective onto
+the square. We state (ii) prominently: it is the honest price of the
+generative reading.
+[L:\,\lean{quasivant\_projects\_N}, \lean{init\_not\_injective},
+\lean{polar\_kills\_intensity}, \lean{init\_flip}, \lean{init\_surjective}]
+\end{proposition}
+
+\section{Related work}\label{sec:related}
+
+\textbf{Belnap--Dunn / FDE.} The $\FOUR$ fragment on $\{\lnot,\wedge,\vee\}$
+\emph{is} FDE \cite{belnap1977useful,belnap1977computer,dunn1976intuitive};
+see \cite{omori2017forty} for the landscape of FDE extensions, within which
+NPL sits as a consensus expansion with a projection layer. \textbf{Logical
+bilattices.} The square is the product bilattice
+\cite{ginsberg1988multivalued,fitting1991bilattices}; $\hmz$ is consensus;
+complete Gentzen/Hilbert calculi for the four-valued bilattice language are
+due to Arieli--Avron \cite{arieli1996reasoning} (see also
+\cite{rivieccio2010algebraic}). The precise relation:
+
+\begin{proposition}[Position within the bilattice framework]\label{prop:bifilter}
+\textnormal{[paper]}
+(i) For every $\tau\in(0,1]$, $D_\tau=\{(t,f):t\ge\tau\}$ is a prime
+bifilter of $[0,1]\odot[0,1]$ (the five defining conditions hold
+componentwise on the truth channel), so
+$\langle[0,1]\odot[0,1],D_\tau\rangle$ is a logical bilattice; by the
+Arieli--Avron collapse theorem (every logical bilattice determines the same
+consequence as $\langle\FOUR,\{t,\top\}\rangle$ ---
+\cite[Thm.~2.17]{arieli1996reasoning}, as presented in
+\cite[Thm.~2.1.4]{rivieccio2010algebraic}), the \emph{unsigned} NPL
+consequence is exactly the $\{\wedge,\vee,\otimes,\lnot\}$-fragment of
+their logic $\mathrm{LB}$ --- subsumed, and consistent with our independent
+\cref{thm:complete-cont}. (ii) The satisfaction set of $\Tm$,
+$\{(t,f):t<\tau\}$, contains $(0,0)$ but not $(1,1)$, hence is not upward
+closed in $\lek$ and is not a bifilter (bifilters are upward closed in both
+orders and contain the knowledge top). The four-signed relation is
+therefore not a logical-bilattice matrix consequence; the signed layer is
+where NPL leaves the framework. (iii) Nor can the negative signs be
+internalized: no formula $\psi$ satisfies
+$\Tp\psi\iff\Tm p$ in all valuations, since the constant-$\vB$ valuation is
+a fixpoint of every connective --- every formula is designated there, while
+$\Tm p$ fails. [L:\,\lean{signs\_not\_internalizable}, via
+\lean{eval\_const\_B}]
+\end{proposition}
+
+\textbf{Logic programming.} Fitting \cite{fitting1991bilattices}
+interprets logic programs over continuous bilattices with the knowledge
+operations (including consensus) available in rule bodies; that line
+provides fixed-point semantics for programs, not a consequence relation
+with a completeness theorem for a propositional language --- the two uses
+of the same algebra are complementary. \textbf{Paraconsistent G\"odel
+logic.} The continuous $\{\lnot,\wedge,\vee\}$ clauses coincide with the
+propositional base of \cite{bilkova2022paraconsistent} (twist product of
+$[0,1]$); their language has a G\"odel implication and no consensus, ours
+has consensus and no implication, and the consequence relations differ
+(signed vs.\ order-based). \textbf{Fuzzy sets.} The projection core is
+$\alpha$-cut cutworthiness \cite{klir1995fuzzy}. \textbf{Tableaux.}
+Sets-as-signs tableaux are standard \cite{haehnle1994automated}; FDE has
+textbook signed tableaux \cite{priest2008introduction}. The closest tableau
+precedent for our setting is the \emph{constraint tableaux} of
+\cite{bilkova2021constraint} for two-dimensional \L{}ukasiewicz and
+G\"odel logics over the same twist product of $[0,1]$: there, branches
+carry order constraints on real values because the fuzzy implications do
+not reduce to any finite matrix. Our calculus needs only four \emph{finite}
+signs precisely because NPL has no implication --- all connectives are
+cut-worthy, exact projection holds, and consequence collapses onto $\FOUR$
+(\cref{thm:projection}); adding a G\"odel implication to NPL would break
+that theorem. The two designs are complementary solutions for different
+languages. \textbf{LP.} Designating $\vB$ descends from
+\cite{priest1979logic}. \textbf{Verified metatheory.} Paraconsistent logics
+have been formalized in proof assistants before --- notably an
+infinite-valued paraconsistent logic with its metatheory in Isabelle
+\cite{villadsen2017formalizing}; we are not aware of verified
+\emph{completeness} for a consensus-bearing logic over $[0,1]^2$.
+
+To our knowledge --- search scope documented in the project's related-work
+audit; last sweep July 2026, covering post-2022 twist-product,
+bilattice-calculus, and proof-assistant literature --- no prior system
+combines a consensus connective over $[0,1]^2$ with four-signed consequence
+and a machine-checked completeness theorem.
+
+\section{Conclusion and open problems}\label{sec:conclusion}
+
+NPL's propositional development is closed end to end: generative
+initialization, continuous two-channel semantics, exact projection, a
+four-signed calculus, soundness/completeness/decidability verified in
+Lean, compactness, strong completeness, classical-corner recovery verified in Lean, coNP-complete finite consequence, a provably
+incomplete ND fragment explaining why the signed calculus is canonical,
+and a precise statement of which parts of the system are and are not
+instances of the logical-bilattice framework. Since this manuscript snapshot,
+the project has also Lean-verified completeness for the $\hmz$-De-Morgan
+extension of $\ndder$ in the repository docs. Open:
+(1) the finite-domain quantified proof theory and its completeness theorem;
+(2) the full infinite-domain quantified extension; the emergence layer of the source material
+remains outside the formal development by design.
+
+\appendix
+\section{The Lean artifact}\label{app:lean}
+\textbf{Availability.} The \texttt{Nullivance} library will be archived
+with a DOI at submission; until then it is available from the author on
+request. \textbf{Toolchain.} Lean 4 (\texttt{leanprover/lean4:v4.32.0-rc1})
+with mathlib pinned via the Lake manifest; build with
+\texttt{lake exe cache get \&\& lake build} (approx.\ 2000 jobs; the
+library itself compiles in under a minute on commodity hardware).
+\textbf{Coverage policy.} The build is \texttt{sorry}-free. Every result
+marked [L] is verified as stated, with the following systematic
+correspondences: branches are lists (finite sets up to the verified
+monotonicity lemma); ``some tableau closes'' is the inductive predicate
+\lean{Closes} (two closure, sixteen rule constructors); the calculus-level
+results are stated against \lean{Closes} directly; explicit finite tableau
+proof trees are equivalent to \lean{Closes}. Results marked [paper]
+--- \cref{cor:conservative} (FDE-conservativity half), \cref{prop:complexity},
+\cref{prop:bifilter} ---
+carry full proofs in this paper and are not formalized; the termination and
+fair-search notions appear only in the alternative proof remark of
+\cref{thm:decidable}. \textbf{Modules.} \texttt{Syntax}, \texttt{Semantics}
+($\FOUR$), \texttt{Continuous} (square, projection, bilattice orders),
+\texttt{ProofTheory} (\lean{Closes}, \lean{ND}, \lean{NDO}), \texttt{Tableau}
+(explicit proof trees), \texttt{Metatheory}
+(soundness, completeness, lifting, $\tau$-invariance, behavioural profile),
+\texttt{Decidability} (finite model checker and \lean{Decidable} instances),
+\texttt{Compactness} (Set/Finset API, compactness, strong completeness),
+\texttt{Classical} (Boolean recovery on the glut/gap-free fragment),
+\texttt{FiniteFO} (finite-domain quantified first pass),
+\texttt{Generative} (\cref{sec:generative}; imported by no core module).
+
+\bibliographystyle{plain}
+\bibliography{../../references/bibliography}
+
+\end{document}

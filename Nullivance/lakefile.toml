@@ -1,0 +1,10 @@
+name = "Nullivance"
+version = "0.1.0"
+defaultTargets = ["Nullivance"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+
+[[lean_lib]]
+name = "Nullivance"

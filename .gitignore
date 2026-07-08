@@ -1,0 +1,16 @@
+# Lean build artifacts (mathlib cache + oleans; multi-GB, fully reproducible)
+Nullivance/.lake/
+
+# Local editor/session settings
+.claude/settings.local.json
+
+# LaTeX build artifacts
+papers/**/*.aux
+papers/**/*.log
+papers/**/*.out
+papers/**/*.toc
+papers/**/*.bbl
+papers/**/*.blg
+papers/**/*.fls
+papers/**/*.fdb_latexmk
+papers/**/*.synctex.gz
