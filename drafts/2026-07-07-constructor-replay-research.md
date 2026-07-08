@@ -513,3 +513,37 @@ This confirms the intended shape of the remaining bridge. The next theorem shoul
 try to classify q-vs-fold cases away. It should define or prove a recursive tail
 consumer that repeatedly applies these step lemmas until it reaches a matching finite
 quantifier, an immediate close, or an impossible shape.
+
+## 2026-07-08 suffix-aligned tail consumer (Prop 3.72) — the consumer exists
+
+The tail consumer is now a verified theorem, and it did NOT reuse the step lemmas by
+iteration at the trace level. The step lemmas' branch-level right obligation cannot be
+re-fed to the same lemmas (their ground alignment is stated against the FULL fold item
+list, while after one step the invariant lives on the TAIL). The working formulation
+generalizes the alignment to an arbitrary suffix of the fold's item list:
+
+    fold item (full) in trace, q-item (S_q, rho, chi) in trace,
+    suffix <:+ full, ground rho chi = fold(suffix ground forms)
+    ==> core closure of the trace's quantified branch.
+
+Proof: structural induction on chi, generalizing trace and suffix. Descent through the
+matching binary connective closes the left child against the suffix head (any member of
+the full tail is in the branch — Prop 3.58 was the key reuse) and recurses on the
+extended trace with the suffix tail. The matching quantifier closes memberwise: equal
+fold chains have equal form lists (new `foldConj_inj`/`foldDisj_inj`), so every domain
+instance finds an opposite-signed, equally-grounded fold member. All other shapes are
+impossible by outer-constructor clash; the empty suffix is impossible for EVERY chi, so
+no admissibility hypothesis is needed anywhere.
+
+Deliverables (all sorry-free, full build 2001 jobs, axiom-clean):
+- `ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core` (+ F/conj, T/disj, F/disj
+  sign variants);
+- `*_tailConsume_full_core` — the `suffix = full` instances, which are the shapes the
+  generated close-pair dispatcher will feed;
+- helpers `foldConj_inj`, `foldDisj_inj`, `ground_all_mem_qTailGround_of_eq`,
+  `ground_ex_mem_qTailGround_of_eq`, `qTailSigned_mem_qTailBranch`.
+
+Next: assemble the generated close-pair dispatcher (Def 3.66 / Prop 3.67 sources) —
+route q-vs-fold source pairs into the `_full_core` entry points; the alignment equation
+comes from the generated ground-source inversion. After the dispatcher, attack
+Conj 3.50 and then Conj 3.39.

@@ -159,7 +159,12 @@ New items:
 - Prop 3.68 rigid-versus-fold close-pair exclusion `[VERIFIED]`;
 - Prop 3.69 cross-fold close-pair exclusion `[VERIFIED]`;
 - Prop 3.70 nonmatching q-versus-fold exclusion fails `[REFUTED]`;
-- Prop 3.71 recursive q-versus-fold replay steps `[VERIFIED]`.
+- Prop 3.71 recursive q-versus-fold replay steps `[VERIFIED]`;
+- Prop 3.72 suffix-aligned tail consumer `[VERIFIED]` (2026-07-08): the four branching
+  sign pairs now close outright for every q-formula aligned with any suffix of a
+  structured fold tail — the recursive fold-tail replay theorem the previous
+  follow-up asked for. No admissibility hypothesis; helpers `foldConj_inj`,
+  `foldDisj_inj`, `ground_all/ex_mem_qTailGround_of_eq`.
 
 Updated items:
 
@@ -173,8 +178,10 @@ Open follow-up:
   and q-vs-fold branching lemmas should be reused through the generated-to-ordinary
   forgetful maps and generated q-fold certificates.
 - Complete or prove impossible the remaining close-pair replay cases involving
-- Lift the verified q-versus-fold replay steps into a recursive fold-tail replay theorem
-  that consumes the tail obligation, then plug that theorem into the generated
+- ~~Lift the verified q-versus-fold replay steps into a recursive fold-tail replay
+  theorem that consumes the tail obligation~~ — **done 2026-07-08, Prop 3.72**
+  (`*_tailConsume_core`, with `suffix = full` dispatcher entry points
+  `*_tailConsume_full_core`). Remaining: plug the entry points into the generated
   close-pair dispatcher. Rigid-vs-fold and conjunction-vs-disjunction cross-fold source
   pairs are now excluded.
 - Define any remaining generated-trace invariant needed by those fold-tail source cases,
@@ -189,8 +196,9 @@ Open follow-up:
 Lean module build:
 
 - `lake build Nullivance.FiniteFO`
-- date: 2026-07-07
-- result: success, 912 jobs
+- date: 2026-07-08 (Prop 3.72 pass; previous pass 2026-07-07)
+- result: success, 912 jobs; full `lake build` success, 2001 jobs; axiom audit of the
+  Prop 3.72 declarations: only `propext`, `Classical.choice`, `Quot.sound`
 
 Key Lean names:
 

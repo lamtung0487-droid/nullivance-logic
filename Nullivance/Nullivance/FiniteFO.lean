@@ -3636,6 +3636,442 @@ theorem ReplayTrace.closeF_qFoldDisjFpos_qDisjFneg_step_core {n : Nat}
         simp
       exact QClosesExtCore.closeGroundF hpos hneg hheadGround.symm
 
+/- Prop 3.72 (suffix-aligned tail consumer). Helpers first: fold chains are
+injective encodings of their form lists, and a quantifier grounding equal to a
+fold exposes, for every domain element, a matching member of the fold tail. -/
+
+theorem foldConj_inj {n : Nat} :
+    ∀ {l₁ l₂ : List Formula}, foldConj n l₁ = foldConj n l₂ → l₁ = l₂
+  | [], [], _ => rfl
+  | [], _ :: _, h => by simp [foldConj] at h
+  | _ :: _, [], h => by simp [foldConj] at h
+  | _ :: _, _ :: _, h => by
+      injection h with h1 h2
+      rw [h1, foldConj_inj h2]
+
+theorem foldDisj_inj {n : Nat} :
+    ∀ {l₁ l₂ : List Formula}, foldDisj n l₁ = foldDisj n l₂ → l₁ = l₂
+  | [], [], _ => rfl
+  | [], _ :: _, h => by simp [foldDisj] at h
+  | _ :: _, [], h => by simp [foldDisj] at h
+  | _ :: _, _ :: _, h => by
+      injection h with h1 h2
+      rw [h1, foldDisj_inj h2]
+
+theorem qTailSigned_mem_qTailBranch {n : Nat} (S : Sign)
+    {item : Assignment n × QFormula} {items : List (Assignment n × QFormula)}
+    (h : item ∈ items) : qTailSigned S item ∈ qTailBranch S items :=
+  List.mem_map.mpr ⟨item, h, rfl⟩
+
+theorem ground_all_mem_qTailGround_of_eq {n : Nat}
+    {ρ : Assignment n} {x : Var} {φ : QFormula}
+    {suffix : List (Assignment n × QFormula)}
+    (h : ground ρ (.all x φ) = foldConj n (qTailGroundForms suffix))
+    (d : Fin (n + 1)) :
+    ∃ item ∈ suffix, qTailGround item = ground (update ρ x d) φ := by
+  rw [ground] at h
+  have hlists := foldConj_inj h
+  have h0 : ground (update ρ x d) φ ∈
+      (List.finRange (n + 1)).map fun e => ground (update ρ x e) φ :=
+    List.mem_map.mpr ⟨d, List.mem_finRange d, rfl⟩
+  rw [hlists] at h0
+  exact List.mem_map.mp h0
+
+theorem ground_ex_mem_qTailGround_of_eq {n : Nat}
+    {ρ : Assignment n} {x : Var} {φ : QFormula}
+    {suffix : List (Assignment n × QFormula)}
+    (h : ground ρ (.ex x φ) = foldDisj n (qTailGroundForms suffix))
+    (d : Fin (n + 1)) :
+    ∃ item ∈ suffix, qTailGround item = ground (update ρ x d) φ := by
+  rw [ground] at h
+  have hlists := foldDisj_inj h
+  have h0 : ground (update ρ x d) φ ∈
+      (List.finRange (n + 1)).map fun e => ground (update ρ x e) φ :=
+    List.mem_map.mpr ⟨d, List.mem_finRange d, rfl⟩
+  rw [hlists] at h0
+  exact List.mem_map.mp h0
+
+/-- Prop 3.72, conj/T variant: suffix-aligned tail consumer. A `T⁻` q-formula whose
+grounding equals the conjunction fold of a suffix of a `T⁺` structured conj-fold
+tail closes the core tableau outright: structural descent through the q-formula,
+closing each left child against the exposed fold-tail member, recursing on the
+right child with the shrunken suffix, and finishing at a matching `∀` by the
+memberwise alignment. No admissibility hypothesis is needed: the empty-suffix
+alignment is impossible for every q-formula shape. -/
+theorem ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n} :
+    ∀ (χ : QFormula) {T : ReplayTrace n}
+      {suffix : List (Assignment n × QFormula)},
+      ReplayItem.qFoldConjTail Sign.Tpos full ∈ T →
+      ReplayItem.q ({ sign := Sign.Tneg, assignment := ρ, formula := χ } :
+        QSigned n) ∈ T →
+      suffix <:+ full →
+      ground ρ χ = foldConj n (qTailGroundForms suffix) →
+      QClosesExtCore (ReplayTrace.qBranch T) := by
+  intro χ
+  induction χ with
+  | pred P xs =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldConj, qTailGroundForms, groundAtomCode_inj,
+            groundPred, groundTop] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | eq x y =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldConj, qTailGroundForms, groundAtomCode_inj,
+            groundEq, groundTop] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | neg φ _ih =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | oplus φ ψ _ihφ _ihψ =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | disj φ ψ _ihφ _ihψ =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | ex x φ _ih =>
+      intro T suffix hfold hq hsuf hground
+      rw [ground, List.finRange_succ] at hground
+      cases suffix with
+      | nil => simp [foldDisj, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [foldDisj, foldConj, qTailGroundForms] at hground
+  | conj φ ψ _ihφ ihψ =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest =>
+          have hground' :
+              Formula.conj (ground ρ φ) (ground ρ ψ) =
+                Formula.conj (qTailGround head)
+                  (foldConj n (qTailGroundForms rest)) := hground
+          injection hground' with h1 h2
+          refine ReplayTrace.replay_conjTneg_core hq ?_ ?_
+          · have hheadFull : head ∈ full :=
+              hsuf.subset (List.mem_cons_self)
+            have hposQ : qTailSigned Sign.Tpos head ∈ ReplayTrace.qBranch T :=
+              ReplayTrace.qTailBranch_subset_of_mem_qFoldConj hfold _
+                (qTailSigned_mem_qTailBranch _ hheadFull)
+            exact QClosesExtCore.closeGroundT
+              (List.mem_cons_of_mem _ hposQ) (List.mem_cons_self) h1.symm
+          · have hrest : rest <:+ full := (List.suffix_cons head rest).trans hsuf
+            exact ihψ (List.mem_cons_of_mem _ hfold)
+              (List.mem_cons_self) hrest h2
+  | all x φ _ih =>
+      intro T suffix hfold hq hsuf hground
+      refine ReplayTrace.replay_allTneg_core hq ?_
+      intro d
+      obtain ⟨item, hitem, hitemGround⟩ :=
+        ground_all_mem_qTailGround_of_eq hground d
+      have hitemFull : item ∈ full := hsuf.subset hitem
+      have hposQ : qTailSigned Sign.Tpos item ∈ ReplayTrace.qBranch T :=
+        ReplayTrace.qTailBranch_subset_of_mem_qFoldConj hfold _
+          (qTailSigned_mem_qTailBranch _ hitemFull)
+      exact QClosesExtCore.closeGroundT
+        (List.mem_cons_of_mem _ hposQ) (List.mem_cons_self) hitemGround
+
+/-- Prop 3.72, conj/F variant: `F⁺` q-formula against an `F⁻` conj-fold tail. -/
+theorem ReplayTrace.closeF_qFpos_qFoldConjFneg_tailConsume_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n} :
+    ∀ (χ : QFormula) {T : ReplayTrace n}
+      {suffix : List (Assignment n × QFormula)},
+      ReplayItem.q ({ sign := Sign.Fpos, assignment := ρ, formula := χ } :
+        QSigned n) ∈ T →
+      ReplayItem.qFoldConjTail Sign.Fneg full ∈ T →
+      suffix <:+ full →
+      ground ρ χ = foldConj n (qTailGroundForms suffix) →
+      QClosesExtCore (ReplayTrace.qBranch T) := by
+  intro χ
+  induction χ with
+  | pred P xs =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldConj, qTailGroundForms, groundAtomCode_inj,
+            groundPred, groundTop] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | eq x y =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldConj, qTailGroundForms, groundAtomCode_inj,
+            groundEq, groundTop] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | neg φ _ih =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | oplus φ ψ _ihφ _ihψ =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | disj φ ψ _ihφ _ihψ =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldConj, qTailGroundForms] at hground
+  | ex x φ _ih =>
+      intro T suffix hq hfold hsuf hground
+      rw [ground, List.finRange_succ] at hground
+      cases suffix with
+      | nil => simp [foldDisj, foldConj, qTailGroundForms] at hground
+      | cons head rest => simp [foldDisj, foldConj, qTailGroundForms] at hground
+  | conj φ ψ _ihφ ihψ =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldConj, qTailGroundForms] at hground
+      | cons head rest =>
+          have hground' :
+              Formula.conj (ground ρ φ) (ground ρ ψ) =
+                Formula.conj (qTailGround head)
+                  (foldConj n (qTailGroundForms rest)) := hground
+          injection hground' with h1 h2
+          refine ReplayTrace.replay_conjFpos_core hq ?_ ?_
+          · have hheadFull : head ∈ full :=
+              hsuf.subset (List.mem_cons_self)
+            have hnegQ : qTailSigned Sign.Fneg head ∈ ReplayTrace.qBranch T :=
+              ReplayTrace.qTailBranch_subset_of_mem_qFoldConj hfold _
+                (qTailSigned_mem_qTailBranch _ hheadFull)
+            exact QClosesExtCore.closeGroundF
+              (List.mem_cons_self) (List.mem_cons_of_mem _ hnegQ) h1
+          · have hrest : rest <:+ full := (List.suffix_cons head rest).trans hsuf
+            exact ihψ (List.mem_cons_self)
+              (List.mem_cons_of_mem _ hfold) hrest h2
+  | all x φ _ih =>
+      intro T suffix hq hfold hsuf hground
+      refine ReplayTrace.replay_allFpos_core hq ?_
+      intro d
+      obtain ⟨item, hitem, hitemGround⟩ :=
+        ground_all_mem_qTailGround_of_eq hground d
+      have hitemFull : item ∈ full := hsuf.subset hitem
+      have hnegQ : qTailSigned Sign.Fneg item ∈ ReplayTrace.qBranch T :=
+        ReplayTrace.qTailBranch_subset_of_mem_qFoldConj hfold _
+          (qTailSigned_mem_qTailBranch _ hitemFull)
+      exact QClosesExtCore.closeGroundF
+        (List.mem_cons_self) (List.mem_cons_of_mem _ hnegQ) hitemGround.symm
+
+/-- Prop 3.72, disj/T variant: `T⁺` q-formula against a `T⁻` disj-fold tail. -/
+theorem ReplayTrace.closeT_qTpos_qFoldDisjTneg_tailConsume_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n} :
+    ∀ (χ : QFormula) {T : ReplayTrace n}
+      {suffix : List (Assignment n × QFormula)},
+      ReplayItem.q ({ sign := Sign.Tpos, assignment := ρ, formula := χ } :
+        QSigned n) ∈ T →
+      ReplayItem.qFoldDisjTail Sign.Tneg full ∈ T →
+      suffix <:+ full →
+      ground ρ χ = foldDisj n (qTailGroundForms suffix) →
+      QClosesExtCore (ReplayTrace.qBranch T) := by
+  intro χ
+  induction χ with
+  | pred P xs =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldDisj, qTailGroundForms, groundAtomCode_inj,
+            groundPred, groundBot] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | eq x y =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldDisj, qTailGroundForms, groundAtomCode_inj,
+            groundEq, groundBot] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | neg φ _ih =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | oplus φ ψ _ihφ _ihψ =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | conj φ ψ _ihφ _ihψ =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | all x φ _ih =>
+      intro T suffix hq hfold hsuf hground
+      rw [ground, List.finRange_succ] at hground
+      cases suffix with
+      | nil => simp [foldConj, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [foldConj, foldDisj, qTailGroundForms] at hground
+  | disj φ ψ _ihφ ihψ =>
+      intro T suffix hq hfold hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest =>
+          have hground' :
+              Formula.disj (ground ρ φ) (ground ρ ψ) =
+                Formula.disj (qTailGround head)
+                  (foldDisj n (qTailGroundForms rest)) := hground
+          injection hground' with h1 h2
+          refine ReplayTrace.replay_disjTpos_core hq ?_ ?_
+          · have hheadFull : head ∈ full :=
+              hsuf.subset (List.mem_cons_self)
+            have hnegQ : qTailSigned Sign.Tneg head ∈ ReplayTrace.qBranch T :=
+              ReplayTrace.qTailBranch_subset_of_mem_qFoldDisj hfold _
+                (qTailSigned_mem_qTailBranch _ hheadFull)
+            exact QClosesExtCore.closeGroundT
+              (List.mem_cons_self) (List.mem_cons_of_mem _ hnegQ) h1
+          · have hrest : rest <:+ full := (List.suffix_cons head rest).trans hsuf
+            exact ihψ (List.mem_cons_self)
+              (List.mem_cons_of_mem _ hfold) hrest h2
+  | ex x φ _ih =>
+      intro T suffix hq hfold hsuf hground
+      refine ReplayTrace.replay_exTpos_core hq ?_
+      intro d
+      obtain ⟨item, hitem, hitemGround⟩ :=
+        ground_ex_mem_qTailGround_of_eq hground d
+      have hitemFull : item ∈ full := hsuf.subset hitem
+      have hnegQ : qTailSigned Sign.Tneg item ∈ ReplayTrace.qBranch T :=
+        ReplayTrace.qTailBranch_subset_of_mem_qFoldDisj hfold _
+          (qTailSigned_mem_qTailBranch _ hitemFull)
+      exact QClosesExtCore.closeGroundT
+        (List.mem_cons_self) (List.mem_cons_of_mem _ hnegQ) hitemGround.symm
+
+/-- Prop 3.72, disj/F variant: an `F⁺` disj-fold tail against an `F⁻` q-formula. -/
+theorem ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n} :
+    ∀ (χ : QFormula) {T : ReplayTrace n}
+      {suffix : List (Assignment n × QFormula)},
+      ReplayItem.qFoldDisjTail Sign.Fpos full ∈ T →
+      ReplayItem.q ({ sign := Sign.Fneg, assignment := ρ, formula := χ } :
+        QSigned n) ∈ T →
+      suffix <:+ full →
+      ground ρ χ = foldDisj n (qTailGroundForms suffix) →
+      QClosesExtCore (ReplayTrace.qBranch T) := by
+  intro χ
+  induction χ with
+  | pred P xs =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldDisj, qTailGroundForms, groundAtomCode_inj,
+            groundPred, groundBot] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | eq x y =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil =>
+          simp [ground, foldDisj, qTailGroundForms, groundAtomCode_inj,
+            groundEq, groundBot] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | neg φ _ih =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | oplus φ ψ _ihφ _ihψ =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | conj φ ψ _ihφ _ihψ =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [ground, foldDisj, qTailGroundForms] at hground
+  | all x φ _ih =>
+      intro T suffix hfold hq hsuf hground
+      rw [ground, List.finRange_succ] at hground
+      cases suffix with
+      | nil => simp [foldConj, foldDisj, qTailGroundForms] at hground
+      | cons head rest => simp [foldConj, foldDisj, qTailGroundForms] at hground
+  | disj φ ψ _ihφ ihψ =>
+      intro T suffix hfold hq hsuf hground
+      cases suffix with
+      | nil => simp [ground, foldDisj, qTailGroundForms] at hground
+      | cons head rest =>
+          have hground' :
+              Formula.disj (ground ρ φ) (ground ρ ψ) =
+                Formula.disj (qTailGround head)
+                  (foldDisj n (qTailGroundForms rest)) := hground
+          injection hground' with h1 h2
+          refine ReplayTrace.replay_disjFneg_core hq ?_ ?_
+          · have hheadFull : head ∈ full :=
+              hsuf.subset (List.mem_cons_self)
+            have hposQ : qTailSigned Sign.Fpos head ∈ ReplayTrace.qBranch T :=
+              ReplayTrace.qTailBranch_subset_of_mem_qFoldDisj hfold _
+                (qTailSigned_mem_qTailBranch _ hheadFull)
+            exact QClosesExtCore.closeGroundF
+              (List.mem_cons_of_mem _ hposQ) (List.mem_cons_self) h1.symm
+          · have hrest : rest <:+ full := (List.suffix_cons head rest).trans hsuf
+            exact ihψ (List.mem_cons_of_mem _ hfold)
+              (List.mem_cons_self) hrest h2
+  | ex x φ _ih =>
+      intro T suffix hfold hq hsuf hground
+      refine ReplayTrace.replay_exFneg_core hq ?_
+      intro d
+      obtain ⟨item, hitem, hitemGround⟩ :=
+        ground_ex_mem_qTailGround_of_eq hground d
+      have hitemFull : item ∈ full := hsuf.subset hitem
+      have hposQ : qTailSigned Sign.Fpos item ∈ ReplayTrace.qBranch T :=
+        ReplayTrace.qTailBranch_subset_of_mem_qFoldDisj hfold _
+          (qTailSigned_mem_qTailBranch _ hitemFull)
+      exact QClosesExtCore.closeGroundF
+        (List.mem_cons_of_mem _ hposQ) (List.mem_cons_self) hitemGround
+
+/- Prop 3.72, dispatcher entry points: the full-alignment instances (suffix = full),
+which is the shape produced by the generated close-pair sources. -/
+
+theorem ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_full_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n}
+    {χ : QFormula} {T : ReplayTrace n}
+    (hfold : ReplayItem.qFoldConjTail Sign.Tpos full ∈ T)
+    (hq : ReplayItem.q ({ sign := Sign.Tneg, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hground : ground ρ χ = foldConj n (qTailGroundForms full)) :
+    QClosesExtCore (ReplayTrace.qBranch T) :=
+  ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core χ hfold hq
+    (List.suffix_refl full) hground
+
+theorem ReplayTrace.closeF_qFpos_qFoldConjFneg_tailConsume_full_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n}
+    {χ : QFormula} {T : ReplayTrace n}
+    (hq : ReplayItem.q ({ sign := Sign.Fpos, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hfold : ReplayItem.qFoldConjTail Sign.Fneg full ∈ T)
+    (hground : ground ρ χ = foldConj n (qTailGroundForms full)) :
+    QClosesExtCore (ReplayTrace.qBranch T) :=
+  ReplayTrace.closeF_qFpos_qFoldConjFneg_tailConsume_core χ hq hfold
+    (List.suffix_refl full) hground
+
+theorem ReplayTrace.closeT_qTpos_qFoldDisjTneg_tailConsume_full_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n}
+    {χ : QFormula} {T : ReplayTrace n}
+    (hq : ReplayItem.q ({ sign := Sign.Tpos, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hfold : ReplayItem.qFoldDisjTail Sign.Tneg full ∈ T)
+    (hground : ground ρ χ = foldDisj n (qTailGroundForms full)) :
+    QClosesExtCore (ReplayTrace.qBranch T) :=
+  ReplayTrace.closeT_qTpos_qFoldDisjTneg_tailConsume_core χ hq hfold
+    (List.suffix_refl full) hground
+
+theorem ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_full_core {n : Nat}
+    {full : List (Assignment n × QFormula)} {ρ : Assignment n}
+    {χ : QFormula} {T : ReplayTrace n}
+    (hfold : ReplayItem.qFoldDisjTail Sign.Fpos full ∈ T)
+    (hq : ReplayItem.q ({ sign := Sign.Fneg, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hground : ground ρ χ = foldDisj n (qTailGroundForms full)) :
+    QClosesExtCore (ReplayTrace.qBranch T) :=
+  ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_core χ hfold hq
+    (List.suffix_refl full) hground
+
 theorem ReplayTrace.closeT_qInstBlockTpos_qAllTneg_core {n : Nat} {T : ReplayTrace n}
     {ρ : Assignment n} {x : Var} {φ : QFormula}
     (hblock : ReplayTrace.HasQInstBlock T Sign.Tpos ρ x φ)

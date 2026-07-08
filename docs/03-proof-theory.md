@@ -1806,3 +1806,102 @@ closure point.
 > `FiniteFO.ReplayTrace.closeF_qFoldDisjFpos_qDisjFneg_step_core` -- sorry-free,
 > `lake build Nullivance.FiniteFO` 2026-07-08.
 > *Depends on:* Prop 3.43, Prop 3.58, Prop 3.70.
+
+**Proposition 3.72 (Suffix-aligned tail consumer).** `[VERIFIED]`
+Fix a domain size n and a structured fold-tail item with full item list `full`. Let
+(S_fold, S_q) be one of the four branching close-pair sign pairs:
+
+1. conjunction-fold `T+` against q-side `T-`;
+2. q-side `F+` against conjunction-fold `F-`;
+3. q-side `T+` against disjunction-fold `T-`;
+4. disjunction-fold `F+` against q-side `F-`.
+
+If a replay trace `T` contains the fold item with list `full` and the q-item
+`(S_q, rho, chi)`, and `ground rho chi` equals the matching fold of the ground forms
+of **some suffix** of `full`, then `QClosesExtCore` closes the full quantified branch
+of `T` — for **every** q-formula `chi`, with no admissibility hypothesis.
+
+*Proof.* By structural induction on `chi` (the eight constructor cases of Def 2.19,
+provably exhaustive as the eliminator of `QFormula`), with the trace and the suffix
+generalized in the induction hypothesis. Throughout, membership of any fold-tail item's
+signed formula in the trace branch is Prop 3.58, and membership of a suffix element in
+`full` follows from the suffix relation (list suffixes are sublists, standard).
+
+*Step 1 (fold-chain injectivity).* Two equal fold chains have equal form lists: fold of
+the empty list is an identity atom while fold of a nonempty list is a binary compound,
+and the binary constructor of Def 1.2 formulas is injective — induction on the first
+list. (New helper lemmas; used in Steps 2 and 4.)
+
+*Step 2 (impossible shapes).* If `chi` is a predicate atom or a crisp equality, its
+grounding is a ground atom whose code differs from both fold identity atoms
+(injectivity of the ground-atom encoding, Def 3.28, and constructor distinctness of
+ground atoms). If `chi` is a negation or a harmonization, its grounding has the
+corresponding outer constructor. If `chi` is the binary connective **not** matching the
+fold, or the quantifier **not** matching the fold, its grounding is the other binary
+compound — for the quantifier case because the domain `Fin(n+1)` is nonempty
+(Def 2.20), so its instance fold is a nonempty chain. In every such case the alignment
+equation identifies formulas with distinct outer constructors, a contradiction that
+discharges the case. In particular the **empty suffix** is impossible for every `chi`:
+its fold is an identity atom, and no grounding of any q-formula is an identity atom.
+This is exactly why no admissibility hypothesis is needed.
+
+*Step 3 (matching binary connective — the recursive step).* By Step 2 the suffix is
+nonempty, `head :: rest`. Constructor injectivity splits the alignment into: ground of
+the left child = ground form of `head`, and ground of the right child = fold of the
+`rest` forms. Apply the branching core decomposition rule for `(S_q, connective)`
+(Def 3.36, via the local replay rules of Prop 3.40). The left child closes by the
+ground closure clause of Def 3.36 against the signed formula of `head` (opposite signs,
+equal groundings). The right child is the induction hypothesis applied to the trace
+extended by the right-child q-item and to the suffix `rest` — a suffix of `full` by
+transitivity of the suffix relation.
+
+*Step 4 (matching quantifier — the base case).* The grounding of the matching
+quantifier is the fold of its `(n+1)`-element instance ground list (Def 3.28). By
+Step 1 the instance ground list equals the suffix ground-form list. The quantifier core
+rule for `S_q` (Prop 3.40: the all-child rules `allTneg`/`allFpos` for `forall` against
+conjunction folds, `exTpos`/`exFneg` for `exists` against disjunction folds) requires
+closing one child per domain element `d`. Child `d` adds the `S_q`-signed instance at
+`d`; its grounding occurs in the instance ground list, hence in the suffix ground-form
+list, so some suffix element carries `S_fold` on an equally-grounded formula — the
+ground closure clause closes the child. The pairing of quantifiers with folds is
+exhaustive over the four sign pairs: `forall` grounds to conjunction folds and
+`exists` to disjunction folds (Def 3.28). ∎
+
+*R5 record (attempted refutations, all failed against the final statement):*
+(i) dropping the suffix hypothesis makes the statement false — take `full = []`, a
+trace containing only the fold item and the q-item `T-(P0 ∧ P1)`, and a phantom
+"alignment" list: the branch `{T-(P0 ∧ P1)}` is satisfied by the all-N model, hence
+unclosable by core soundness (Prop 3.37 + Thm 3.31); so membership of the aligned
+items in the trace is load-bearing. (ii) Same-sign pairings are false: the constant-B
+model satisfies every `T+`-signed branch, so no close exists. (iii) The empty-suffix
+degenerate case was attacked directly and turned out impossible for every `chi`
+(Step 2) — recorded because it shows the branching pairs need **no** admissibility
+hypothesis at all, and exhibits the technique (empty-fold impossibility by ground
+shape) that would likewise eliminate the admissibility hypothesis still carried by
+the four non-branching steps of Prop 3.71, which live on the other four sign pairs.
+
+*Consequence for the program:* with Prop 3.72, the q-versus-fold family of the
+generated close-pair dispatcher (Def 3.66, Prop 3.67) reduces to supplying the
+alignment equation from the generated sources; the remaining work toward Conj 3.39/3.50
+is dispatcher assembly over the source classification, not new replay mathematics.
+
+> *Lean:* consumers
+> `FiniteFO.ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core`,
+> `FiniteFO.ReplayTrace.closeF_qFpos_qFoldConjFneg_tailConsume_core`,
+> `FiniteFO.ReplayTrace.closeT_qTpos_qFoldDisjTneg_tailConsume_core`,
+> `FiniteFO.ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_core`;
+> dispatcher entry points (`suffix = full`)
+> `FiniteFO.ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_full_core`,
+> `FiniteFO.ReplayTrace.closeF_qFpos_qFoldConjFneg_tailConsume_full_core`,
+> `FiniteFO.ReplayTrace.closeT_qTpos_qFoldDisjTneg_tailConsume_full_core`,
+> `FiniteFO.ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_full_core`;
+> helpers `FiniteFO.foldConj_inj`, `FiniteFO.foldDisj_inj`,
+> `FiniteFO.qTailSigned_mem_qTailBranch`,
+> `FiniteFO.ground_all_mem_qTailGround_of_eq`,
+> `FiniteFO.ground_ex_mem_qTailGround_of_eq` -- all sorry-free,
+> full `lake build` 2026-07-08 (2001 jobs); axiom audit: every declaration depends
+> only on `propext`, `Classical.choice`, `Quot.sound`.
+> *Depends on:* Def 2.19, 2.20, 3.28, 3.36, Prop 3.40, Prop 3.58. *Supersedes:* the
+> four branching steps (cases 5–8) of Prop 3.71, which it iterates to a complete
+> closure; the four non-branching steps (cases 1–4) belong to the other four sign
+> pairs and remain the single-step closers there.
