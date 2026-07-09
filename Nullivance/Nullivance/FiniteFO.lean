@@ -4072,6 +4072,293 @@ theorem ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_full_core {n : Nat}
   ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_core χ hfold hq
     (List.suffix_refl full) hground
 
+/- Prop 3.73 (close-pair dispatcher). Shape inversions first. -/
+
+/-- A grounding is an atom only for predicate atoms and crisp equalities. -/
+theorem ground_atom_cases {n : Nat} {ρ : Assignment n} {χ : QFormula} {k : Nat}
+    (h : ground ρ χ = Formula.atom k) :
+    (∃ P xs, χ = QFormula.pred P xs ∧
+      k = groundAtomCode (groundPred P (xs.map ρ))) ∨
+    (∃ x y, χ = QFormula.eq x y ∧
+      k = groundAtomCode (groundEq (ρ x) (ρ y))) := by
+  cases χ with
+  | pred P xs =>
+      injection h with hk
+      exact Or.inl ⟨P, xs, rfl, hk.symm⟩
+  | eq x y =>
+      injection h with hk
+      exact Or.inr ⟨x, y, rfl, hk.symm⟩
+  | neg φ => simp [ground] at h
+  | conj φ ψ => simp [ground] at h
+  | disj φ ψ => simp [ground] at h
+  | oplus φ ψ => simp [ground] at h
+  | all x φ =>
+      rw [ground, List.finRange_succ] at h
+      simp [foldConj] at h
+  | ex x φ =>
+      rw [ground, List.finRange_succ] at h
+      simp [foldDisj] at h
+
+/-- The rigid constraints contain no predicate ground atom. -/
+theorem rigidGroundConstraints_no_pred_atom {n : Nat} {S : Sign} {P : Pred}
+    {args : List (Fin (n + 1))}
+    (h : (S, Formula.atom (groundAtomCode (groundPred P args))) ∈
+      rigidGroundConstraints n) : False := by
+  unfold rigidGroundConstraints at h
+  rcases List.mem_append.mp h with h4 | heq
+  · simp [groundAtomCode_inj, groundPred, groundTop, groundBot] at h4
+  · simp [rigidGroundEqConstraints] at heq
+    rcases heq with ⟨a, b, hab⟩
+    by_cases hab' : a = b <;>
+      simp [rigidGroundEqSigns, hab', groundAtomCode_inj, groundPred,
+        groundEq] at hab
+
+/- The four non-branching q-versus-fold shape dispatches: the q-formula's outer
+constructor is forced to the matching connective or quantifier; the single verified
+step lemma of Prop 3.71 (cases 1-4) or Prop 3.61 closes outright. -/
+
+theorem ReplayTrace.closeT_qTpos_qFoldConjTneg_dispatch_core {n : Nat}
+    {T : ReplayTrace n} (hAdm : ReplayTrace.Admissible T)
+    {ρ : Assignment n} {χ : QFormula}
+    {items : List (Assignment n × QFormula)}
+    (hq : ReplayItem.q ({ sign := Sign.Tpos, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hfold : ReplayItem.qFoldConjTail Sign.Tneg items ∈ T)
+    (hground : ground ρ χ = foldConj n (qTailGroundForms items)) :
+    QClosesExtCore (ReplayTrace.qBranch T) := by
+  rcases ReplayTrace.admissible_mem_qFoldConjTneg_nonempty hAdm hfold with
+    ⟨head, tail, rfl⟩
+  cases χ with
+  | pred P xs => simp [ground, foldConj, qTailGroundForms] at hground
+  | eq x y => simp [ground, foldConj, qTailGroundForms] at hground
+  | neg φ => simp [ground, foldConj, qTailGroundForms] at hground
+  | oplus φ ψ => simp [ground, foldConj, qTailGroundForms] at hground
+  | disj φ ψ => simp [ground, foldConj, qTailGroundForms] at hground
+  | ex x φ =>
+      rw [ground, List.finRange_succ] at hground
+      simp [foldDisj, foldConj, qTailGroundForms] at hground
+  | conj φ ψ =>
+      exact ReplayTrace.closeT_qConjTpos_qFoldConjTneg_core hAdm hq hfold hground
+  | all x φ =>
+      exact ReplayTrace.closeT_qAllTpos_qFoldConjTneg_core hAdm hq hfold hground
+
+theorem ReplayTrace.closeF_qFoldConjFpos_qFneg_dispatch_core {n : Nat}
+    {T : ReplayTrace n} (hAdm : ReplayTrace.Admissible T)
+    {ρ : Assignment n} {χ : QFormula}
+    {items : List (Assignment n × QFormula)}
+    (hfold : ReplayItem.qFoldConjTail Sign.Fpos items ∈ T)
+    (hq : ReplayItem.q ({ sign := Sign.Fneg, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hground : ground ρ χ = foldConj n (qTailGroundForms items)) :
+    QClosesExtCore (ReplayTrace.qBranch T) := by
+  rcases ReplayTrace.admissible_mem_qFoldConjFpos_nonempty hAdm hfold with
+    ⟨head, tail, rfl⟩
+  cases χ with
+  | pred P xs => simp [ground, foldConj, qTailGroundForms] at hground
+  | eq x y => simp [ground, foldConj, qTailGroundForms] at hground
+  | neg φ => simp [ground, foldConj, qTailGroundForms] at hground
+  | oplus φ ψ => simp [ground, foldConj, qTailGroundForms] at hground
+  | disj φ ψ => simp [ground, foldConj, qTailGroundForms] at hground
+  | ex x φ =>
+      rw [ground, List.finRange_succ] at hground
+      simp [foldDisj, foldConj, qTailGroundForms] at hground
+  | conj φ ψ =>
+      exact ReplayTrace.closeF_qFoldConjFpos_qConjFneg_core hAdm hfold hq hground
+  | all x φ =>
+      exact ReplayTrace.closeF_qFoldConjFpos_qAllFneg_core hAdm hfold hq hground
+
+theorem ReplayTrace.closeT_qFoldDisjTpos_qTneg_dispatch_core {n : Nat}
+    {T : ReplayTrace n} (hAdm : ReplayTrace.Admissible T)
+    {ρ : Assignment n} {χ : QFormula}
+    {items : List (Assignment n × QFormula)}
+    (hfold : ReplayItem.qFoldDisjTail Sign.Tpos items ∈ T)
+    (hq : ReplayItem.q ({ sign := Sign.Tneg, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hground : ground ρ χ = foldDisj n (qTailGroundForms items)) :
+    QClosesExtCore (ReplayTrace.qBranch T) := by
+  rcases ReplayTrace.admissible_mem_qFoldDisjTpos_nonempty hAdm hfold with
+    ⟨head, tail, rfl⟩
+  cases χ with
+  | pred P xs => simp [ground, foldDisj, qTailGroundForms] at hground
+  | eq x y => simp [ground, foldDisj, qTailGroundForms] at hground
+  | neg φ => simp [ground, foldDisj, qTailGroundForms] at hground
+  | oplus φ ψ => simp [ground, foldDisj, qTailGroundForms] at hground
+  | conj φ ψ => simp [ground, foldDisj, qTailGroundForms] at hground
+  | all x φ =>
+      rw [ground, List.finRange_succ] at hground
+      simp [foldConj, foldDisj, qTailGroundForms] at hground
+  | disj φ ψ =>
+      exact ReplayTrace.closeT_qFoldDisjTpos_qDisjTneg_core hAdm hfold hq hground
+  | ex x φ =>
+      exact ReplayTrace.closeT_qFoldDisjTpos_qExTneg_core hAdm hfold hq hground
+
+theorem ReplayTrace.closeF_qFpos_qFoldDisjFneg_dispatch_core {n : Nat}
+    {T : ReplayTrace n} (hAdm : ReplayTrace.Admissible T)
+    {ρ : Assignment n} {χ : QFormula}
+    {items : List (Assignment n × QFormula)}
+    (hq : ReplayItem.q ({ sign := Sign.Fpos, assignment := ρ, formula := χ } :
+      QSigned n) ∈ T)
+    (hfold : ReplayItem.qFoldDisjTail Sign.Fneg items ∈ T)
+    (hground : ground ρ χ = foldDisj n (qTailGroundForms items)) :
+    QClosesExtCore (ReplayTrace.qBranch T) := by
+  rcases ReplayTrace.admissible_mem_qFoldDisjFneg_nonempty hAdm hfold with
+    ⟨head, tail, rfl⟩
+  cases χ with
+  | pred P xs => simp [ground, foldDisj, qTailGroundForms] at hground
+  | eq x y => simp [ground, foldDisj, qTailGroundForms] at hground
+  | neg φ => simp [ground, foldDisj, qTailGroundForms] at hground
+  | oplus φ ψ => simp [ground, foldDisj, qTailGroundForms] at hground
+  | conj φ ψ => simp [ground, foldDisj, qTailGroundForms] at hground
+  | all x φ =>
+      rw [ground, List.finRange_succ] at hground
+      simp [foldConj, foldDisj, qTailGroundForms] at hground
+  | disj φ ψ =>
+      exact ReplayTrace.closeF_qDisjFpos_qFoldDisjFneg_core hAdm hq hfold hground
+  | ex x φ =>
+      exact ReplayTrace.closeF_qExFpos_qFoldDisjFneg_core hAdm hq hfold hground
+
+/-- Source inversion in disjunction form, at an arbitrary signed formula. -/
+theorem ReplayGroundSource.inv {n : Nat} {T : ReplayTrace n} {S : Sign}
+    {f : Formula} (h : ReplayGroundSource T (S, f)) :
+    (∃ ρ χ, ReplayItem.q ({ sign := S, assignment := ρ, formula := χ } :
+        QSigned n) ∈ T ∧ ground ρ χ = f) ∨
+    (ReplayItem.rigid (S, f) ∈ T ∧ (S, f) ∈ rigidGroundConstraints n) ∨
+    (∃ items, ReplayItem.qFoldConjTail S items ∈ T ∧
+      f = foldConj n (qTailGroundForms items)) ∨
+    (∃ items, ReplayItem.qFoldDisjTail S items ∈ T ∧
+      f = foldDisj n (qTailGroundForms items)) := by
+  cases h with
+  | q hmem => exact Or.inl ⟨_, _, hmem, rfl⟩
+  | rigid hmem hrc => exact Or.inr (Or.inl ⟨hmem, hrc⟩)
+  | qFoldConj hmem _ => exact Or.inr (Or.inr (Or.inl ⟨_, hmem, rfl⟩))
+  | qFoldDisj hmem _ => exact Or.inr (Or.inr (Or.inr ⟨_, hmem, rfl⟩))
+
+/-- Prop 3.73: the T-close-pair dispatcher. Every source combination of an
+admissible plain close pair (Def 3.53) closes the core tableau — no generated
+certificate is needed: the q-versus-fold branching cases go through the Prop 3.72
+tail consumers, whose fold-chain alignment replaces the Def 3.62 instance-block
+invariant. -/
+theorem ReplayTrace.closeT_pair_dispatch_core {n : Nat} {T : ReplayTrace n}
+    (hAdm : ReplayTrace.Admissible T) {f : Formula}
+    (hpair : ReplayCloseTPair T f) :
+    QClosesExtCore (ReplayTrace.qBranch T) := by
+  obtain ⟨hpos, hneg⟩ := hpair
+  rcases hpos.inv with ⟨ρ₁, χ₁, hq₁, hg₁⟩ | ⟨hri₁, hrc₁⟩ |
+    ⟨items₁, hfc₁, hg₁⟩ | ⟨items₁, hfd₁, hg₁⟩
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · exact QClosesExtCore.closeGroundT (ReplayTrace.mem_qBranch_of_mem_q hq₁)
+        (ReplayTrace.mem_qBranch_of_mem_q hq₂) (hg₁.trans hg₂.symm)
+    · rcases rigidGroundConstraints_formula_atom hrc₂ with ⟨k, rfl⟩
+      rcases ground_atom_cases hg₁ with ⟨P, xs, rfl, rfl⟩ | ⟨x, y, rfl, rfl⟩
+      · exact (rigidGroundConstraints_no_pred_atom hrc₂).elim
+      · exact ReplayTrace.replay_eqTpos_rigidTneg_core hq₁ hrc₂
+    · exact ReplayTrace.closeT_qTpos_qFoldConjTneg_dispatch_core hAdm hq₁ hfc₂
+        (hg₁.trans hg₂)
+    · exact ReplayTrace.closeT_qTpos_qFoldDisjTneg_tailConsume_full_core hq₁ hfd₂
+        (hg₁.trans hg₂)
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · rcases rigidGroundConstraints_formula_atom hrc₁ with ⟨k, rfl⟩
+      rcases ground_atom_cases hg₂ with ⟨P, xs, rfl, rfl⟩ | ⟨x, y, rfl, rfl⟩
+      · exact (rigidGroundConstraints_no_pred_atom hrc₁).elim
+      · exact ReplayTrace.replay_eqTneg_rigidTpos_core hq₂ hrc₁
+    · exact (ReplayTrace.closeT_rigid_rigid_false hAdm hri₁ hri₂).elim
+    · exact (ReplayTrace.closeT_rigidTpos_qFoldConjTneg_false hAdm hri₁ hfc₂
+        hg₂).elim
+    · exact (ReplayTrace.closeT_rigidTpos_qFoldDisjTneg_false hAdm hri₁ hfd₂
+        hg₂).elim
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · exact ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_full_core hfc₁ hq₂
+        (hg₂.trans hg₁)
+    · exact (ReplayTrace.closeT_qFoldConjTpos_rigidTneg_false hAdm hfc₁ hri₂
+        hg₁.symm).elim
+    · exact ReplayTrace.closeT_qFoldConj_qFoldConj_core hAdm hfc₁ hfc₂
+        (hg₁.symm.trans hg₂)
+    · exact (ReplayTrace.closeT_qFoldConjTpos_qFoldDisjTneg_false hfc₁ hfd₂
+        (hg₁.symm.trans hg₂)).elim
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · exact ReplayTrace.closeT_qFoldDisjTpos_qTneg_dispatch_core hAdm hfd₁ hq₂
+        (hg₂.trans hg₁)
+    · exact (ReplayTrace.closeT_qFoldDisjTpos_rigidTneg_false hAdm hfd₁ hri₂
+        hg₁.symm).elim
+    · exact (ReplayTrace.closeT_qFoldDisjTpos_qFoldConjTneg_false hAdm hfd₁ hfc₂
+        (hg₁.symm.trans hg₂)).elim
+    · exact ReplayTrace.closeT_qFoldDisj_qFoldDisj_core hAdm hfd₁ hfd₂
+        (hg₁.symm.trans hg₂)
+
+/-- Prop 3.73: the F-close-pair dispatcher. -/
+theorem ReplayTrace.closeF_pair_dispatch_core {n : Nat} {T : ReplayTrace n}
+    (hAdm : ReplayTrace.Admissible T) {f : Formula}
+    (hpair : ReplayCloseFPair T f) :
+    QClosesExtCore (ReplayTrace.qBranch T) := by
+  obtain ⟨hpos, hneg⟩ := hpair
+  rcases hpos.inv with ⟨ρ₁, χ₁, hq₁, hg₁⟩ | ⟨hri₁, hrc₁⟩ |
+    ⟨items₁, hfc₁, hg₁⟩ | ⟨items₁, hfd₁, hg₁⟩
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · exact QClosesExtCore.closeGroundF (ReplayTrace.mem_qBranch_of_mem_q hq₁)
+        (ReplayTrace.mem_qBranch_of_mem_q hq₂) (hg₁.trans hg₂.symm)
+    · rcases rigidGroundConstraints_formula_atom hrc₂ with ⟨k, rfl⟩
+      rcases ground_atom_cases hg₁ with ⟨P, xs, rfl, rfl⟩ | ⟨x, y, rfl, rfl⟩
+      · exact (rigidGroundConstraints_no_pred_atom hrc₂).elim
+      · exact ReplayTrace.replay_eqFpos_rigidFneg_core hq₁ hrc₂
+    · exact ReplayTrace.closeF_qFpos_qFoldConjFneg_tailConsume_full_core hq₁ hfc₂
+        (hg₁.trans hg₂)
+    · exact ReplayTrace.closeF_qFpos_qFoldDisjFneg_dispatch_core hAdm hq₁ hfd₂
+        (hg₁.trans hg₂)
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · rcases rigidGroundConstraints_formula_atom hrc₁ with ⟨k, rfl⟩
+      rcases ground_atom_cases hg₂ with ⟨P, xs, rfl, rfl⟩ | ⟨x, y, rfl, rfl⟩
+      · exact (rigidGroundConstraints_no_pred_atom hrc₁).elim
+      · exact ReplayTrace.replay_eqFneg_rigidFpos_core hq₂ hrc₁
+    · exact (ReplayTrace.closeF_rigid_rigid_false hAdm hri₁ hri₂).elim
+    · exact (ReplayTrace.closeF_rigidFpos_qFoldConjFneg_false hAdm hri₁ hfc₂
+        hg₂).elim
+    · exact (ReplayTrace.closeF_rigidFpos_qFoldDisjFneg_false hAdm hri₁ hfd₂
+        hg₂).elim
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · exact ReplayTrace.closeF_qFoldConjFpos_qFneg_dispatch_core hAdm hfc₁ hq₂
+        (hg₂.trans hg₁)
+    · exact (ReplayTrace.closeF_qFoldConjFpos_rigidFneg_false hAdm hfc₁ hri₂
+        hg₁.symm).elim
+    · exact ReplayTrace.closeF_qFoldConj_qFoldConj_core hAdm hfc₁ hfc₂
+        (hg₁.symm.trans hg₂)
+    · exact (ReplayTrace.closeF_qFoldConjFpos_qFoldDisjFneg_false hAdm hfc₁ hfd₂
+        (hg₁.symm.trans hg₂)).elim
+  · rcases hneg.inv with ⟨ρ₂, χ₂, hq₂, hg₂⟩ | ⟨hri₂, hrc₂⟩ |
+      ⟨items₂, hfc₂, hg₂⟩ | ⟨items₂, hfd₂, hg₂⟩
+    · exact ReplayTrace.closeF_qFoldDisjFpos_qFneg_tailConsume_full_core hfd₁ hq₂
+        (hg₂.trans hg₁)
+    · exact (ReplayTrace.closeF_qFoldDisjFpos_rigidFneg_false hAdm hfd₁ hri₂
+        hg₁.symm).elim
+    · exact (ReplayTrace.closeF_qFoldDisjFpos_qFoldConjFneg_false hfd₁ hfc₂
+        (hg₁.symm.trans hg₂)).elim
+    · exact ReplayTrace.closeF_qFoldDisj_qFoldDisj_core hAdm hfd₁ hfd₂
+        (hg₁.symm.trans hg₂)
+
+/-- Prop 3.73, membership form: the closure cases of the future ground-to-replay
+bridge (Conj 3.50/3.39). -/
+theorem ReplayTrace.closeT_members_dispatch_core {n : Nat} {T : ReplayTrace n}
+    (hAdm : ReplayTrace.Admissible T) {f : Formula}
+    (hpos : (Sign.Tpos, f) ∈ ReplayTrace.groundBranch T)
+    (hneg : (Sign.Tneg, f) ∈ ReplayTrace.groundBranch T) :
+    QClosesExtCore (ReplayTrace.qBranch T) :=
+  ReplayTrace.closeT_pair_dispatch_core hAdm
+    (ReplayTrace.closeT_pair_inversion hAdm hpos hneg)
+
+theorem ReplayTrace.closeF_members_dispatch_core {n : Nat} {T : ReplayTrace n}
+    (hAdm : ReplayTrace.Admissible T) {f : Formula}
+    (hpos : (Sign.Fpos, f) ∈ ReplayTrace.groundBranch T)
+    (hneg : (Sign.Fneg, f) ∈ ReplayTrace.groundBranch T) :
+    QClosesExtCore (ReplayTrace.qBranch T) :=
+  ReplayTrace.closeF_pair_dispatch_core hAdm
+    (ReplayTrace.closeF_pair_inversion hAdm hpos hneg)
+
 theorem ReplayTrace.closeT_qInstBlockTpos_qAllTneg_core {n : Nat} {T : ReplayTrace n}
     {ρ : Assignment n} {x : Var} {φ : QFormula}
     (hblock : ReplayTrace.HasQInstBlock T Sign.Tpos ρ x φ)

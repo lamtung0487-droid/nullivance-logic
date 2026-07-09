@@ -164,7 +164,13 @@ New items:
   sign pairs now close outright for every q-formula aligned with any suffix of a
   structured fold tail — the recursive fold-tail replay theorem the previous
   follow-up asked for. No admissibility hypothesis; helpers `foldConj_inj`,
-  `foldDisj_inj`, `ground_all/ex_mem_qTailGround_of_eq`.
+  `foldDisj_inj`, `ground_all/ex_mem_qTailGround_of_eq`;
+- Prop 3.73 close-pair dispatcher `[VERIFIED]` (2026-07-09): all sixteen source
+  combinations per close sign dispatch from a **plain** admissible close pair to
+  `QClosesExtCore`. Design consequence: the generated certificate layer
+  (Def 3.62/3.64/3.66, Props 3.63/3.65/3.67) is no longer on the critical path —
+  Prop 3.72's fold-chain alignment replaced the instance-block invariant. The
+  closure cases of Conj 3.50/3.39 are done.
 
 Updated items:
 
@@ -184,11 +190,24 @@ Open follow-up:
   `*_tailConsume_full_core`). Remaining: plug the entry points into the generated
   close-pair dispatcher. Rigid-vs-fold and conjunction-vs-disjunction cross-fold source
   pairs are now excluded.
-- Define any remaining generated-trace invariant needed by those fold-tail source cases,
-  then prove the bridge from constrained propositional closure under that invariant to
-  `ReplayClosesCore`.
-- Prove Conj 3.39 without invoking `propSim` or `rigidPropSim`.
-- Revisit Thm 3.35 after Conj 3.39: if replay succeeds, finite-domain completeness can
+- ~~Dispatch the generated close-pair source combinations~~ — **done 2026-07-09,
+  Prop 3.73**, and with a simplification: plain sources suffice, no generated
+  invariant is consumed.
+- ~~Define any remaining generated-trace invariant needed by those fold-tail source
+  cases~~ — **obsolete**: Prop 3.72/3.73 eliminated the need for generated-trace
+  invariants in the dispatcher.
+- Prove Conj 3.39 without invoking `propSim` or `rigidPropSim`. **Route revision
+  (2026-07-09):** the derivation-by-derivation simulation hits a real obstruction at
+  branching-sign quantifier groundings (binary propositional cascade versus the
+  core's `(n+1)`-ary quantifier rules; see the Conj 3.50 progress note). Recommended
+  route: prove semantic completeness of the core calculus directly —
+  `unsatisfiable-in-finite-models ⟹ QClosesExtCore` — by mirroring
+  `Metatheory.closes_todo` at the quantified level with the domain-weighted measure
+  `qweight(∀xφ) = 1 + (n+1)·qweight(φ)`; every core rule strictly decreases todo
+  weight, fold tails never arise, and the closure/literal stage uses the ground
+  canonical model plus the equality and extensional closure clauses. Conj 3.39's
+  final statement then follows via Thm 4.13's semantic transfer.
+- Revisit Thm 3.35 after the core completeness lands: finite-domain completeness can
   be restated with `QClosesExtCore` as the proof-theoretic target.
 
 ## Verification

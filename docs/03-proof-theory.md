@@ -1237,8 +1237,35 @@ be induction on the propositional closure derivation, with additional inversion 
 mapping membership in `ReplayTrace.groundBranch T` back to either a quantified item, a
 rigid equality item, or an admissible structured fold-tail item.
 
-> *Lean:* no theorem yet.
-> *Depends on:* Def 3.47, Prop 3.48, Prop 3.49.
+**Progress note (2026-07-09, dispatcher session).** The **closure cases** of the
+intended induction are fully discharged by the close-pair dispatcher (Prop 3.73).
+The **rule cases** were analyzed to the exact remaining obstruction: when the
+propositional derivation decomposes the grounding of a *branching-sign* quantifier
+(`T-` universal or the mirrored signs), the binary `conjTneg`-cascade of the
+propositional calculus produces a right child asserting the **fold of the remaining
+instances as one branch**, while the core rule `allTneg` requires **one closed child
+per domain element**. The induction hypothesis for the right child yields the pooled
+branch, from which the per-element children are not recoverable by monotonicity; a
+depth-preserving propositional inversion package would restate the problem but does
+not make the induction well-founded (inversion does not shrink the derivation).
+The non-branching-sign quantifier decompositions, all propositional connective
+decompositions, and all fold-tail decompositions do go through (duplicate-absorption
+by Prop 3.42 monotonicity, plus the `n = 0` empty-tail child handled by dropping the
+right branch). **Recommended route recorded in DR-0013:** prove semantic completeness
+of the core calculus directly — `no finite model satisfies B ⟹ QClosesExtCore B` —
+by mirroring the verified propositional engine (`Metatheory.closes_todo`) at the
+quantified level with the domain-weighted measure `qweight(∀xφ) = 1 + (n+1)·qweight(φ)`
+(similarly for `∃`), under which every core rule strictly decreases the todo weight;
+the core's natively `(n+1)`-ary quantifier rules never meet the binary-cascade
+mismatch, and fold tails do not arise at all. This would discharge Conj 3.39's final
+statement through Thm 4.13's semantic transfer instead of derivation-by-derivation
+simulation, and Conj 3.50 would remain as a sharpening about the trace calculus.
+
+> *Lean:* closure cases `FiniteFO.ReplayTrace.closeT_members_dispatch_core`,
+> `closeF_members_dispatch_core` (Prop 3.73) -- sorry-free. Rule cases: no theorem
+> yet; obstruction and route analysis in
+> `drafts/2026-07-07-constructor-replay-research.md` (2026-07-09 entry).
+> *Depends on:* Def 3.47, Prop 3.48, Prop 3.49, Prop 3.73.
 
 **Definition 3.51 (Replay ground source).** `[DRAFT]`
 `ReplayGroundSource T s` classifies the source of a signed propositional formula `s`
@@ -1905,3 +1932,76 @@ is dispatcher assembly over the source classification, not new replay mathematic
 > four branching steps (cases 5–8) of Prop 3.71, which it iterates to a complete
 > closure; the four non-branching steps (cases 1–4) belong to the other four sign
 > pairs and remain the single-step closers there.
+
+**Proposition 3.73 (Close-pair dispatcher).** `[VERIFIED]`
+Let `T` be an **admissible** replay trace (Def 3.47) and let both members of a
+propositional close pair — `(T+, f)` and `(T-, f)`, or `(F+, f)` and `(F-, f)` —
+occur in `ReplayTrace.groundBranch T`. Then `QClosesExtCore (ReplayTrace.qBranch T)`.
+Equivalently, in pair form: every **plain** close-pair source classification
+(Def 3.53) closes the core tableau. The generated certificate layer (Def 3.62,
+3.64, 3.66) is **not needed**: the plain sources suffice.
+
+*Proof.* By Prop 3.54 (close-pair inversion under admissibility) each side of the
+pair receives a source classification: quantified item (q), rigid item, structured
+conjunction fold, or structured disjunction fold — four sources per side, sixteen
+combinations per close sign, and the case analysis is exhaustive because Def 3.51
+has exactly these four constructors. The combinations dispatch as follows
+(T-close; the F-close table is the mirror image under `T ↦ F`):
+
+| pos \ neg | q | rigid | conj-fold | disj-fold |
+|---|---|---|---|---|
+| **q** | ground-close clause (both groundings equal `f`) | equality analysis (i) | non-branching shape dispatch (ii) | tail consumer (Prop 3.72) |
+| **rigid** | equality analysis (i) | impossible (Prop 3.55) | impossible (Prop 3.68) | impossible (Prop 3.68) |
+| **conj-fold** | tail consumer (Prop 3.72) | impossible (Prop 3.68) | matching-fold close (Prop 3.60 family) | impossible (Prop 3.69) |
+| **disj-fold** | non-branching shape dispatch (ii) | impossible (Prop 3.68) | impossible (Prop 3.69) | matching-fold close (Prop 3.60 family) |
+
+(i) *Equality analysis.* The rigid side's formula is an atom (Prop 3.68's atom
+fact). A q-side grounding equal to an atom forces the q-formula to be a predicate
+atom or a crisp equality (new shape inversion: compounds ground to compounds, and
+quantifiers ground to folds of the nonempty instance list, Def 2.20/3.28). The
+predicate case contradicts a new lemma — the rigid constraints contain no
+predicate ground atom (inspection of Def 3.34's four identity constraints and the
+equality block, with injectivity of the ground-atom encoding). The equality case
+closes by the crisp-equality closure clauses of Def 3.25 through the verified
+rigid-equality replay rules (Prop 3.41).
+
+(ii) *Non-branching shape dispatch.* For the four sign pairs where the q-side
+connective rule is non-branching, admissibility makes the fold tail nonempty
+(Def 3.47), so the fold formula is a binary compound; the q-formula's outer
+constructor is forced to the matching connective (single step of Prop 3.71,
+cases 1–4) or the matching quantifier (all-child lemmas of Prop 3.61); every
+other constructor contradicts the alignment equation by outer-constructor clash.
+
+Two previously missing matching-fold cases — disj-fold `T+` against disj-fold
+`T-`, and conj-fold `F+` against conj-fold `F-` — were found already verified in
+the development (Prop 3.60's family covers all four after inspection). ∎
+
+*R5 record:* (i) admissibility is load-bearing in exactly three places: the
+rigid/rigid and rigid/fold exclusions (empty-tail identity atoms would otherwise
+close against rigid constraints — the Prop 3.46 counterexample), and the
+nonemptiness of fold tails in the shape dispatches. (ii) The **generated**
+close-pair layer was expected to be required for the q-versus-fold branching
+cases (R5 record of Prop 3.63); Prop 3.72's fold-chain alignment replaced the
+instance-block certificate, so the dispatcher consumes only plain sources. The
+generated layer (Def 3.62–3.66, Prop 3.63/3.65/3.67) remains verified but is no
+longer on the critical path of the bridge program.
+
+*Consequence:* the closure cases of the ground-to-replay bridge (Conj 3.50) and
+of the final constructor replay (Conj 3.39) are fully discharged: whenever the
+propositional derivation closes a pair, the membership form of this proposition
+produces the core closure directly.
+
+> *Lean:* dispatchers `FiniteFO.ReplayTrace.closeT_pair_dispatch_core`,
+> `FiniteFO.ReplayTrace.closeF_pair_dispatch_core`; membership form
+> `FiniteFO.ReplayTrace.closeT_members_dispatch_core`,
+> `FiniteFO.ReplayTrace.closeF_members_dispatch_core`; shape dispatches
+> `FiniteFO.ReplayTrace.closeT_qTpos_qFoldConjTneg_dispatch_core`,
+> `FiniteFO.ReplayTrace.closeF_qFoldConjFpos_qFneg_dispatch_core`,
+> `FiniteFO.ReplayTrace.closeT_qFoldDisjTpos_qTneg_dispatch_core`,
+> `FiniteFO.ReplayTrace.closeF_qFpos_qFoldDisjFneg_dispatch_core`; inversions
+> `FiniteFO.ReplayGroundSource.inv`, `FiniteFO.ground_atom_cases`,
+> `FiniteFO.rigidGroundConstraints_no_pred_atom` -- all sorry-free, full
+> `lake build` 2026-07-09 (2001 jobs); axiom audit: only `propext`,
+> `Classical.choice`, `Quot.sound`.
+> *Depends on:* Def 3.47, 3.51, 3.53, Prop 3.41, 3.54, 3.55, 3.60, 3.61, 3.68,
+> 3.69, 3.71, 3.72.

@@ -547,3 +547,74 @@ Next: assemble the generated close-pair dispatcher (Def 3.66 / Prop 3.67 sources
 route q-vs-fold source pairs into the `_full_core` entry points; the alignment equation
 comes from the generated ground-source inversion. After the dispatcher, attack
 Conj 3.50 and then Conj 3.39.
+
+## 2026-07-09 close-pair dispatcher (Prop 3.73) and the route revision
+
+The dispatcher is done, and it is SMALLER than planned: it consumes plain
+`ReplayCloseTPair`/`ReplayCloseFPair` (Def 3.53), not the generated pairs. Reason:
+the Prop 3.72 tail consumers close the q-vs-fold branching cases from the ground
+alignment equation alone, which the plain fold source already carries. The whole
+generated layer (Def 3.62/3.64/3.66, Props 3.63/3.65/3.67) is verified but now off
+the critical path.
+
+Dispatch table facts discovered while assembling the 16 cases per close sign:
+- `closeT_qFoldDisj_qFoldDisj_core` and `closeF_qFoldConj_qFoldConj_core` already
+  existed (my review of Prop 3.60 as "two lemmas" was wrong - all four matching-fold
+  cases were verified);
+- the q-vs-rigid combinations reduce to: predicate atoms cannot appear in the rigid
+  constraints (`rigidGroundConstraints_no_pred_atom`, new), groundings that are atoms
+  come only from predicate/equality q-formulas (`ground_atom_cases`, new), and the
+  four rigid-equality replay rules of Prop 3.41 do the rest.
+
+### Why the derivation-simulation route for Conj 3.50 stalls
+
+Everything in the intended induction on `Closes (groundBranch T)` now goes through
+EXCEPT one family. Status per case:
+- close cases: Prop 3.73 membership form. DONE.
+- propositional connective rules on q-item groundings: extend the trace with the
+  child q-items, IH, then the matching `replay_*_core`. WORKS.
+- rules on fold-item groundings: extend with head q-item / tail fold item; all new
+  qBranch members are duplicates of members already contributed by the fold item, so
+  the IH conclusion contracts to the goal by Prop 3.42 monotonicity
+  (`extras ++ B ⊆ B` when extras are duplicates). WORKS, including the `n = 0`
+  empty-tail child, which is handled by using only the OTHER branch's IH.
+- non-branching-sign quantifier groundings (T+ forall etc.): child items are the
+  head instance plus the T+/F- fold of the remaining instances (admissible even when
+  empty); IH, then mono into `qinstAll ++ qBranch`, then the block rule. WORKS.
+- branching-sign quantifier groundings (T- forall, F+ forall, T+ exists, F- exists):
+  BLOCKED. The propositional side decomposes `T-(g0 ∧ (g1 ∧ ...))` by a binary
+  cascade whose right child asserts the POOLED fold of the remaining instances in a
+  single branch; the core rule `allTneg` needs one closed child PER domain element.
+  `Core(pooled ++ B)` does not yield `Core(inst_d :: B)` for any d (fewer assumptions,
+  monotonicity points the wrong way). A propositional inversion package
+  (`Closes((T-(g∧h))::B) -> Closes((T-g)::B) ∧ Closes((T-h)::B)`) is provable but
+  produces derivations that are not structurally smaller, so it cannot feed the same
+  induction; depth-indexed derivations with depth-preserving inversion do not shrink
+  either component of any usable measure at this case.
+
+### The better route
+
+Drop the simulation for the endgame. Prove semantic completeness of the core
+calculus directly, mirroring the verified propositional engine
+(`Metatheory.closes_todo`, ~300 lines) at the quantified level:
+
+    THEOREM (target): if no finite FOUR model satisfies the quantified branch B,
+    then QClosesExtCore B.
+
+Key device: the domain-weighted formula measure
+`qweight(pred) = qweight(eq) = 1`, `qweight(¬φ) = 1 + qweight(φ)`, binary
+connectives `1 + sum`, and `qweight(∀xφ) = qweight(∃xφ) = 1 + (n+1)*qweight(φ)`
+for the FIXED domain size n. Every core decomposition rule strictly decreases the
+total todo weight (the quantifier rules replace `1 + (n+1)w` by at most `(n+1)`
+copies of weight `w`). The core's quantifier rules are natively `(n+1)`-ary, so the
+binary-cascade mismatch never appears, and fold tails never arise. The literal
+stage builds the canonical finite model from ground predicate literals (keyed by
+`groundAtomCode`, injective), with the equality closure clauses of Def 3.25 and the
+extensional clauses of Def 3.36 exactly covering the non-model-able literal
+configurations. Conj 3.39's final statement follows from this plus Thm 4.13
+semantics (`Closes -> unsat -> q-unsat via ground_truth_rigid -> core closes`),
+with `propSim`/`rigidPropSim` never invoked. Thm 3.35 can then be restated with
+`QClosesExtCore` as the target calculus.
+
+Estimated shape: an `qclosesCore_todo` engine + literal-stage lemmas; comparable to
+but larger than the propositional engine. This is the next session's target.
