@@ -665,9 +665,13 @@ incomplete ND fragment explaining why the signed calculus is canonical,
 and a precise statement of which parts of the system are and are not
 instances of the logical-bilattice framework. Since this manuscript snapshot,
 the project has also Lean-verified completeness for the $\hmz$-De-Morgan
-extension of $\ndder$ in the repository docs. Open:
-(1) the finite-domain quantified proof theory and its completeness theorem;
-(2) the full infinite-domain quantified extension; the emergence layer of the source material
+extension of $\ndder$, and has closed the finite-domain quantified program:
+a function-free quantified extension over finite nonempty domains with crisp
+equality, an exact threshold projection, and a machine-checked semantic
+completeness theorem for a macro-free extensional tableau calculus (a
+companion manuscript is in preparation in the repository under
+\texttt{papers/npl-finite-fo/}). Open:
+the full infinite-domain quantified extension; the emergence layer of the source material
 remains outside the formal development by design.
 
 \appendix
@@ -697,7 +701,8 @@ fair-search notions appear only in the alternative proof remark of
 \texttt{Decidability} (finite model checker and \lean{Decidable} instances),
 \texttt{Compactness} (Set/Finset API, compactness, strong completeness),
 \texttt{Classical} (Boolean recovery on the glut/gap-free fragment),
-\texttt{FiniteFO} (finite-domain quantified first pass),
+\texttt{FiniteFO} (the complete finite-domain quantified layer, including its
+verified completeness theorem — companion manuscript),
 \texttt{Generative} (\cref{sec:generative}; imported by no core module).
 
 \bibliographystyle{plain}

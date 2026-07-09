@@ -2025,16 +2025,21 @@ produces the core closure directly.
 > 3.69, 3.71, 3.72.
 
 **Theorem 3.74 (Semantic completeness of the core calculus).** `[VERIFIED]`
-For every finite-domain quantified branch `B` over domain size `n`: if no finite
-FOUR model satisfies `B`, then `QClosesExtCore B`. Combined with core soundness
-(Prop 3.37 + Thm 3.31) this is exact: `QClosesExtCore B` **iff** `B` is
-unsatisfiable in finite models; and in derivability form,
+For every finite-domain quantified branch `B` over domain size `n`: if no FOUR
+model **with domain `Fin(n+1)`** satisfies `B`, then `QClosesExtCore B`. Combined
+with core soundness (Prop 3.37 + Thm 3.31) this is exact: `QClosesExtCore B`
+**iff** `B` is unsatisfiable over that domain; and in derivability form,
 
 `Gamma ⊢_{QExtCore,n} sphi ⟺ Gamma |=_{Q,n} sphi`
 
 — finite-domain soundness **and completeness with the macro-free core tableau as
 the proof-theoretic target**, the restatement of Thm 3.35 that DR-0013's follow-up
-list requested. `propSim`/`rigidPropSim` do not occur anywhere in the proof.
+list requested. `propSim`/`rigidPropSim` do not occur anywhere in the
+**completeness** proof (nor in Thm 3.75); the soundness half of the equivalences
+is the pre-existing Prop 3.37, whose verification embeds the core into the macro
+calculus (`QClosesExtCore.toExt`) — a harmless direction, since soundness of a
+subsystem may be inherited from the supersystem without invoking the macro rules
+to build any derivation.
 
 *Proof.* By a quantified completeness engine mirroring the verified propositional
 engine of Thm 4.13 (`closes_todo`/`closes_lits`), with three components.

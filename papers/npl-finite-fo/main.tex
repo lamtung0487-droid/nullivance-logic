@@ -1,0 +1,531 @@
+% =========================================================================
+% NPL finite-domain quantified paper — draft v0.1 (2026-07-09).
+% Companion to papers/npl-core. Headline: semantic completeness of the
+% macro-free core extensional tableau (docs Thm 3.74), plus Thm 3.75.
+% Manuscript numbering is presentational; the stable numbering lives in
+% docs/ (project rule R3). Results marked [L] name sorry-free Lean
+% declarations in the Nullivance artifact.
+% Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
+% =========================================================================
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[capitalize]{cleveref}
+\usepackage{microtype}
+\newcommand{\lb}{\discretionary{}{}{}}
+\emergencystretch=3em
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% ----- notation (shared with the companion paper) -----
+\newcommand{\FOUR}{\mathbf{4}}
+\newcommand{\vT}{\mathbf{T}}
+\newcommand{\vF}{\mathbf{F}}
+\newcommand{\vB}{\mathbf{B}}
+\newcommand{\vN}{\mathbf{N}}
+\newcommand{\hmz}{\oplus}
+\newcommand{\proj}[1]{\pi_{#1}}
+\newcommand{\ind}[1]{\mathbf{1}[#1]}
+\newcommand{\Tp}{T^{+}}\newcommand{\Tm}{T^{-}}
+\newcommand{\Fp}{F^{+}}\newcommand{\Fm}{F^{-}}
+\newcommand{\lean}[1]{\texttt{#1}}
+% finite-FO specific
+\newcommand{\dom}[1]{\{0,\dots,#1\}}
+\newcommand{\qder}{\vdash_{\mathrm{core}}}
+\newcommand{\qmod}{\models_{Q,n}}
+\newcommand{\grd}{\mathrm{gr}}
+\newcommand{\qsize}{\mathrm{qsize}}
+
+\title{Finite-Domain Quantified Nullivance Logic:\\
+A Machine-Checked Completeness Theorem\\
+for a Macro-Free Extensional Tableau\thanks{%
+Draft v0.1 (July 2026). Companion to \emph{Nullivance Propositional Logic:
+Threshold-Signed Consequence on the Unit Square with a Machine-Checked
+Completeness Theorem} (same repository, \texttt{papers/npl-core}). Results
+marked [L] are verified sorry-free in the Lean~4 artifact described in
+Appendix~\ref{app:lean}. The related-work section is a stub pending the
+project's literature pass; novelty wording is correspondingly guarded.}}
+\author{Trinh Tung Lam\thanks{Contact: \texttt{lamyofficialvn@gmail.com}.}}
+\date{July 2026 --- draft v0.1}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We extend nullivance propositional logic (NPL) --- a paraconsistent,
+two-channel logic on the unit square with a harmonization connective $\hmz$
+and four threshold signs $\Tp,\Tm,\Fp,\Fm$ --- by finite-domain quantifiers.
+The language is function-free first-order with crisp equality; models
+interpret predicates over a fixed finite nonempty domain by values in the
+four-element matrix $\FOUR$, and the finite universal (existential)
+quantifier takes the pointwise minimum (maximum) on the truth channel and
+the dual on the falsity channel. Main results, each machine-checked in
+Lean~4: (i)~the exact threshold projection of the propositional theory
+lifts to the quantified language over finite domains; (ii)~a natural signed
+tableau calculus is \emph{refuted} as complete --- crisp equality
+$x{=}x$ is valid but underivable --- and two further tempting proof routes
+are refuted by explicit countermodels, all machine-checked; (iii)~the
+repaired \emph{core extensional tableau}, whose closure conditions add
+four crisp-equality clauses and two ground-closure clauses to the
+decomposition rules, is sound and \emph{complete}: a branch closes exactly
+when no finite model satisfies it. The completeness proof is a quantified
+tableau engine driven by a domain-weighted measure
+($\qsize(\forall x\,\varphi)=(n{+}1)\cdot\qsize(\varphi)+1$ over a domain
+of size $n{+}1$) under which every rule strictly decreases branch weight,
+together with a canonical-model construction at the literal stage keyed by
+an injective ground-atom encoding. As a corollary, closure of the grounded
+propositional branch under rigid constraints reaches the core calculus with
+no propositional-simulation macro --- settling the artifact's final
+open bridge conjecture. We also document the failure analysis that led
+from a derivation-by-derivation simulation program to the weighted-measure
+proof.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The companion paper develops the propositional core of nullivance logic
+(NPL): formulas valued in $[0,1]^2$ with independent truth and falsity
+channels, a threshold $\tau\in(0,1]$ inducing four signs, an exact
+projection onto the four-valued matrix $\FOUR$, and a four-signed analytic
+tableau calculus with a machine-checked completeness theorem. This paper
+asks the next question: what does a \emph{quantified} NPL look like, and
+can its metatheory be machine-checked to the same standard?
+
+We deliberately restrict to \textbf{finite nonempty domains}. The
+restriction is not cosmetic: the exact-projection theorem — the load-bearing
+bridge between the continuous semantics and the finite matrix — uses that
+finite infima and suprema are attained, and it can fail over infinite
+domains when a supremum is approached but not attained
+(\cref{rem:infinite}). Finite domains keep the entire two-layer
+architecture of NPL intact, and they are the natural first-order setting
+for the intended applications of a threshold logic (finite data, finite
+scenarios). Equality is \emph{crisp}: $x{=}y$ evaluates to $\vT$ or $\vF$
+by identity of domain elements, never to a glut or a gap.
+
+\paragraph{Contributions.} All results are verified sorry-free in Lean~4
+unless explicitly marked otherwise; [L] markers name the verifying
+declarations.
+
+\begin{enumerate}
+\item \emph{Finite-domain quantified NPL} (\cref{sec:syntax}): function-free
+  syntax with predicate atoms, crisp equality, the NPL connectives
+  including $\hmz$, and quantifiers evaluated by finite channel-wise
+  extrema; quantifier duality under channel-swap negation; and the exact
+  threshold projection for the quantified language.
+\item \emph{A catalogue of machine-checked refutations}
+  (\cref{sec:negative}): the naive signed tableau is incomplete (crisp
+  reflexivity is valid but underivable); the bare grounding bridge to
+  propositional NPL is unsound as a completeness route; and a natural
+  dispatcher shortcut for the completeness proof fails on a two-element
+  counterexample. Each failure shaped the final calculus.
+\item \emph{The core extensional tableau and its exact semantic
+  characterization} (\cref{sec:core,sec:completeness}): the headline
+  theorem states that a finite branch closes in the macro-free core
+  calculus \emph{iff} it has no finite model, hence derivability coincides
+  with finite semantic consequence. The proof introduces a domain-weighted
+  formula measure under which every rule of the calculus — including the
+  $(n{+}1)$-ary quantifier rules — strictly decreases the branch weight,
+  and closes the literal stage by a canonical model read off the branch
+  through an injective ground-atom encoding.
+\item \emph{The constrained-grounding corollary} (\cref{sec:grounding}):
+  closure of the grounded propositional branch augmented by \emph{rigid
+  constraints} (fixing the identity and equality atoms) yields core
+  closure. Unlike the first completeness theorem of the artifact, no
+  propositional-simulation macro rule appears anywhere: the propositional
+  derivation is consumed through its soundness and the core closure is
+  rebuilt semantically.
+\item \emph{A documented dead end} (\cref{sec:simulation}): the
+  derivation-by-derivation simulation program (replay traces with residual
+  fold tails) is developed to the point where its exact obstruction is
+  isolated — the binary propositional decomposition cascade cannot be
+  reassembled into the core's $(n{+}1)$-ary quantifier rules — and the
+  weighted-measure proof is shown to dissolve the obstruction. The
+  simulation layer remains machine-verified as a study of the approach.
+\end{enumerate}
+
+\paragraph{Method.} The development follows the project's rigor rules:
+every claim is labeled, refutation is attempted before proof, and the Lean
+artifact is the ground truth. The manuscript numbering is presentational;
+the stable numbering and the full proofs live in the repository
+documentation.
+
+\section{Preliminaries: propositional NPL}\label{sec:prelim}
+
+We summarize what is needed from the companion paper. The propositional
+language has atoms and $\lnot,\wedge,\vee,\hmz$. The matrix $\FOUR$ is
+$\{0,1\}^2$ with corners $\vT=(1,0)$, $\vF=(0,1)$, $\vB=(1,1)$,
+$\vN=(0,0)$; negation swaps the two bits, $\wedge$ acts as $(\min,\max)$,
+$\vee$ as $(\max,\min)$, and $\hmz$ as $(\min,\min)$ (bilattice consensus
+\cite{ginsberg1988multivalued,fitting1991bilattices,arieli1996reasoning}).
+The $\{\lnot,\wedge,\vee\}$-fragment is Belnap--Dunn first-degree
+entailment \cite{belnap1977useful,dunn1976intuitive}. Four signs read the
+bits: $\Tp$ ($t$-bit is $1$), $\Tm$ ($t$-bit is $0$), $\Fp$, $\Fm$
+likewise on the $f$-bit. A four-signed analytic tableau calculus (sixteen
+decomposition rules, two closure conditions) is sound and complete for
+signed consequence over $\FOUR$, and — by the exact projection — over the
+continuous semantics on $[0,1]^2$; signed tableaux over sets-of-values
+signs are a standard paradigm \cite{haehnle1994automated}. All of this is
+machine-checked in the same artifact this paper extends.
+
+\section{Finite-domain quantified NPL}\label{sec:syntax}
+
+\begin{definition}[Syntax]\label{def:syntax}
+Fix countable stocks of variables and predicate symbols. Quantified
+formulas are generated by
+\[
+\varphi \;::=\; P(x_0,\dots,x_k) \;\mid\; x = y \;\mid\; \lnot\varphi
+\;\mid\; \varphi\wedge\varphi \;\mid\; \varphi\vee\varphi \;\mid\;
+\varphi\hmz\varphi \;\mid\; \forall x\,\varphi \;\mid\; \exists x\,\varphi.
+\]
+Predicate atoms carry a list of variables; arity is a well-formedness
+discipline of the intended signature, and evaluation is total on the raw
+syntax. [L:\,\lean{FiniteFO.QFormula}]
+\end{definition}
+
+\begin{definition}[Models and assignments]\label{def:model}
+For a fixed $n\in\mathbb{N}$, the domain is $\mathrm{Fin}(n{+}1)$ — finite
+and nonempty by construction. A \emph{model} $M$ assigns to each predicate
+symbol and argument list a value in $\FOUR$. An \emph{assignment} $\rho$
+maps variables to domain elements; $\rho[x{\mapsto}d]$ updates it.
+[L:\,\lean{FiniteFO.QModel}, \lean{FiniteFO.Assignment}]
+\end{definition}
+
+\begin{definition}[Evaluation]\label{def:eval}
+Evaluation extends the propositional $\FOUR$ clauses by crisp equality and
+finite channel-wise quantifiers:
+\[
+V(x{=}y) = \begin{cases}\vT & \rho(x)=\rho(y)\\ \vF &
+\text{otherwise,}\end{cases}
+\qquad
+V(\forall x\,\varphi) = \Bigl(\textstyle\bigwedge_{d} t_d,\;
+\bigvee_{d} f_d\Bigr),
+\qquad
+V(\exists x\,\varphi) = \Bigl(\textstyle\bigvee_{d} t_d,\;
+\bigwedge_{d} f_d\Bigr),
+\]
+where $(t_d,f_d)$ is the value of $\varphi$ under $\rho[x{\mapsto}d]$ and
+the extrema range over the finite domain. Signed satisfaction reads one
+bit of the value, exactly as in the propositional case. A \emph{signed
+branch member} is a triple (sign, assignment, formula); a model satisfies
+a branch iff it satisfies every member.
+[L:\,\lean{FiniteFO.qeval}, \lean{forallV4}, \lean{existsV4},
+\lean{qsatSigned}, \lean{qsatBranch}]
+\end{definition}
+
+\begin{proposition}[Quantifier duality]\label{prop:duality}
+$\lnot\forall x\,\varphi$ and $\exists x\,\lnot\varphi$ have the same
+value, as do $\lnot\exists x\,\varphi$ and $\forall x\,\lnot\varphi$:
+channel-swap negation exchanges the two finite extrema. The nonempty
+domain is used; over an empty domain the statement would depend on
+conventions for vacuous quantifiers.
+[L:\,\lean{FiniteFO.qeval\_neg\_all}, \lean{qeval\_neg\_ex}]
+\end{proposition}
+
+\begin{theorem}[Finite exact projection]\label{thm:projection}
+Interpret predicates by continuous truth-objects in $[0,1]^2$ and evaluate
+quantifiers by finite channel-wise infima/suprema. For every threshold
+$0<\tau\le 1$, thresholding commutes with evaluation:
+$\proj{\tau}(V_M(\varphi)) = V_{\proj{\tau}(M)}(\varphi)$, where
+$\proj{\tau}(M)$ projects the predicate interpretations pointwise. Hence
+the finite-domain metatheory, like the propositional one, can be developed
+on $\FOUR$ and lifted. [L:\,\lean{FiniteFO.finite\_exact\_projection}]
+\end{theorem}
+
+\begin{remark}[Why finite domains]\label{rem:infinite}
+Over an infinite domain the existential/supremum direction of
+\cref{thm:projection} can fail when the supremum is not attained: every
+instance can fall below the threshold while the supremum reaches it. The
+finite, nonempty domain is therefore a load-bearing design choice, not a
+convenience. (Recorded as a refutation attempt in the development.)
+\end{remark}
+
+\section{Grounding}\label{sec:groundingdef}
+
+The finite domain makes every quantifier a finite fold, which suggests
+translating quantified branches into propositional ones.
+
+\begin{definition}[Ground atoms and the ground translation]\label{def:ground}
+\emph{Ground atoms} are: two fixed identity atoms $\top_g$ and $\bot_g$
+(fold units), a ground predicate atom for each predicate symbol and
+argument list, and a ground equality atom for each pair of domain
+elements. Ground atoms are encoded injectively into propositional atoms.
+The translation $\grd_\rho$ maps a quantified formula under an assignment
+to a propositional formula: predicate and equality atoms to their ground
+atoms; connectives homomorphically; $\forall x\,\varphi$ to the finite
+conjunction fold of $\{\grd_{\rho[x\mapsto d]}(\varphi)\}_d$ (with unit
+$\top_g$) and $\exists$ to the disjunction fold (with unit $\bot_g$).
+[L:\,\lean{FiniteFO.GroundAtom}, \lean{groundAtomCode},
+\lean{FiniteFO.ground}, \lean{foldConj}, \lean{foldDisj}]
+\end{definition}
+
+\begin{lemma}[Grounding truth lemma]\label{lem:groundtruth}
+For every model $M$ there is a propositional valuation $v_M$ (reading
+ground atoms through $M$, with $\top_g\mapsto\vT$, $\bot_g\mapsto\vF$, and
+equality atoms crisp) such that the propositional value of
+$\grd_\rho(\varphi)$ under $v_M$ equals the quantified value of $\varphi$
+under $M,\rho$. [L:\,\lean{FiniteFO.ground\_truth},
+\lean{groundVal}]
+\end{lemma}
+
+\begin{definition}[Rigid constraints]\label{def:rigid}
+The \emph{rigid constraints} form the finite propositional branch
+containing $\Tp,\Fm$ for $\top_g$; $\Tm,\Fp$ for $\bot_g$; and for every
+pair $(a,b)$ of domain elements, $\Tp,\Fm$ (respectively $\Tm,\Fp$) for
+the ground equality atom of $(a,b)$ when $a=b$ (respectively $a\neq b$).
+They pin exactly the part of a ground valuation that finite-domain models
+do not choose freely; ground predicate atoms remain unconstrained.
+[L:\,\lean{FiniteFO.rigidGroundConstraints}]
+\end{definition}
+
+\section{Calculi, and what fails}\label{sec:negative}
+
+The propositional tableau rules lift to signed quantified branch members,
+with four finite quantifier rules per quantifier: the \emph{block} rules
+add all $n{+}1$ instances to the branch at once (non-branching: $\Tp\forall$,
+$\Fm\forall$, $\Tm\exists$, $\Fp\exists$), and the \emph{per-element}
+rules require one closed child per domain element (the remaining four
+signs). Closure, in the naive calculus, is an identical opposite-signed
+pair. [L:\,\lean{FiniteFO.QCloses}]
+
+\begin{proposition}[The naive calculus is incomplete]\label{prop:naive}
+Crisp reflexivity $\Tp(x{=}x)$ is valid over every finite domain, but the
+empty branch does not derive it: no decomposition rule applies to an
+equality atom and no closure pair exists. Machine-checked countermodel to
+the completeness conjecture for \lean{QCloses}.
+[L:\,\lean{FiniteFO.qeqRefl0\_valid},
+\lean{qeqRefl0\_not\_derivable},
+\lean{qcompleteness\_current\_refuted}]
+\end{proposition}
+
+\begin{definition}[Equality-completed calculus]\label{def:eqcalc}
+Add four crisp-equality closure clauses: a branch closes if it contains
+$\Tm(x{=}y)$ or $\Fp(x{=}y)$ under an assignment with $\rho(x)=\rho(y)$,
+or $\Tp(x{=}y)$ or $\Fm(x{=}y)$ with $\rho(x)\neq\rho(y)$.
+[L:\,\lean{FiniteFO.QClosesEq}]
+\end{definition}
+
+\begin{example}[Why equality clauses are not enough]\label{ex:extensional}
+Let $\rho(x)=\sigma(y)=d$ and consider the two-member branch
+$\{\Tp(\rho,\,P\,x),\ \Tm(\sigma,\,P\,y)\}$. Every model gives both
+members the same ground predicate value at $(P,[d])$, so the branch is
+unsatisfiable; but the members are not an identical pair (different
+formulas, different assignments), no rule decomposes literals, and no
+equality clause applies. Closure must be allowed on \emph{equal
+groundings}, not merely on identical members.
+\end{example}
+
+\section{The core extensional tableau}\label{sec:core}
+
+\begin{definition}[Core calculus]\label{def:core}
+The \emph{core extensional finite-domain tableau} extends the
+equality-completed calculus of \cref{def:eqcalc} by two \emph{ground
+closure clauses}: a branch closes if it contains members
+$\Tp(\rho,\varphi)$ and $\Tm(\sigma,\psi)$ with
+$\grd_\rho(\varphi)=\grd_\sigma(\psi)$, or $\Fp/\Fm$ likewise. All
+sixteen propositional decomposition rules and all eight finite quantifier
+rules are retained. The calculus contains \emph{no} propositional
+simulation macro. Derivability: $\Gamma\qder s\varphi$ iff the branch
+$\{\overline{s}\varphi\}\cup\Gamma$ closes, where $\overline{s}$ is the
+opposite sign. [L:\,\lean{FiniteFO.QClosesExtCore},
+\lean{QDerivesExtCore}]
+\end{definition}
+
+\begin{proposition}[Soundness]\label{prop:soundness}
+If a branch closes in the core calculus, no finite model satisfies it;
+hence $\Gamma\qder s\varphi$ implies $\Gamma\qmod s\varphi$.
+[L:\,\lean{FiniteFO.QClosesExtCore.unsat}]
+\end{proposition}
+
+\section{The completeness theorem}\label{sec:completeness}
+
+\begin{theorem}[Semantic completeness of the core calculus]\label{thm:complete}
+Let $B$ be a finite branch of signed quantified members over domain size
+$n{+}1$. If no model with domain $\mathrm{Fin}(n{+}1)$ satisfies $B$, then
+$B$ closes in the core calculus. With \cref{prop:soundness}, closure is
+\emph{exactly} finite unsatisfiability, and
+\[
+\Gamma \qder s\varphi \quad\Longleftrightarrow\quad \Gamma \qmod s\varphi .
+\]
+[L:\,\lean{FiniteFO.QClosesExtCore.complete\_of\_unsat},
+\lean{qclosesExtCore\_iff\_unsat},
+\lean{QDerivesExtCore.complete},
+\lean{qDerivesExtCore\_iff\_qconsequence4}]
+\end{theorem}
+
+\begin{proof}[Proof (engine; full details in the artifact)]
+\emph{Step 1: the domain-weighted measure.} Define $\qsize$ on quantified
+formulas by $\qsize=1$ on predicate and equality atoms, $+1$ for negation,
+$+1$ over the sum for binary connectives, and
+\[
+\qsize(\forall x\,\varphi) \;=\; \qsize(\exists x\,\varphi) \;=\;
+(n{+}1)\cdot\qsize(\varphi)+1 ,
+\]
+extended to branches by summation. Every rule of \cref{def:core} strictly
+decreases the weight of the undecomposed segment: unary and binary rules
+drop at least the head's outermost symbol; a block quantifier rule
+replaces weight $(n{+}1)w+1$ by the $n{+}1$ instances of weight $w$ each;
+a per-element rule replaces it by a single instance of weight
+$w\le (n{+}1)w$. The case analysis is exhaustive over the eight formula
+constructors and four signs.
+
+\emph{Step 2: the engine.} By strong induction on the weight bound, a
+branch split as $\mathit{todo} + \mathit{lits}$ (with $\mathit{lits}$
+literals) that no finite model satisfies closes in the core: a literal
+head moves to $\mathit{lits}$; a compound head is decomposed by its rule,
+unsatisfiability transfers to each child by the corresponding local
+satisfaction equivalence (the signed quantifier equivalences and the
+propositional local-soundness table), the induction hypothesis applies at
+strictly smaller weight, and monotonicity of closure restores the full
+branch. Because the core's quantifier rules are natively $(n{+}1)$-ary,
+no intermediate ``partially decomposed fold'' state ever arises
+(contrast \cref{sec:simulation}).
+
+\emph{Step 3: the literal stage.} For a branch of literals: if an equality
+literal contradicts its crisp value, an equality clause closes; if two
+literals carry $\Tp/\Tm$ (or $\Fp/\Fm$) with equal groundings, a ground
+closure clause closes. Otherwise build the \emph{canonical model}: the
+truth (falsity) bit of each ground predicate atom is set iff some $\Tp$-
+($\Fp$-) literal grounds to it, read through the injective ground-atom
+encoding. Positive literals are satisfied by their own witness; negative
+literals because the opposite witness would be a ground closure pair,
+excluded by assumption; equality literals by crispness, their four
+unsatisfiable sign/value combinations being exactly the equality clauses.
+This contradicts unsatisfiability, so a closure option applied.
+\end{proof}
+
+\begin{remark}[What the refutations bought]\label{rem:r5}
+Three hypotheses of \cref{thm:complete} carry machine-checked failure
+witnesses for their removal: without the ground closure clauses,
+\cref{ex:extensional} is unsatisfiable but open; without the
+$(n{+}1)$-weighting, decomposing a block quantifier \emph{increases} the
+unweighted measure and the induction has no footing; without any one of
+the four equality clauses, the corresponding literal configuration is
+unsatisfiable but unmodelable and unclosable.
+\end{remark}
+
+\section{Constrained grounding reaches the core}\label{sec:grounding}
+
+The artifact's first finite-domain completeness theorem ran through the
+propositional calculus: if the grounded branch together with the rigid
+constraints closes propositionally, an \emph{extensional macro calculus}
+closes the quantified branch by a single simulation rule. That macro rule
+is exactly what a proof-theoretic reading wants to eliminate.
+
+\begin{theorem}[Constrained grounding, macro-free]\label{thm:grounding}
+For every finite branch $B$: if the propositional branch
+$\mathrm{Rigid}_n + \grd(B)$ closes in the propositional tableau
+calculus, then $B$ closes in the core calculus of \cref{def:core}. No
+simulation macro occurs: the propositional derivation is consumed through
+propositional soundness, and the core closure is rebuilt by
+\cref{thm:complete}. Concretely: a finite model of $B$ would induce, by
+\cref{lem:groundtruth} and the rigid values, a propositional valuation
+satisfying $\mathrm{Rigid}_n + \grd(B)$, contradicting propositional
+soundness; hence $B$ is finitely unsatisfiable and
+\cref{thm:complete} applies.
+[L:\,\lean{FiniteFO.groundBranch\_closes\_to\_core},
+\lean{satBranch\_groundVal\_rigid}]
+\end{theorem}
+
+Conversely, grounding is sound: the grounded branch of a satisfiable
+quantified branch is satisfiable under the induced valuation
+(\cref{lem:groundtruth}), so \cref{thm:grounding} composes with the
+propositional completeness theorem of the companion paper into a
+round-trip between the two levels.
+
+\section{The simulation program: a documented dead end}\label{sec:simulation}
+
+An earlier phase of the project attempted \cref{thm:grounding} by
+\emph{simulation}: induction on the propositional closure derivation,
+maintaining a replay trace whose items include quantified members, rigid
+atoms, and \emph{residual fold tails} — the partially decomposed remains
+of a grounded quantifier, which are not groundings of any single
+quantified formula. The layer produced a complete, machine-verified
+dispatch analysis for propositional closure pairs (sixteen source
+combinations per closure sign), a recursive ``tail consumer'' closing any
+quantified formula against a fold tail it grounds into, and two further
+machine-checked refutations of shortcut routes.
+
+The program then hit a precise wall: when the propositional derivation
+decomposes the grounding of a \emph{per-element-sign} quantifier
+($\Tm\forall$ and its mirrors), the binary conjunction cascade produces a
+right child asserting the pooled fold of the remaining instances in one
+branch, while the core rule needs one closed child per domain element;
+the pooled induction hypothesis cannot be redistributed, and
+depth-preserving inversion does not make the induction well-founded. The
+weighted-measure engine of \cref{thm:complete} dissolves the problem at
+the root: the core's quantifier rules are $(n{+}1)$-ary, so the binary
+cascade never appears. We record the dead end because the failure
+analysis, not luck, produced the measure; the simulation layer remains in
+the artifact as a verified study.
+
+\section{Related work}\label{sec:related}
+
+\emph{This section is a stub pending the project's systematic literature
+pass; wording is deliberately guarded.} Signed tableaux with
+sets-of-values signs for finitely-valued logics, including quantified
+ones, are a standard paradigm \cite{haehnle1994automated}; quantified
+Belnap--Dunn logics and their semantics are classical territory
+\cite{belnap1977useful,dunn1976intuitive,priest2008introduction}. The
+NPL-specific ingredients here are the threshold-signed presentation with
+the harmonization connective in the object language, the crisp-equality
+and ground-closure clause set of the core calculus, the domain-weighted
+completeness engine, and the machine-checked status of the entire
+development including its refutations. Which of these ingredients appear
+elsewhere — in particular in the literature on tableaux for
+finitely-valued first-order logics and on formalized completeness
+theorems \cite{villadsen2017formalizing} — is exactly what the pending
+literature pass must establish before any novelty claim is made.
+
+\section{Open problems}\label{sec:open}
+
+(1)~\emph{Infinite domains}: the projection argument fails at unattained
+suprema (\cref{rem:infinite}); a quantified NPL over infinite domains
+needs either attained-extrema semantics or a genuinely different bridge.
+(2)~\emph{Function symbols and non-crisp equality}: the present language
+is function-free and its equality never takes glut or gap values; both
+restrictions are design choices worth revisiting.
+(3)~\emph{Complexity}: finite-domain consequence is decidable by
+finiteness of the model space; its exact complexity as a function of
+domain size and formula size is open here.
+(4)~\emph{The trace-calculus bridge}: the optional sharpening that the
+replay-trace calculus itself absorbs constrained propositional closure
+remains a conjecture in the repository (no longer on any critical path).
+
+\appendix
+\section{The Lean artifact}\label{app:lean}
+The results of this paper are verified in the \lean{Nullivance} Lean~4
+library (module \lean{Nullivance.FiniteFO}, $\approx$380 declarations),
+part of the same artifact as the companion paper. \textbf{Toolchain.}
+Lean~4 (\texttt{leanprover/lean4:v4.32.0-rc1}) with mathlib pinned via the
+Lake manifest; \texttt{lake exe cache get \&\& lake build} (approx.\ 2000
+jobs). \textbf{Coverage policy.} The build is \texttt{sorry}-free; every
+result above is stated against the calculus \lean{QClosesExtCore}
+directly. Axiom audit: every named declaration depends only on
+\lean{propext}, \lean{Classical.choice}, \lean{Quot.sound}.
+\textbf{Key declarations.} Semantics:\ \lean{qeval}, \lean{qsatBranch};
+projection:\ \lean{finite\_exact\_projection}; refutations:\
+\lean{qcompleteness\_current\_refuted},
+\lean{qeqRefl0\_not\_derivable}; calculus:\ \lean{QClosesExtCore};
+soundness:\ \lean{QClosesExtCore.unsat}; completeness engine:\
+\lean{qsize}, \lean{qweightB}, \lean{qclosesCore\_todo},
+\lean{qclosesCore\_lits}; headline:\
+\lean{QClosesExtCore.complete\_of\_unsat},
+\lean{qDerivesExtCore\_iff\_qconsequence4}; grounding:\
+\lean{ground\_truth}, \lean{groundBranch\_closes\_to\_core}.
+
+\bibliographystyle{plain}
+\bibliography{../../references/bibliography}
+
+\end{document}

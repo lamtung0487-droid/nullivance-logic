@@ -15,8 +15,8 @@ lake build              # builds the whole library
 - **Toolchain:** `leanprover/lean4:v4.32.0-rc1` (pinned in `Nullivance/lean-toolchain`).
 - **Dependency:** mathlib, pinned in `Nullivance/lake-manifest.json` at rev
   `8f5331973a3e2b3cc5fd307208f456ccd6d3b467`.
-- **Result:** the library builds with **no `sorry` and no errors** (650 top-level
-  declarations across 12 modules, count of 2026-07-08).
+- **Result:** the library builds with **no `sorry` and no errors** (≈700 top-level
+  declarations across 12 modules, count of 2026-07-09).
 
 Verify the sorry-free claim:
 ```
@@ -37,7 +37,7 @@ grep -rn "\bsorry\b\|\badmit\b" Nullivance/Nullivance   # only the word in a com
 | `Nullivance/Decidability.lean` | §6 (Thm 6.3) | Finite model checker `consequence4Bool` + `Decidable` instances |
 | `Nullivance/Compactness.lean` | §6 (Thm 6.4) | Set/Finset API, compactness, strong completeness |
 | `Nullivance/Classical.lean` | §7 | Boolean recovery on the glut/gap-free ⊕-free fragment |
-| `Nullivance/FiniteFO.lean` | beyond the manuscript (docs §2.I, §3.D–3.F) | Finite-domain quantified layer: semantics, tableaux, refuted bridges, constrained completeness |
+| `Nullivance/FiniteFO.lean` | second manuscript (`papers/npl-finite-fo/`); docs §2.I, §3.D–3.F | Finite-domain quantified layer, complete: semantics, exact projection, tableaux, refuted bridges, replay study, and **semantic completeness of the macro-free core calculus** (Thm 3.74/3.75) |
 | `Nullivance/Generative.lean` | §8 | `GenFrame`, initialization, quasivance (imported by no core module) |
 
 ## Correspondence: manuscript result → Lean declaration
@@ -70,16 +70,23 @@ correspondences:
 | Signs not internalizable (Prop 9.1iii) | `Metatheory.signs_not_internalizable`, `eval_const_B` |
 | Generative interface (Def 8.1) | `Generative.GenState.init_mem` |
 | Quasivance → N (Prop 8.3) | `Generative.quasivant_projects_N`, `init_not_injective`, `polar_kills_intensity` |
-| Finite-FO layer (docs §2.I, §3.D–F; not in the manuscript) | `FiniteFO.finite_exact_projection`, `QClosesExt.unsat`, `QDerivesExt.complete`, refuted bridges `qcompleteness_current_refuted`, `qeqRefl0_not_derivable` |
+| Finite-FO layer (docs §2.I, §3.D–F; second manuscript) | `FiniteFO.finite_exact_projection`, `QClosesExt.unsat`, `QDerivesExt.complete`, refuted bridges `qcompleteness_current_refuted`, `qeqRefl0_not_derivable` |
+| Core semantic completeness (docs Thm 3.74) | `FiniteFO.QClosesExtCore.complete_of_unsat`, `qclosesExtCore_iff_unsat`, `QDerivesExtCore.complete`, `qDerivesExtCore_iff_qconsequence4` |
+| Constrained grounding reaches the core (docs Thm 3.75; Conj 3.39 settled) | `FiniteFO.groundBranch_closes_to_core`, `satBranch_groundVal_rigid` |
+| Tail consumer + dispatcher (docs Prop 3.72/3.73) | `FiniteFO.ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core` (+3 variants), `closeT/F_pair_dispatch_core`, `closeT/F_members_dispatch_core` |
 
 The full development documents are in `docs/` (chapters 0–5, design records, glossary,
 intake ledger, audit reports); the manuscript's numbering is presentational and does not
 match the stable `docs/` numbering (project rule R3).
 
-## Reproducing the manuscript PDF
+## Reproducing the manuscript PDFs
+
+Two manuscripts share the bibliography in `references/bibliography.bib`:
+`papers/npl-core` (the propositional core) and `papers/npl-finite-fo`
+(the finite-domain quantified layer, headline Thm 3.74). For each:
 
 ```
-cd papers/npl-core
+cd papers/<name>
 pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 Requires a LaTeX distribution with `amsmath`, `amssymb`, `booktabs`, `hyperref`,
