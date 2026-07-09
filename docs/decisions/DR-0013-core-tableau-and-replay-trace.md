@@ -196,19 +196,24 @@ Open follow-up:
 - ~~Define any remaining generated-trace invariant needed by those fold-tail source
   cases~~ — **obsolete**: Prop 3.72/3.73 eliminated the need for generated-trace
   invariants in the dispatcher.
-- Prove Conj 3.39 without invoking `propSim` or `rigidPropSim`. **Route revision
-  (2026-07-09):** the derivation-by-derivation simulation hits a real obstruction at
-  branching-sign quantifier groundings (binary propositional cascade versus the
-  core's `(n+1)`-ary quantifier rules; see the Conj 3.50 progress note). Recommended
-  route: prove semantic completeness of the core calculus directly —
-  `unsatisfiable-in-finite-models ⟹ QClosesExtCore` — by mirroring
-  `Metatheory.closes_todo` at the quantified level with the domain-weighted measure
-  `qweight(∀xφ) = 1 + (n+1)·qweight(φ)`; every core rule strictly decreases todo
-  weight, fold tails never arise, and the closure/literal stage uses the ground
-  canonical model plus the equality and extensional closure clauses. Conj 3.39's
-  final statement then follows via Thm 4.13's semantic transfer.
-- Revisit Thm 3.35 after the core completeness lands: finite-domain completeness can
-  be restated with `QClosesExtCore` as the proof-theoretic target.
+- ~~Prove Conj 3.39 without invoking `propSim` or `rigidPropSim`~~ — **done
+  2026-07-09, Thm 3.75** (`FiniteFO.groundBranch_closes_to_core`), via the route
+  revision recorded below: semantic completeness of the core calculus
+  (**Thm 3.74**, `FiniteFO.QClosesExtCore.complete_of_unsat`) proved by the
+  quantified engine `qclosesCore_todo` with the domain-weighted measure
+  `qsize(∀xφ) = (n+1)·qsize(φ) + 1`; every core rule strictly decreases todo
+  weight, fold tails never arise, and the literal stage uses the canonical
+  finite model plus the equality and ground closure clauses. Conj 3.39's final
+  statement follows by semantic transfer through `Closes.unsat` +
+  `ground_truth`/`satBranch_groundVal_rigid`.
+- ~~Revisit Thm 3.35 after the core completeness lands~~ — **done 2026-07-09**:
+  finite-domain completeness is restated with `QClosesExtCore` as target
+  (`FiniteFO.QDerivesExtCore.complete`, `qDerivesExtCore_iff_qconsequence4`);
+  Thm 3.35 carries a supersession note and stays as the historical first result.
+- Conj 3.50 (trace-level bridge) is demoted to an optional sharpening about the
+  replay-trace calculus; the replay layer (Props 3.40–3.73) remains verified and
+  documents the simulation program, but the publication path runs through
+  Thm 3.74/3.75.
 
 ## Verification
 

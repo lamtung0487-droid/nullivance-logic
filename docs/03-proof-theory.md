@@ -831,6 +831,11 @@ construction does not collapse arbitrary predicate interpretations.
 > `FiniteFO.QDerivesExt.complete` -- sorry-free,
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 2.20, Def 3.28, Lem 3.29, Def 3.30, Def 3.34, Thm 4.13.
+> *Superseded for publication (2026-07-09):* Theorem 3.74 proves the same
+> completeness with the **macro-free core calculus** `QClosesExtCore` as target
+> (`FiniteFO.QDerivesExtCore.complete`), removing the `rigidPropSim` macro from
+> the completeness statement; this theorem remains valid and is kept as the
+> historical first completeness result of the finite-domain program.
 
 **Definition 3.36 (Core extensional finite-domain tableau).** `[DRAFT]`
 `QClosesExtCore` is the full extensional finite-domain tableau of Def 3.30 with the
@@ -907,17 +912,27 @@ without pretending it is a quantified formula.
 > `lake build Nullivance.FiniteFO` 2026-07-07. *DR:* DR-0013.
 > *Depends on:* Def 3.28, Def 3.34, Def 3.36.
 
-**Conjecture 3.39 (Constructor replay into the core calculus).** `[CONJECTURE]`
-There is a constructor-by-constructor replay theorem from constrained propositional
+**Conjecture 3.39 (Constructor replay into the core calculus).** — **settled
+2026-07-09**: the final-case statement is `[VERIFIED]` as **Theorem 3.75** (via the
+semantic completeness of the core calculus, Theorem 3.74), with no use of
+`QClosesExt.propSim` or `QClosesExt.rigidPropSim`. The derivation-by-derivation
+replay formulation below is kept for the record; its trace-simulation content
+survives as the optional Conj 3.50.
+
+~~There is a constructor-by-constructor replay theorem from constrained propositional
 closure of a replay trace into the core extensional finite-domain tableau, with final
-case:
+case:~~
 
 if `Closes (rigidGroundConstraints n ++ groundBranch B)`, then `QClosesExtCore B`.
 
-The proof must not use `QClosesExt.propSim` or `QClosesExt.rigidPropSim`. The intended
-proof is induction on the propositional closure derivation, using trace items for
-residual fold tails or equivalent fold-block lemmas for finite conjunction/disjunction
-groundings.
+*(statement `[VERIFIED]` as Thm 3.75)*
+
+~~The proof must not use `QClosesExt.propSim` or `QClosesExt.rigidPropSim`. The
+intended proof is induction on the propositional closure derivation, using trace items
+for residual fold tails or equivalent fold-block lemmas for finite
+conjunction/disjunction groundings.~~ *(the macro-free requirement is met by Thm 3.75;
+the induction-on-derivation route is superseded — see the Conj 3.50 progress note for
+its exact obstruction.)*
 
 *R5 record:* a direct theorem targeting `QClosesExt` is rejected as publication
 insufficient, because it is discharged by the macro constructor `rigidPropSim`. A direct
@@ -1228,6 +1243,9 @@ constructor of `ReplayClosesCore` and Prop 3.45 discharge the core projection. �
 > *Depends on:* Def 3.44, Def 3.47.
 
 **Conjecture 3.50 (Admissible ground-to-replay bridge).** `[CONJECTURE]`
+*(Demoted 2026-07-09: no longer on the critical path — the program's endgame is
+discharged by Thm 3.74/3.75. This remains an optional sharpening about the
+replay-trace calculus itself.)*
 For every admissible replay trace `T`, if the propositional branch
 `ReplayTrace.groundBranch T` closes by a constructor-respecting derivation, then
 `ReplayClosesCore T`.
@@ -2005,3 +2023,115 @@ produces the core closure directly.
 > `Classical.choice`, `Quot.sound`.
 > *Depends on:* Def 3.47, 3.51, 3.53, Prop 3.41, 3.54, 3.55, 3.60, 3.61, 3.68,
 > 3.69, 3.71, 3.72.
+
+**Theorem 3.74 (Semantic completeness of the core calculus).** `[VERIFIED]`
+For every finite-domain quantified branch `B` over domain size `n`: if no finite
+FOUR model satisfies `B`, then `QClosesExtCore B`. Combined with core soundness
+(Prop 3.37 + Thm 3.31) this is exact: `QClosesExtCore B` **iff** `B` is
+unsatisfiable in finite models; and in derivability form,
+
+`Gamma ⊢_{QExtCore,n} sphi ⟺ Gamma |=_{Q,n} sphi`
+
+— finite-domain soundness **and completeness with the macro-free core tableau as
+the proof-theoretic target**, the restatement of Thm 3.35 that DR-0013's follow-up
+list requested. `propSim`/`rigidPropSim` do not occur anywhere in the proof.
+
+*Proof.* By a quantified completeness engine mirroring the verified propositional
+engine of Thm 4.13 (`closes_todo`/`closes_lits`), with three components.
+
+*Step 1 (domain-weighted measure).* Define `qsize` on quantified formulas with
+`qsize(pred) = qsize(eq) = 1`, `qsize(¬φ) = qsize(φ) + 1`, binary connectives
+`qsize(φ) + qsize(ψ) + 1`, and **`qsize(∀xφ) = qsize(∃xφ) = (n+1)·qsize(φ) + 1`**
+for the fixed domain size `n`; extend to branches by summation (`qweightB`). Every
+decomposition rule of Def 3.36 strictly decreases the todo weight: unary rules
+drop 1; non-branching binary rules replace `w₁+w₂+1` by `w₁+w₂`; branching binary
+rules replace it by `wᵢ` on each child (each `wⱼ ≥ 1`); block quantifier rules
+replace `(n+1)w+1` by the `n+1` instances of weight `w` each; per-element
+quantifier rules replace it by a single instance of weight `w ≤ (n+1)w`. The
+case analysis is exhaustive over the eight constructors of Def 2.19 and the four
+signs of Def 2.4 (the eliminators of the two inductive types).
+
+*Step 2 (engine).* By strong induction on an upper bound for the todo weight:
+a branch split as `todo ++ lits` with `lits` consisting of literals (predicate
+atoms and crisp equalities) and unsatisfiable in finite models closes in the
+core. The head of `todo` is either a literal — moved to `lits`, weight decreases
+by at least 1, and closure transfers back across the reordering by monotonicity
+(Prop 3.42) — or a compound, decomposed by its core rule; in each case
+unsatisfiability transfers to the children by the corresponding verified local
+satisfaction equivalence (the quantifier cases are the eight signed equivalences
+of Def 2.21's evaluation, Lem 2.22/`qsat_all_*`/`qsat_ex_*`; the propositional
+cases are the local soundness table of Lem 4.1–4.4 applied to the FOUR value of
+the formula), and the recursion applies at strictly smaller weight. Monotonicity
+(Prop 3.42) restores the full branch from the child branch that dropped the
+processed head.
+
+*Step 3 (literal stage).* For a branch of literals: if some equality literal
+contradicts its crisp value (`T⁻` or `F⁺` at equal elements, `T⁺` or `F⁻` at
+unequal elements), the corresponding equality closure clause of Def 3.25 closes.
+If two literals carry `T⁺`/`T⁻` (or `F⁺`/`F⁻`) with equal groundings, the ground
+closure clause of Def 3.36 closes. Otherwise define the **canonical finite
+model**: each predicate value's truth (falsity) bit is set iff some `T⁺`- (`F⁺`-)
+literal grounds to that predicate's ground atom, read through the injective
+ground-atom encoding of Def 3.28. Every predicate literal is then satisfied — the
+positive signs by their own witness, the negative signs because the opposite
+witness would be a ground closure pair, excluded above. Every equality literal is
+satisfied by crispness, the four excluded sign/value combinations being exactly
+the equality clauses. This contradicts unsatisfiability, so one of the closure
+options must have applied. ∎
+
+*R5 record (attempted refutations, all failed):* (i) the same-assignment closure
+of Def 3.21 alone is insufficient — `{T⁺(ρ, P x), T⁻(σ, P y)}` with
+`ρ(x) = σ(y)` is unsatisfiable but contains no same-assignment pair; the ground
+closure clauses of Def 3.36 are load-bearing, which is the semantic content of
+the extensional layer. (ii) The `(n+1)`-weighting is load-bearing: under the
+unweighted size, decomposing `T⁺∀` into its `n+1` instances *increases* the
+total, and no induction on it goes through — this measure is what the
+binary-cascade obstruction of the simulation route (Conj 3.50 note) reduces to.
+(iii) Equality literals cannot be modeled freely (equality is crisp, Def 2.20);
+the Def 3.25 clauses cover exactly the unmodelable combinations — removing any
+one of the four breaks the literal stage.
+
+> *Lean:* measure `FiniteFO.qsize`, `FiniteFO.qweightB` (+ `qsize_pos`,
+> `qweightB_append`, `qweightB_formula_const`, `qweightB_qinstAll`); engine
+> `FiniteFO.qclosesCore_todo` (generic steps `qstep1/qstep2/qstepBr/qstepAll/
+> qstepEach`), literal stage `FiniteFO.qclosesCore_lits`; headline
+> `FiniteFO.QClosesExtCore.complete_of_unsat`,
+> `FiniteFO.qclosesExtCore_iff_unsat`,
+> `FiniteFO.QDerivesExtCore.complete`,
+> `FiniteFO.qDerivesExtCore_iff_qconsequence4` -- all sorry-free, full
+> `lake build` 2026-07-09 (2001 jobs); axiom audit: only `propext`,
+> `Classical.choice`, `Quot.sound`.
+> *Depends on:* Def 2.19, 2.20, 2.21, 3.25, 3.28, 3.36, Lem 2.22, Prop 3.37,
+> Prop 3.42; mirrors the engine of Thm 4.13.
+
+**Theorem 3.75 (Constrained grounding closure reaches the core — Conj 3.39
+settled).** `[VERIFIED]`
+For every finite-domain quantified branch `B`:
+
+if `Closes (rigidGroundConstraints n ++ groundBranch B)`, then `QClosesExtCore B`,
+
+and the proof uses neither `QClosesExt.propSim` nor `QClosesExt.rigidPropSim`
+(the macro calculus `QClosesExt` does not occur at all).
+
+*Proof.* Suppose some finite FOUR model `M` satisfies `B`. The propositional
+valuation `groundVal M` satisfies the rigid constraints — the identity and crisp
+equality atoms receive exactly their rigid values (new lemma, by inspection of
+Def 3.34 with the `groundVal` computation rules) — and satisfies
+`groundBranch B` by the verified grounding transfer (Lem 3.29's
+`qsatBranch_groundBranch`, via the grounding truth lemma). So the propositional
+branch `rigidGroundConstraints n ++ groundBranch B` is satisfiable, contradicting
+propositional soundness (Thm 4.5, `Closes.unsat`). Hence no finite model
+satisfies `B`, and Theorem 3.74 closes `B` in the core calculus. ∎
+
+*Route note (R9):* this settles the **final-case statement** of Conj 3.39 by the
+semantic route recorded in DR-0013 — the propositional derivation is consumed
+through its soundness and the core closure is rebuilt by the engine of Thm 3.74 —
+not by the constructor-by-constructor trace simulation originally envisaged. The
+simulation formulation survives as the optional Conj 3.50 (a sharpening about the
+replay-trace calculus, no longer on the critical path). The macro-free
+publication requirement that motivated Conj 3.39 is met.
+
+> *Lean:* `FiniteFO.groundBranch_closes_to_core`,
+> `FiniteFO.satBranch_groundVal_rigid` -- sorry-free, full `lake build`
+> 2026-07-09; axiom audit clean.
+> *Depends on:* Def 3.28, 3.34, Lem 3.29, Thm 3.74, Thm 4.5.

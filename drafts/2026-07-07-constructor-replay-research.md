@@ -618,3 +618,47 @@ with `propSim`/`rigidPropSim` never invoked. Thm 3.35 can then be restated with
 
 Estimated shape: an `qclosesCore_todo` engine + literal-stage lemmas; comparable to
 but larger than the propositional engine. This is the next session's target.
+
+## 2026-07-09 (second entry) Thm 3.74/3.75: the endgame lands
+
+The engine route worked on the first substantive build. Deliverables, all
+sorry-free with clean axiom trails (full lake build 2001 jobs):
+
+- `qsize`/`qweightB`: the domain-weighted measure. The strict-decrease claim held
+  in Lean exactly as predicted; every engine case discharges its weight goal by
+  `simp [qweightB, qsize] + omega` (quantifier per-element cases additionally use
+  `qsize φ ≤ (n+1)·qsize φ`).
+- `qstep1/qstep2/qstepBr/qstepAll/qstepEach`: generic decomposition steps,
+  structurally identical to `Metatheory.step1/step2/stepBr` plus the two
+  finite-quantifier shapes. The unsat-transfer obligations are the verified
+  `qsat_all_*`/`qsat_ex_*` equivalences and the propositional `sat_*` table.
+- `qclosesCore_lits`: literal stage. Closure options: the four Def 3.25 equality
+  clauses, then the two Def 3.36 ground clauses; otherwise the canonical model
+  `modelOfGroundVal` over bits read from the positive literals. The
+  no-ground-close-pair hypotheses are exactly what makes the negative signs
+  satisfiable - the same observation that made the Prop 3.73 dispatcher work.
+- `qclosesCore_todo`: the engine (8 constructors x 4 signs).
+- `QClosesExtCore.complete_of_unsat` + `qclosesExtCore_iff_unsat` (Thm 3.74),
+  `QDerivesExtCore.complete` + `qDerivesExtCore_iff_qconsequence4` (the restated
+  Thm 3.35 with the macro-free core as target).
+- `satBranch_groundVal_rigid` + `groundBranch_closes_to_core` (Thm 3.75): the
+  final-case statement of Conj 3.39, macro-free, via semantic transfer.
+
+Retrospective: the whole fold-tail/replay program (Defs 3.38-3.66, Props
+3.40-3.73) was scaffolding for a simulation that the (n+1)-weighted measure makes
+unnecessary. It was NOT wasted: Prop 3.70's counterexample and the binary-cascade
+obstruction analysis are what pointed at the weighted-measure route, Prop 3.72's
+fold-chain-injectivity trick previewed the memberwise quantifier handling that the
+engine's literal stage and the canonical model use, and the replay layer remains a
+verified study of the simulation approach. But the publication story is now:
+Def 3.36 core calculus + Thm 3.74 exact semantic characterization + Thm 3.75
+constrained-grounding corollary.
+
+Lean gotchas for the record: `∀ x ∈ ({structure literal} : T) :: l, P` does not
+parse - use anonymous constructors; `qstepEach` needs `(f := ...)` because the
+instance family is not determined by the motive when hsem elaborates first;
+`0 + x` and `0 * x` are not defeq reductions in Nat (nil cases need simp, not rfl).
+
+Remaining open in the finite-FO program: nothing on the critical path. Optional:
+Conj 3.50 (trace-calculus sharpening), a paper restatement pass for ch. 2-3 docs,
+and the eventual quantified-NPL manuscript.

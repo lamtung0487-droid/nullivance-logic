@@ -5391,4 +5391,673 @@ theorem finite_exact_projection {n : Nat} (τ : ℝ) (hτ0 : 0 < τ) (hτ1 : τ 
       funext d
       exact finite_exact_projection τ hτ0 hτ1 M (update ρ x d) φ
 
+/- Thm 3.74/3.75: semantic completeness of the core calculus, by a quantified
+completeness engine mirroring `Metatheory.closes_todo`, with the domain-weighted
+measure under which every core rule strictly decreases the todo weight. The
+literal stage closes by the equality clauses of Def 3.25 or the ground closure
+clauses of Def 3.36, or builds the canonical finite model from the ground
+predicate literals. -/
+
+/-- Quantified literals: predicate atoms and crisp equalities. -/
+def IsQLit : QFormula → Prop
+  | .pred _ _ => True
+  | .eq _ _ => True
+  | _ => False
+
+/-- Domain-weighted decomposition size: a quantifier counts its whole finite
+instance block, so decomposing it strictly decreases the total. -/
+def qsize (n : Nat) : QFormula → Nat
+  | .pred _ _ => 1
+  | .eq _ _ => 1
+  | .neg φ => qsize n φ + 1
+  | .conj φ ψ => qsize n φ + qsize n ψ + 1
+  | .disj φ ψ => qsize n φ + qsize n ψ + 1
+  | .oplus φ ψ => qsize n φ + qsize n ψ + 1
+  | .all _ φ => (n + 1) * qsize n φ + 1
+  | .ex _ φ => (n + 1) * qsize n φ + 1
+
+theorem qsize_pos (n : Nat) (φ : QFormula) : 1 ≤ qsize n φ := by
+  cases φ <;> simp [qsize]
+
+/-- Total decomposition weight of a quantified branch segment. -/
+def qweightB {n : Nat} : QBranch n → Nat
+  | [] => 0
+  | sφ :: B => qsize n sφ.formula + qweightB B
+
+theorem qweightB_append {n : Nat} (A B : QBranch n) :
+    qweightB (A ++ B) = qweightB A + qweightB B := by
+  induction A with
+  | nil => simp [qweightB]
+  | cons a A ih => simp [qweightB, ih, Nat.add_assoc]
+
+theorem qweightB_formula_const {n : Nat} {φ : QFormula} :
+    ∀ L : QBranch n, (∀ s ∈ L, s.formula = φ) →
+      qweightB L = L.length * qsize n φ := by
+  intro L
+  induction L with
+  | nil => intro _; simp [qweightB]
+  | cons a L ih =>
+      intro h
+      have ha : a.formula = φ := h a List.mem_cons_self
+      have hL := ih fun s hs => h s (List.mem_cons_of_mem _ hs)
+      simp [qweightB, ha, hL, Nat.succ_mul]
+      omega
+
+theorem qweightB_qinstAll {n : Nat} (S : Sign) (ρ : Assignment n) (x : Var)
+    (φ : QFormula) : qweightB (qinstAll S ρ x φ) = (n + 1) * qsize n φ := by
+  have hforms : ∀ s ∈ qinstAll S ρ x φ, s.formula = φ := by
+    intro s hs
+    rcases (List.mem_ofFn' _ _).1 hs with ⟨d, rfl⟩
+    rfl
+  have hlen : (qinstAll S ρ x φ).length = n + 1 := by simp [qinstAll]
+  rw [qweightB_formula_const _ hforms, hlen]
+
+/- Generic decomposition steps for the quantified completeness engine, mirroring
+`Metatheory.step1/step2/stepBr` plus the two finite-quantifier shapes. -/
+
+private theorem qstep1 {n : Nat} {c c1 : QSigned n} {rest lits : QBranch n}
+    (hsem : ∀ M : QModel n, qsatSigned M c1 = true → qsatSigned M c = true)
+    (hrule : ∀ {B : QBranch n}, c ∈ B → QClosesExtCore (c1 :: B) →
+      QClosesExtCore B)
+    (hrec : (∀ M : QModel n, ¬ qsatBranch M ((c1 :: rest) ++ lits)) →
+      QClosesExtCore ((c1 :: rest) ++ lits))
+    (hunsat : ∀ M : QModel n, ¬ qsatBranch M ((c :: rest) ++ lits)) :
+    QClosesExtCore ((c :: rest) ++ lits) := by
+  apply hrule (List.Mem.head _)
+  refine (hrec fun M hs => hunsat M fun x hx => ?_).mono fun x hx => ?_
+  · have hx' : x = c ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | h | h
+    · exact hsem M (hs _ (List.Mem.head _))
+    · exact hs _ (by simp [h])
+    · exact hs _ (by simp [h])
+  · have hx' : x = c1 ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | h | h
+    · simp
+    · simp [h]
+    · simp [h]
+
+private theorem qstep2 {n : Nat} {c c1 c2 : QSigned n} {rest lits : QBranch n}
+    (hsem : ∀ M : QModel n, qsatSigned M c1 = true → qsatSigned M c2 = true →
+      qsatSigned M c = true)
+    (hrule : ∀ {B : QBranch n}, c ∈ B → QClosesExtCore (c1 :: c2 :: B) →
+      QClosesExtCore B)
+    (hrec : (∀ M : QModel n, ¬ qsatBranch M ((c1 :: c2 :: rest) ++ lits)) →
+      QClosesExtCore ((c1 :: c2 :: rest) ++ lits))
+    (hunsat : ∀ M : QModel n, ¬ qsatBranch M ((c :: rest) ++ lits)) :
+    QClosesExtCore ((c :: rest) ++ lits) := by
+  apply hrule (List.Mem.head _)
+  refine (hrec fun M hs => hunsat M fun x hx => ?_).mono fun x hx => ?_
+  · have hx' : x = c ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | h | h
+    · exact hsem M (hs _ (List.Mem.head _))
+        (hs _ (List.Mem.tail _ (List.Mem.head _)))
+    · exact hs _ (by simp [h])
+    · exact hs _ (by simp [h])
+  · have hx' : x = c1 ∨ x = c2 ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | rfl | h | h
+    · simp
+    · simp
+    · simp [h]
+    · simp [h]
+
+private theorem qstepBr {n : Nat} {c c1 c2 : QSigned n} {rest lits : QBranch n}
+    (hsem1 : ∀ M : QModel n, qsatSigned M c1 = true → qsatSigned M c = true)
+    (hsem2 : ∀ M : QModel n, qsatSigned M c2 = true → qsatSigned M c = true)
+    (hrule : ∀ {B : QBranch n}, c ∈ B → QClosesExtCore (c1 :: B) →
+      QClosesExtCore (c2 :: B) → QClosesExtCore B)
+    (hrec1 : (∀ M : QModel n, ¬ qsatBranch M ((c1 :: rest) ++ lits)) →
+      QClosesExtCore ((c1 :: rest) ++ lits))
+    (hrec2 : (∀ M : QModel n, ¬ qsatBranch M ((c2 :: rest) ++ lits)) →
+      QClosesExtCore ((c2 :: rest) ++ lits))
+    (hunsat : ∀ M : QModel n, ¬ qsatBranch M ((c :: rest) ++ lits)) :
+    QClosesExtCore ((c :: rest) ++ lits) := by
+  apply hrule (List.Mem.head _)
+  · refine (hrec1 fun M hs => hunsat M fun x hx => ?_).mono fun x hx => ?_
+    · have hx' : x = c ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+      rcases hx' with rfl | h | h
+      · exact hsem1 M (hs _ (List.Mem.head _))
+      · exact hs _ (by simp [h])
+      · exact hs _ (by simp [h])
+    · have hx' : x = c1 ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+      rcases hx' with rfl | h | h
+      · simp
+      · simp [h]
+      · simp [h]
+  · refine (hrec2 fun M hs => hunsat M fun x hx => ?_).mono fun x hx => ?_
+    · have hx' : x = c ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+      rcases hx' with rfl | h | h
+      · exact hsem2 M (hs _ (List.Mem.head _))
+      · exact hs _ (by simp [h])
+      · exact hs _ (by simp [h])
+    · have hx' : x = c2 ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+      rcases hx' with rfl | h | h
+      · simp
+      · simp [h]
+      · simp [h]
+
+private theorem qstepAll {n : Nat} {c : QSigned n} {P : QBranch n}
+    {rest lits : QBranch n}
+    (hsem : ∀ M : QModel n, qsatBranch M P → qsatSigned M c = true)
+    (hrule : ∀ {B : QBranch n}, c ∈ B → QClosesExtCore (P ++ B) →
+      QClosesExtCore B)
+    (hrec : (∀ M : QModel n, ¬ qsatBranch M ((P ++ rest) ++ lits)) →
+      QClosesExtCore ((P ++ rest) ++ lits))
+    (hunsat : ∀ M : QModel n, ¬ qsatBranch M ((c :: rest) ++ lits)) :
+    QClosesExtCore ((c :: rest) ++ lits) := by
+  apply hrule (List.Mem.head _)
+  refine (hrec fun M hs => hunsat M fun x hx => ?_).mono fun x hx => ?_
+  · have hx' : x = c ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | h | h
+    · exact hsem M fun y hy => hs y (by simp [hy])
+    · exact hs _ (by simp [h])
+    · exact hs _ (by simp [h])
+  · have hx' : x ∈ P ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with h | h | h
+    · simp [h]
+    · simp [h]
+    · simp [h]
+
+private theorem qstepEach {n : Nat} {c : QSigned n} {f : Fin (n + 1) → QSigned n}
+    {rest lits : QBranch n}
+    (hsem : ∀ (M : QModel n) (d : Fin (n + 1)),
+      qsatSigned M (f d) = true → qsatSigned M c = true)
+    (hrule : ∀ {B : QBranch n}, c ∈ B →
+      (∀ d, QClosesExtCore (f d :: B)) → QClosesExtCore B)
+    (hrec : ∀ d, (∀ M : QModel n, ¬ qsatBranch M ((f d :: rest) ++ lits)) →
+      QClosesExtCore ((f d :: rest) ++ lits))
+    (hunsat : ∀ M : QModel n, ¬ qsatBranch M ((c :: rest) ++ lits)) :
+    QClosesExtCore ((c :: rest) ++ lits) := by
+  apply hrule (List.Mem.head _)
+  intro d
+  refine ((hrec d) fun M hs => hunsat M fun x hx => ?_).mono fun x hx => ?_
+  · have hx' : x = c ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | h | h
+    · exact hsem M d (hs _ (List.Mem.head _))
+    · exact hs _ (by simp [h])
+    · exact hs _ (by simp [h])
+  · have hx' : x = f d ∨ x ∈ rest ∨ x ∈ lits := by simpa using hx
+    rcases hx' with rfl | h | h
+    · simp
+    · simp [h]
+    · simp [h]
+
+/-- Literal stage: an unsatisfiable branch of quantified literals closes by an
+equality clause, a ground closure clause, or not at all — in which case the
+canonical finite model built from the positive ground literals satisfies it. -/
+theorem qclosesCore_lits {n : Nat} (lits : QBranch n)
+    (hlit : ∀ sφ ∈ lits, IsQLit sφ.formula)
+    (hunsat : ∀ M : QModel n, ¬ qsatBranch M lits) :
+    QClosesExtCore lits := by
+  classical
+  by_cases hTneq : ∃ (ρ : Assignment n) (x y : Var),
+      ({ sign := Sign.Tneg, assignment := ρ, formula := .eq x y } : QSigned n) ∈
+        lits ∧ ρ x = ρ y
+  · obtain ⟨ρ, x, y, hmem, hxy⟩ := hTneq
+    exact .base (.eqTneg hmem hxy)
+  by_cases hTpeq : ∃ (ρ : Assignment n) (x y : Var),
+      ({ sign := Sign.Tpos, assignment := ρ, formula := .eq x y } : QSigned n) ∈
+        lits ∧ ρ x ≠ ρ y
+  · obtain ⟨ρ, x, y, hmem, hxy⟩ := hTpeq
+    exact .base (.eqTpos hmem hxy)
+  by_cases hFpeq : ∃ (ρ : Assignment n) (x y : Var),
+      ({ sign := Sign.Fpos, assignment := ρ, formula := .eq x y } : QSigned n) ∈
+        lits ∧ ρ x = ρ y
+  · obtain ⟨ρ, x, y, hmem, hxy⟩ := hFpeq
+    exact .base (.eqFpos hmem hxy)
+  by_cases hFneq : ∃ (ρ : Assignment n) (x y : Var),
+      ({ sign := Sign.Fneg, assignment := ρ, formula := .eq x y } : QSigned n) ∈
+        lits ∧ ρ x ≠ ρ y
+  · obtain ⟨ρ, x, y, hmem, hxy⟩ := hFneq
+    exact .base (.eqFneg hmem hxy)
+  by_cases hT : ∃ (ρ σ : Assignment n) (φ ψ : QFormula),
+      ({ sign := Sign.Tpos, assignment := ρ, formula := φ } : QSigned n) ∈ lits ∧
+      ({ sign := Sign.Tneg, assignment := σ, formula := ψ } : QSigned n) ∈ lits ∧
+      ground ρ φ = ground σ ψ
+  · obtain ⟨ρ, σ, φ, ψ, h1, h2, hg⟩ := hT
+    exact .closeGroundT h1 h2 hg
+  by_cases hF : ∃ (ρ σ : Assignment n) (φ ψ : QFormula),
+      ({ sign := Sign.Fpos, assignment := ρ, formula := φ } : QSigned n) ∈ lits ∧
+      ({ sign := Sign.Fneg, assignment := σ, formula := ψ } : QSigned n) ∈ lits ∧
+      ground ρ φ = ground σ ψ
+  · obtain ⟨ρ, σ, φ, ψ, h1, h2, hg⟩ := hF
+    exact .closeGroundF h1 h2 hg
+  exfalso
+  apply hunsat (modelOfGroundVal fun k =>
+    ⟨decide (∃ sψ ∈ lits, sψ.sign = Sign.Tpos ∧
+        ground sψ.assignment sψ.formula = Formula.atom k),
+     decide (∃ sψ ∈ lits, sψ.sign = Sign.Fpos ∧
+        ground sψ.assignment sψ.formula = Formula.atom k)⟩)
+  intro sφ hmem
+  obtain ⟨S, ρ, φ⟩ := sφ
+  cases φ with
+  | pred P xs =>
+      cases S with
+      | Tpos =>
+          have hwit : ∃ sψ ∈ lits, sψ.sign = Sign.Tpos ∧
+              ground sψ.assignment sψ.formula =
+                Formula.atom (groundAtomCode (groundPred P (xs.map ρ))) :=
+            ⟨_, hmem, rfl, rfl⟩
+          simp [qsatSigned, qsat, qeval, modelOfGroundVal, V4.sat, hwit]
+      | Tneg =>
+          have hno : ¬ ∃ sψ ∈ lits, sψ.sign = Sign.Tpos ∧
+              ground sψ.assignment sψ.formula =
+                Formula.atom (groundAtomCode (groundPred P (xs.map ρ))) := by
+            rintro ⟨sψ, hsψ, hsign, hgr⟩
+            obtain ⟨S', ρ', φ'⟩ := sψ
+            cases hsign
+            exact hT ⟨ρ', ρ, φ', .pred P xs, hsψ, hmem, hgr⟩
+          simp [qsatSigned, qsat, qeval, modelOfGroundVal, V4.sat, hno]
+      | Fpos =>
+          have hwit : ∃ sψ ∈ lits, sψ.sign = Sign.Fpos ∧
+              ground sψ.assignment sψ.formula =
+                Formula.atom (groundAtomCode (groundPred P (xs.map ρ))) :=
+            ⟨_, hmem, rfl, rfl⟩
+          simp [qsatSigned, qsat, qeval, modelOfGroundVal, V4.sat, hwit]
+      | Fneg =>
+          have hno : ¬ ∃ sψ ∈ lits, sψ.sign = Sign.Fpos ∧
+              ground sψ.assignment sψ.formula =
+                Formula.atom (groundAtomCode (groundPred P (xs.map ρ))) := by
+            rintro ⟨sψ, hsψ, hsign, hgr⟩
+            obtain ⟨S', ρ', φ'⟩ := sψ
+            cases hsign
+            exact hF ⟨ρ', ρ, φ', .pred P xs, hsψ, hmem, hgr⟩
+          simp [qsatSigned, qsat, qeval, modelOfGroundVal, V4.sat, hno]
+  | eq x y =>
+      cases S with
+      | Tpos =>
+          by_cases hxy : ρ x = ρ y
+          · simp [qsatSigned, qsat, qeval, hxy, V4.sat, V4.T]
+          · exact absurd ⟨ρ, x, y, hmem, hxy⟩ hTpeq
+      | Tneg =>
+          by_cases hxy : ρ x = ρ y
+          · exact absurd ⟨ρ, x, y, hmem, hxy⟩ hTneq
+          · simp [qsatSigned, qsat, qeval, hxy, V4.sat, V4.F]
+      | Fpos =>
+          by_cases hxy : ρ x = ρ y
+          · exact absurd ⟨ρ, x, y, hmem, hxy⟩ hFpeq
+          · simp [qsatSigned, qsat, qeval, hxy, V4.sat, V4.F]
+      | Fneg =>
+          by_cases hxy : ρ x = ρ y
+          · simp [qsatSigned, qsat, qeval, hxy, V4.sat, V4.T]
+          · exact absurd ⟨ρ, x, y, hmem, hxy⟩ hFneq
+  | neg φ => exact (hlit _ hmem).elim
+  | conj φ ψ => exact (hlit _ hmem).elim
+  | disj φ ψ => exact (hlit _ hmem).elim
+  | oplus φ ψ => exact (hlit _ hmem).elim
+  | all x φ => exact (hlit _ hmem).elim
+  | ex x φ => exact (hlit _ hmem).elim
+
+/-- The quantified completeness engine: an unsatisfiable branch `todo ++ lits`
+with literal `lits` closes in the core calculus, by strong induction on the
+domain-weighted decomposition weight of `todo`. -/
+theorem qclosesCore_todo {n : Nat} (fuel : Nat) : ∀ todo lits : QBranch n,
+    qweightB todo ≤ fuel →
+    (∀ sφ ∈ lits, IsQLit sφ.formula) →
+    (∀ M : QModel n, ¬ qsatBranch M (todo ++ lits)) →
+    QClosesExtCore (todo ++ lits) := by
+  induction fuel with
+  | zero =>
+      intro todo lits hw hlit hunsat
+      rcases todo with _ | ⟨⟨S, ρ, φ⟩, rest⟩
+      · simpa using qclosesCore_lits lits hlit (by simpa using hunsat)
+      · exfalso
+        have := qsize_pos n φ
+        simp [qweightB] at hw
+        omega
+  | succ fuel ih =>
+      intro todo lits hw hlit hunsat
+      rcases todo with _ | ⟨⟨S, ρ, φ⟩, rest⟩
+      · simpa using qclosesCore_lits lits hlit (by simpa using hunsat)
+      · cases φ with
+        | pred P xs =>
+            have hw' : qweightB rest ≤ fuel := by
+              simp [qweightB, qsize] at hw; omega
+            have hlit' : ∀ sφ ∈
+                ((⟨S, ρ, QFormula.pred P xs⟩ : QSigned n) :: lits),
+                IsQLit sφ.formula := by
+              intro sφ hsφ
+              rcases List.mem_cons.mp hsφ with rfl | h
+              · trivial
+              · exact hlit _ h
+            have hunsat' : ∀ M : QModel n, ¬ qsatBranch M
+                (rest ++ ((⟨S, ρ, QFormula.pred P xs⟩ : QSigned n) :: lits)) := by
+              intro M hs
+              exact hunsat M fun x hx => hs x (by simp at hx ⊢; tauto)
+            exact (ih rest _ hw' hlit' hunsat').mono
+              fun x hx => by simp at hx ⊢; tauto
+        | eq a b =>
+            have hw' : qweightB rest ≤ fuel := by
+              simp [qweightB, qsize] at hw; omega
+            have hlit' : ∀ sφ ∈
+                ((⟨S, ρ, QFormula.eq a b⟩ : QSigned n) :: lits),
+                IsQLit sφ.formula := by
+              intro sφ hsφ
+              rcases List.mem_cons.mp hsφ with rfl | h
+              · trivial
+              · exact hlit _ h
+            have hunsat' : ∀ M : QModel n, ¬ qsatBranch M
+                (rest ++ ((⟨S, ρ, QFormula.eq a b⟩ : QSigned n) :: lits)) := by
+              intro M hs
+              exact hunsat M fun x hx => hs x (by simp at hx ⊢; tauto)
+            exact (ih rest _ hw' hlit' hunsat').mono
+              fun x hx => by simp at hx ⊢; tauto
+        | neg φ =>
+            cases S with
+            | Tpos =>
+                exact qstep1
+                  (fun M h => by
+                    simpa [qsatSigned, qsat, qeval, sat_neg_Tpos] using h)
+                  (fun {B} hm hc => QClosesExtCore.negTpos hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Tneg =>
+                exact qstep1
+                  (fun M h => by
+                    simpa [qsatSigned, qsat, qeval, sat_neg_Tneg] using h)
+                  (fun {B} hm hc => QClosesExtCore.negTneg hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fpos =>
+                exact qstep1
+                  (fun M h => by
+                    simpa [qsatSigned, qsat, qeval, sat_neg_Fpos] using h)
+                  (fun {B} hm hc => QClosesExtCore.negFpos hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fneg =>
+                exact qstep1
+                  (fun M h => by
+                    simpa [qsatSigned, qsat, qeval, sat_neg_Fneg] using h)
+                  (fun {B} hm hc => QClosesExtCore.negFneg hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+        | conj φ ψ =>
+            have hp := qsize_pos n φ
+            have hq := qsize_pos n ψ
+            cases S with
+            | Tpos =>
+                exact qstep2
+                  (fun M h1 h2 => by
+                    simp [qsatSigned, qsat, qeval, sat_conj_Tpos] at h1 h2 ⊢
+                    simp [h1, h2])
+                  (fun {B} hm hc => QClosesExtCore.conjTpos hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Tneg =>
+                exact qstepBr
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_conj_Tneg] at h ⊢
+                    simp [h])
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_conj_Tneg] at h ⊢
+                    simp [h])
+                  (fun {B} hm hc1 hc2 => QClosesExtCore.conjTneg hm hc1 hc2)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fpos =>
+                exact qstepBr
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_conj_Fpos] at h ⊢
+                    simp [h])
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_conj_Fpos] at h ⊢
+                    simp [h])
+                  (fun {B} hm hc1 hc2 => QClosesExtCore.conjFpos hm hc1 hc2)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fneg =>
+                exact qstep2
+                  (fun M h1 h2 => by
+                    simp [qsatSigned, qsat, qeval, sat_conj_Fneg] at h1 h2 ⊢
+                    simp [h1, h2])
+                  (fun {B} hm hc => QClosesExtCore.conjFneg hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+        | disj φ ψ =>
+            have hp := qsize_pos n φ
+            have hq := qsize_pos n ψ
+            cases S with
+            | Tpos =>
+                exact qstepBr
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_disj_Tpos] at h ⊢
+                    simp [h])
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_disj_Tpos] at h ⊢
+                    simp [h])
+                  (fun {B} hm hc1 hc2 => QClosesExtCore.disjTpos hm hc1 hc2)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Tneg =>
+                exact qstep2
+                  (fun M h1 h2 => by
+                    simp [qsatSigned, qsat, qeval, sat_disj_Tneg] at h1 h2 ⊢
+                    simp [h1, h2])
+                  (fun {B} hm hc => QClosesExtCore.disjTneg hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fpos =>
+                exact qstep2
+                  (fun M h1 h2 => by
+                    simp [qsatSigned, qsat, qeval, sat_disj_Fpos] at h1 h2 ⊢
+                    simp [h1, h2])
+                  (fun {B} hm hc => QClosesExtCore.disjFpos hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fneg =>
+                exact qstepBr
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_disj_Fneg] at h ⊢
+                    simp [h])
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_disj_Fneg] at h ⊢
+                    simp [h])
+                  (fun {B} hm hc1 hc2 => QClosesExtCore.disjFneg hm hc1 hc2)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+        | oplus φ ψ =>
+            have hp := qsize_pos n φ
+            have hq := qsize_pos n ψ
+            cases S with
+            | Tpos =>
+                exact qstep2
+                  (fun M h1 h2 => by
+                    simp [qsatSigned, qsat, qeval, sat_oplus_Tpos] at h1 h2 ⊢
+                    simp [h1, h2])
+                  (fun {B} hm hc => QClosesExtCore.oplusTpos hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Tneg =>
+                exact qstepBr
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_oplus_Tneg] at h ⊢
+                    simp [h])
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_oplus_Tneg] at h ⊢
+                    simp [h])
+                  (fun {B} hm hc1 hc2 => QClosesExtCore.oplusTneg hm hc1 hc2)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fpos =>
+                exact qstep2
+                  (fun M h1 h2 => by
+                    simp [qsatSigned, qsat, qeval, sat_oplus_Fpos] at h1 h2 ⊢
+                    simp [h1, h2])
+                  (fun {B} hm hc => QClosesExtCore.oplusFpos hm hc)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+            | Fneg =>
+                exact qstepBr
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_oplus_Fneg] at h ⊢
+                    simp [h])
+                  (fun M h => by
+                    simp [qsatSigned, qsat, qeval, sat_oplus_Fneg] at h ⊢
+                    simp [h])
+                  (fun {B} hm hc1 hc2 => QClosesExtCore.oplusFneg hm hc1 hc2)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu)
+                  (fun hu => ih _ lits (by simp [qweightB, qsize] at hw ⊢; omega)
+                    hlit hu) hunsat
+        | all x φ =>
+            have hple : qsize n φ ≤ (n + 1) * qsize n φ :=
+              Nat.le_mul_of_pos_left _ (Nat.succ_pos n)
+            cases S with
+            | Tpos =>
+                refine qstepAll
+                  (fun M hs => (qsat_all_Tpos M ρ x φ).mpr
+                    fun d => hs _ (qinst_mem_qinstAll _ _ _ _ d))
+                  (fun {B} hm hc => QClosesExtCore.allTpos hm hc)
+                  (fun hu => ih (qinstAll Sign.Tpos ρ x φ ++ rest) lits ?_ hlit hu)
+                  hunsat
+                rw [qweightB_append, qweightB_qinstAll]
+                simp [qweightB, qsize] at hw
+                omega
+            | Tneg =>
+                refine qstepEach (f := fun d => qinst Sign.Tneg ρ x φ d)
+                  (fun M d h => (qsat_all_Tneg M ρ x φ).mpr ⟨d, h⟩)
+                  (fun {B} hm hc => QClosesExtCore.allTneg hm hc)
+                  (fun d hu => ih (qinst Sign.Tneg ρ x φ d :: rest) lits ?_ hlit hu)
+                  hunsat
+                simp [qweightB, qsize, qinst] at hw ⊢
+                omega
+            | Fpos =>
+                refine qstepEach (f := fun d => qinst Sign.Fpos ρ x φ d)
+                  (fun M d h => (qsat_all_Fpos M ρ x φ).mpr ⟨d, h⟩)
+                  (fun {B} hm hc => QClosesExtCore.allFpos hm hc)
+                  (fun d hu => ih (qinst Sign.Fpos ρ x φ d :: rest) lits ?_ hlit hu)
+                  hunsat
+                simp [qweightB, qsize, qinst] at hw ⊢
+                omega
+            | Fneg =>
+                refine qstepAll
+                  (fun M hs => (qsat_all_Fneg M ρ x φ).mpr
+                    fun d => hs _ (qinst_mem_qinstAll _ _ _ _ d))
+                  (fun {B} hm hc => QClosesExtCore.allFneg hm hc)
+                  (fun hu => ih (qinstAll Sign.Fneg ρ x φ ++ rest) lits ?_ hlit hu)
+                  hunsat
+                rw [qweightB_append, qweightB_qinstAll]
+                simp [qweightB, qsize] at hw
+                omega
+        | ex x φ =>
+            have hple : qsize n φ ≤ (n + 1) * qsize n φ :=
+              Nat.le_mul_of_pos_left _ (Nat.succ_pos n)
+            cases S with
+            | Tpos =>
+                refine qstepEach (f := fun d => qinst Sign.Tpos ρ x φ d)
+                  (fun M d h => (qsat_ex_Tpos M ρ x φ).mpr ⟨d, h⟩)
+                  (fun {B} hm hc => QClosesExtCore.exTpos hm hc)
+                  (fun d hu => ih (qinst Sign.Tpos ρ x φ d :: rest) lits ?_ hlit hu)
+                  hunsat
+                simp [qweightB, qsize, qinst] at hw ⊢
+                omega
+            | Tneg =>
+                refine qstepAll
+                  (fun M hs => (qsat_ex_Tneg M ρ x φ).mpr
+                    fun d => hs _ (qinst_mem_qinstAll _ _ _ _ d))
+                  (fun {B} hm hc => QClosesExtCore.exTneg hm hc)
+                  (fun hu => ih (qinstAll Sign.Tneg ρ x φ ++ rest) lits ?_ hlit hu)
+                  hunsat
+                rw [qweightB_append, qweightB_qinstAll]
+                simp [qweightB, qsize] at hw
+                omega
+            | Fpos =>
+                refine qstepAll
+                  (fun M hs => (qsat_ex_Fpos M ρ x φ).mpr
+                    fun d => hs _ (qinst_mem_qinstAll _ _ _ _ d))
+                  (fun {B} hm hc => QClosesExtCore.exFpos hm hc)
+                  (fun hu => ih (qinstAll Sign.Fpos ρ x φ ++ rest) lits ?_ hlit hu)
+                  hunsat
+                rw [qweightB_append, qweightB_qinstAll]
+                simp [qweightB, qsize] at hw
+                omega
+            | Fneg =>
+                refine qstepEach (f := fun d => qinst Sign.Fneg ρ x φ d)
+                  (fun M d h => (qsat_ex_Fneg M ρ x φ).mpr ⟨d, h⟩)
+                  (fun {B} hm hc => QClosesExtCore.exFneg hm hc)
+                  (fun d hu => ih (qinst Sign.Fneg ρ x φ d :: rest) lits ?_ hlit hu)
+                  hunsat
+                simp [qweightB, qsize, qinst] at hw ⊢
+                omega
+
+/-- Thm 3.74: semantic completeness of the core extensional finite-domain
+tableau. Together with `QClosesExtCore.unsat` (Prop 3.37) this is an exact
+characterization. -/
+theorem QClosesExtCore.complete_of_unsat {n : Nat} {B : QBranch n}
+    (h : ∀ M : QModel n, ¬ qsatBranch M B) : QClosesExtCore B := by
+  have h0 : ∀ sφ ∈ ([] : QBranch n), IsQLit sφ.formula := by simp
+  have := qclosesCore_todo (qweightB B) B [] le_rfl h0 (by simpa using h)
+  simpa using this
+
+theorem qclosesExtCore_iff_unsat {n : Nat} {B : QBranch n} :
+    QClosesExtCore B ↔ ∀ M : QModel n, ¬ qsatBranch M B :=
+  ⟨QClosesExtCore.unsat, QClosesExtCore.complete_of_unsat⟩
+
+/-- Thm 3.74, derivability form: the core calculus is complete for finite
+semantic consequence. -/
+theorem QDerivesExtCore.complete {n : Nat} {Γ : QBranch n} {sφ : QSigned n}
+    (h : QConsequence4 Γ sφ) : QDerivesExtCore Γ sφ := by
+  apply QClosesExtCore.complete_of_unsat
+  intro M hs
+  have hΓ : qsatBranch M Γ := fun x hx => hs x (List.mem_cons_of_mem _ hx)
+  have hopp := hs sφ.opp List.mem_cons_self
+  rw [qsatSigned_opp, h M hΓ] at hopp
+  simp at hopp
+
+theorem qDerivesExtCore_iff_qconsequence4 {n : Nat} {Γ : QBranch n}
+    {sφ : QSigned n} : QDerivesExtCore Γ sφ ↔ QConsequence4 Γ sφ := by
+  constructor
+  · intro h M hΓ
+    by_contra hns
+    have hfalse : qsatSigned M sφ = false := by
+      revert hns
+      cases qsatSigned M sφ <;> simp
+    apply QClosesExtCore.unsat h M
+    intro x hx
+    rcases List.mem_cons.mp hx with rfl | hx
+    · rw [qsatSigned_opp, hfalse]
+      rfl
+    · exact hΓ x hx
+  · exact QDerivesExtCore.complete
+
+/-- The rigid constraints are satisfied by the ground valuation of every finite
+model. -/
+theorem satBranch_groundVal_rigid {n : Nat} (M : QModel n) :
+    satBranch (groundVal M) (rigidGroundConstraints n) := by
+  intro s hs
+  unfold rigidGroundConstraints at hs
+  rcases List.mem_append.mp hs with h4 | heq
+  · simp at h4
+    rcases h4 with rfl | rfl | rfl | rfl <;>
+      simp [sat4, eval, V4.sat, V4.T, V4.F]
+  · simp [rigidGroundEqConstraints] at heq
+    rcases heq with ⟨a, b, hab⟩
+    by_cases hab' : a = b <;> simp [rigidGroundEqSigns, hab'] at hab <;>
+      rcases hab with rfl | rfl <;>
+        simp [sat4, eval, V4.sat, V4.T, V4.F, hab']
+
+/-- Thm 3.75 (the final-case statement of Conj 3.39, semantic route): constrained
+propositional closure of the grounded branch yields core closure, with no use of
+`propSim` or `rigidPropSim`. -/
+theorem groundBranch_closes_to_core {n : Nat} {B : QBranch n}
+    (h : Closes (rigidGroundConstraints n ++ groundBranch B)) :
+    QClosesExtCore B := by
+  apply QClosesExtCore.complete_of_unsat
+  intro M hMB
+  refine Closes.unsat h (groundVal M) ?_
+  intro s hs
+  rcases List.mem_append.mp hs with hrig | hgb
+  · exact satBranch_groundVal_rigid M s hrig
+  · exact qsatBranch_groundBranch M B hMB s hgb
+
 end Nullivance.FiniteFO
