@@ -222,3 +222,76 @@ Disclosed, judged non-blocking by the round-2 panel.
   (not used).
 - Wiley/Springer/ScienceDirect article landing pages — 403/redirect walls; metadata
   taken from CrossRef/Semantic Scholar APIs instead.
+
+## 6. Finite-domain quantified NPL vs. the literature (related-work pass 2026-07-09)
+
+Search scope: web searches on (a) tableaux for finitely-valued first-order logics
+(Carnielli, Haehnle, Baaz-Fermueller lines), (b) quantified Belnap-Dunn/FDE,
+(c) machine-checked completeness theorems for tableau/sequent calculi. Queries and
+sources recorded below; all verdicts phrased per the R8 discipline.
+
+### 6.1 Finitely-valued first-order tableaux: Carnielli 1987, Haehnle 1994
+
+Carnielli (JSL 52(2), 1987, 473-493) [carnielli1987systematization] gives tableau
+systems for arbitrary finite many-valued first-order logics with *distribution
+quantifiers*, with abstract completeness, model existence, compactness, and
+Loewenheim-Skolem theorems. Haehnle's monograph [haehnle1994automated] generalizes
+the sign language to sets-as-signs and covers first-order quantifiers in the same
+distribution style.
+
+Comparison with our system:
+- Their quantifiers range over arbitrary (possibly infinite) domains; rules act
+  through value distributions of instances. Our domain is a FIXED finite Fin(n+1);
+  our quantifier rules are (n+1)-ary instance rules (block or per-element). The two
+  designs coincide in spirit on finite domains but are formally different calculi.
+- Their signs: single values (Carnielli, Smullyan-style) or sets-as-signs
+  (Haehnle). NPL's four threshold signs ARE sets-as-signs instances
+  ({T,B},{F,N},{B,F},{T,N}) - already recorded in docs ch. 3.
+- Neither treats crisp equality closure or ground-closure (extensional) clauses;
+  equality is absent from their core calculi.
+- Neither is mechanized.
+
+**Verdict: the generic claim "a sound and complete tableau calculus for a
+finitely-valued first-order logic exists" is SUBSUMED (Carnielli 1987; Haehnle
+1994).** The manuscript must cite both and must not claim novelty for
+many-valued FO tableau completeness as such. What remains NPL-specific
+(overlapping/novel as far as checked): the fixed-finite-domain (n+1)-ary rule
+format, the crisp-equality and ground-closure clause set, the threshold-sign
+presentation with harmonization in the object language, the domain-weighted
+completeness engine, and the mechanization.
+
+### 6.2 Quantified Belnap-Dunn/FDE
+
+Textbook tableaux for first-order FDE with completeness: Priest
+[priest2008introduction]. Recent work on quantified BD includes universally free
+extensions (arXiv:2412.19767) and free quantification over four-valued and fuzzy
+bilattice-valued logics: Behounek-Dankova-Dvorak, IUKM 2023 [behounek2023free] -
+dual-domain free logic (non-denoting terms) over BD and a fuzzy bilattice variant.
+Checked against ours: their axis is free logic/non-denotation over unrestricted
+domains, without a tableau completeness theorem and without mechanization; ours is
+total denotation over fixed finite domains with a machine-checked exact
+characterization. **Verdict: OVERLAPPING territory (quantified four-valued /
+bilattice), orthogonal axes; cite, no subsumption either way as far as checked.**
+
+### 6.3 Machine-checked completeness theorems
+
+Classical first-order: Ridge-Margetson (Isabelle, sequent calculus);
+Blanchette-Popescu-Traytel, JAR 58(1):149-179, 2017 [blanchette2017soundness] -
+coinductive framework with a formalized tableau instance for many-sorted classical
+FOL with equality; the From/Schlichtkrull/Villadsen teaching line
+[villadsen2017formalizing]; recent free-variable tableaux in Rocq
+(arXiv:2605.16952). Modal/hybrid/intuitionistic formalizations also exist.
+**None of the searches surfaced a machine-checked completeness theorem for a
+many-valued (in particular four-valued or bilattice-based) quantified tableau
+calculus.** Verdict: NOVEL AS FAR AS CHECKED for "machine-checked completeness of
+a quantified many-valued tableau"; phrase as "to our knowledge" citing this note.
+
+### Sources consulted (2026-07-09)
+
+- philpapers.org/rec/CARSOF; Cambridge Core JSL page (Carnielli metadata).
+- OUP catalogue page for Haehnle, Automated Deduction in Multiple-Valued Logics.
+- arXiv:2306.13079 abstract (Behounek et al., fetched).
+- arXiv:2412.19767 (universally free FO BD, surfaced, not fetched).
+- Springer/ACM metadata for Blanchette-Popescu-Traytel JAR 58(1).
+- Search results referencing Ridge-Margetson, From/Villadsen, TableauxRocq
+  (arXiv:2605.16952), hybrid-logic Lean 4 completeness (arXiv:2606.19761).
