@@ -1,6 +1,6 @@
 /-! # Nullivance
 
-Machine-checked mirror of the NPL development in `docs/` (see rule R7 in `CLAUDE.md`).
+Machine-checked mirror of the canonical NPL development in `docs/`.
 
 Module map:
 - `Nullivance.Syntax` — chapter 1 (formulas)

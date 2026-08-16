@@ -1,7 +1,6 @@
 # 4. Metatheory
 
-Source: intake from `drafts/NPL_v2_detailed_completeness_proof_VI.md` (§5–§11), transcribed
-and re-derived. The paper proofs below are stated for the tableau-tree presentation
+The paper proofs below are stated for the tableau-tree presentation
 (Def 3.5); the Lean mirror proves the corresponding statements **directly against the
 `Closes` predicate** (Rem 3.6, DR-0005), which discharges the encoding gap for every
 result in this chapter.
@@ -108,29 +107,36 @@ each connective adds one to the union of the subformulas of its arguments). ∎
 
 > Source: D2 Lem 6.2. · *Depends on:* Def 1.2, Lem 4.6.
 
-**Theorem 4.8 (Termination).** `[PROVEN]`
-Under a fair strategy (Def 3.5) with the convention *never re-decompose a processed
-member*, every proof search from a finite B₀ halts in a finite tableau in which every
-leaf is either closed, or open and saturated (Def 3.4).
+**Theorem 4.8 (Reference-search termination).** `[VERIFIED]`
+The transition relation `→_ref` of Definition 3.78 is well founded. Consequently,
+`run(todo,lits)` of Definition 3.79 terminates for every pair of finite input lists.
 
-*Proof.* Each expansion step processes at least one previously unprocessed signed formula
-on the branch it extends, and by Lemma 4.7 each branch supports at most `4·|Sub(B₀)|`
-distinct signed formulas — so each path of the tableau tree is finite. The tree is
-binary (each node has at most two children, Def 3.5), so by Kőnig's lemma (finite-branching
-tree with no infinite path is finite — standard theorem) the whole tree is finite. When no
-applicable unprocessed formula remains on an open leaf, that leaf is saturated by
-Definition 3.4; fairness guarantees no applicable formula is postponed forever, so at halt
-every open leaf is closed or saturated. ∎
+*Proof.* Use the worklist weight `μ` of Definition 3.78. Moving an atom to `lits`
+decreases `μ` by one. A negation step replaces a contribution `|φ|+1` by `|φ|`.
+A non-branching binary step replaces `|φ|+|ψ|+1` by `|φ|+|ψ|`. In a
+branching step, each child retains only one operand, so its weight decreases by the
+positive size of the omitted operand plus one. The untouched tail has the same weight
+on both sides. Hence every `W →_ref W'` satisfies `μ(W') < μ(W)`. Strict order on
+natural numbers is well founded, so `→_ref` is well founded; the recursive calls of
+`run` are exactly to such lower-weight children. ∎
 
-> Source: D2 Thm 6.3. · *Depends on:* Def 3.4, 3.5, Lem 4.7. · *Note:* termination is a statement about proof *search*; the Lean mirror does not need it (the `Closes` predicate quantifies over derivations). Decidability is now verified separately by finite model checking (Thm 4.24).
+*R5 record:* if processed compounds are retained in `todo`, repeated decomposition gives
+a self-loop and the theorem is false. If a scheduler may stop with nonempty `todo`, it
+terminates but need not be complete. Definition 3.78 excludes both failures by removing
+the selected head occurrence and by declaring only `todo=[]` terminal.
+
+> *Lean:* `Operational.children_weight_lt`, `refStep_weight_lt`,
+> `refStep_wellFounded`; termination of `Operational.run` is accepted from the same
+> `Metatheory.weight` decrease · *Depends on:* Def 3.78–3.79 · *DR:* DR-0017.
 
 ## 4.C Completeness on FOUR
 
-**Definition 4.9 (Canonical valuation).** `[DRAFT]`
+**Definition 4.9 (Canonical valuation).** `[VERIFIED]`
 For an open saturated branch B, define `v_B(p) = (x_B(p), y_B(p)) ∈ FOUR` by:
 `x_B(p) = 1` iff `T⁺p ∈ B`, and `y_B(p) = 1` iff `F⁺p ∈ B`.
 
-> Source: D2 §7.1. · *Depends on:* Def 2.7, 3.4.
+> Source: D2 §7.1. · *Lean:* `Metatheory.canonicalVal` ·
+> *Depends on:* Def 2.7, 3.4.
 
 **Lemma 4.10 (Atomic lemma).** `[PROVEN]`
 For every atom p: if `T⁺p ∈ B` the truth bit of `v_B(p)` is 1; if `T⁻p ∈ B` it is 0;
@@ -178,23 +184,35 @@ Every open saturated branch is satisfiable in FOUR: `v_B` satisfies every member
 
 > Source: D2 Cor 8.2. · *Depends on:* Thm 4.11.
 
-**Theorem 4.13 (FOUR branch-completeness).** `[VERIFIED]` *(in the `Closes` form — see note)*
-For a finite branch B₀: B₀ is unsatisfiable in FOUR **iff** some tableau from B₀ is
-closed (equivalently, per Def 3.5: every fair fully expanded tableau from B₀ is closed).
+**Theorem 4.13 (FOUR branch-completeness).** `[VERIFIED]`
+For a finite branch B₀, B₀ is unsatisfiable in FOUR **iff** `Closes B₀`.
+Equivalently, `TableauCloses B₀`: there exists a finite closed tableau proof tree with
+root B₀.
 
 *Proof.* (closed ⇒ unsat) Theorem 4.5.
-(unsat ⇒ closed) Contrapositive: run a fair fully expanded search from B₀. By Theorem 4.8
-it halts in a finite tableau whose leaves are each closed or open-saturated. If it is not
-closed, it has an open saturated leaf L. By Corollary 4.12 some valuation v satisfies L.
-Every rule only adds members, so `B₀ ⊆ L`, hence v satisfies B₀ — B₀ is satisfiable. ∎
 
-> Source: D2 Thm 9.1. · *Lean:* `Metatheory.closes_of_unsat` (unsat ⇒ `Closes`; engine `closes_todo` + literal stage `closes_lits` + `Closes.mono`) with the converse `Metatheory.Closes.unsat` — sorry-free. · *Depends on:* Thm 4.5, 4.8, Cor 4.12.
-> *Note (proof deviation, recorded per R9/DR-0005):* the Lean counterpart proves
-> `unsatisfiable ⇒ Closes` directly by strong induction on the total weight of
-> undecomposed formulas, constructing the canonical valuation at the literal stage —
-> it does not formalize fair search + saturation. Same theorem in the `Closes` form
-> (Rem 3.6), different (constructive-recursive) proof route; Theorems 4.8/4.11 remain
-> paper-level results about the search procedure and stay `[PROVEN]`.
+(unsat ⇒ closed) More generally, split the input as `todo ++ lits`, require `lits`
+to be atomic, and use strong induction on the total formula-size weight of `todo`.
+If `todo=[]`, an atomic branch with no complementary pair is satisfied by the canonical
+valuation of Definition 4.9; unsatisfiability therefore supplies a closure pair. If the
+head is atomic, move it to `lits`; the weight decreases by one and branch satisfaction
+is unchanged. If the head is compound, its appropriate row of Definition 3.3 gives one
+or two child branches. The local semantic equivalence (Lemmas 4.1–4.4) shows every
+required child is unsatisfiable; each has smaller weight, so the induction hypothesis
+closes it, and the corresponding rule constructor closes the parent. The sixteen
+sign–connective cases exhaust Definition 3.3. Taking `todo=B₀` and `lits=[]` yields
+`Closes B₀`. The explicit proof-tree equivalence from Remark 3.6 gives
+`TableauCloses B₀`. ∎
+
+> Source: D2 Thm 9.1. · *Lean:* `Metatheory.closes_of_unsat` (unsat ⇒ `Closes`;
+> engine `closes_todo` + literal stage `closes_lits` + `Closes.mono`) with the converse
+> `Metatheory.Closes.unsat`; explicit proof-tree equivalence
+> `ProofTheory.tableauCloses_iff_closes` — sorry-free. · *Depends on:* Thm 4.5,
+> Cor 4.12.
+> *Method note (DR-0005):* this is the same strong-induction construction as the Lean
+> proof; no fairness or saturation premise is used. The former general-fairness draft
+> has been scope-corrected and replaced by the independently verified progressing-step
+> result in Theorem 4.33; Theorem 4.13 does not depend on that later result.
 
 **Theorem 4.14 (Soundness and completeness of the calculus on FOUR).** `[VERIFIED]`
 For every **finite** set Σ of signed formulas and signed conclusion Sφ:
@@ -297,7 +315,7 @@ on the ⊕-free fragment. Discharges D1 Thm 5 (INTAKE §E). ∎
 **Proposition 4.21 (Nontriviality — consistency evidence).** `[VERIFIED]`
 The empty premise set does not derive `T⁺p`: `∅ ⊬_A T⁺p` for atomic p. Together with
 non-explosion (Cor 4.18) this records that the consequence relation is neither empty-
-trivial nor glut-trivial — the audit checklist's "model evidence" item.
+degenerate nor collapse-prone — the audit checklist's "model evidence" item.
 
 *Proof.* By Theorem 4.14 it suffices to refute `∅ ⊨₄ T⁺p`: the constant valuation
 `v(q) = N` for all q satisfies every member of ∅ (vacuously) and gives `t(p) = 0`. ∎
@@ -319,7 +337,7 @@ the induction principle of Def 1.2). But at `p₀ ↦ T, p₁ ↦ F` — classic
 
 > *Lean:* `Metatheory.classical_closed` (induction), `Metatheory.oplus_not_definable` (witness) — sorry-free. · *Depends on:* Def 1.2, 2.3, 2.7.
 
-## 4.G Finite dependence, decidability, compactness (2026-07-03, second session)
+## 4.G Finite dependence, decidability, compactness
 
 **Lemma 4.23 (Finite dependence).** `[VERIFIED]`
 If two FOUR valuations agree on every atom occurring in φ, they give φ the same value;
@@ -415,9 +433,14 @@ direction, applied to that member).
 `Σ ⊨ Sφ` by (i)(⇐)-monotonicity. (⇐) `Σ ⊨ Sφ` gives a finite `Σ₀ ⊨ Sφ` by (ii), and
 `Σ₀ ⊢_A Sφ` by Theorem 4.16. ∎
 
-> *Depends on:* Def 2.4, 2.6, Cor 2.14, Thm 4.15, 4.16, 4.25. · *Lean:* `Metatheory.compactness_consequence4_set`, `Metatheory.satisfiableCSet_iff_four`, `Metatheory.compactness_consequenceC_set`, `Metatheory.derivesSet_iff_consequenceCSet` — sorry-free, `lake build` 2026-07-04.
+> *Depends on:* Def 2.4, 2.6, Cor 2.14, Thm 4.15, 4.16, 4.25. · *Lean:*
+> exact set-level definitions `Metatheory.Consequence4Set`,
+> `Metatheory.ConsequenceCSetModel`, `Metatheory.DerivesSet`; implementation bridge
+> `consequenceCSetModel_iff_consequenceCSet`; results
+> `compactness_consequence4_set`, `satisfiableCSet_iff_four`,
+> `compactness_consequenceC_set`, `derivesSet_iff_consequenceCSet` — sorry-free.
 
-## 4.H Panel-review follow-ups (2026-07-03, /peer-review round 1)
+## 4.H Structural and literature-positioning results
 
 **Proposition 4.27 (τ-invariance of consequence).** `[VERIFIED]`
 For every **fixed** τ ∈ (0,1], the consequence relation "over all valuations at
@@ -435,7 +458,7 @@ transfers by Thm 2.13/Cor 2.14. ∎
 *Consequence for presentation (R9):* the phrase "quantified over all thresholds" must
 not be advertised as strengthening the consequence relation; its honest content is
 that the relation is well-defined *independently of* the threshold parameter. Def 2.6
-acquires a pointer note. (Raised as Q2 by Referee 2, panel review 2026-07-03.)
+therefore carries a pointer to this proposition.
 
 > *Lean:* `Metatheory.ConsequenceCAt`, `consequenceCAt_iff_consequence4`, `consequenceCAt_iff_consequenceC` (via `proj_iota`, `SatC_iota_at`) — sorry-free. · *Depends on:* Def 2.6, Thm 2.13, Cor 2.14, Thm 4.15.
 
@@ -464,7 +487,7 @@ agrees with the independently proven Thm 4.16 + Cor 4.17 route.
 (ii) (0,0) ≤_k (1,1); membership fails upward. Bifilters are upward closed in both
 orders (loc. cit.), and nonempty ⇒ ⊤ ∈ F. ∎
 
-> Source verification: `references/npl-positioning.md` §2 (updated 2026-07-03; extraction log there). · *Depends on:* Def 2.6, Lem 2.18, Prop 4.27; [arieli1996reasoning; rivieccio2010algebraic]. · *Lean:* not planned — the statement quantifies over another framework's definitions; the NPL-internal halves are covered by Prop 4.27 and Cor 4.17.
+> Source verification: `references/npl-positioning.md` §2. · *Depends on:* Def 2.6, Lem 2.18, Prop 4.27; [arieli1996reasoning; rivieccio2010algebraic]. · *Lean:* not planned — the statement quantifies over another framework's definitions; the NPL-internal halves are covered by Prop 4.27 and Cor 4.17.
 
 **Proposition 4.29 (The negative signs are not internalizable).** `[VERIFIED]`
 There is no formula ψ such that `T⁺ψ ⟺ T⁻p` holds in every FOUR valuation: the
@@ -475,8 +498,7 @@ negative signs cannot be simulated inside the object language.
 evaluates to B there. Hence every formula is designated under that valuation, while
 `T⁻p` fails (t(p) = 1 ≥ τ). Any candidate ψ disagrees with `T⁻p` at this valuation. ∎
 (Companion to Prop 4.28(ii): the signed layer is neither a designated-set consequence
-nor expressible by translation into the unsigned one. Suggested by the round-2 panel
-review, R2.3.)
+nor expressible by translation into the unsigned one.)
 
 > *Lean:* `Metatheory.signs_not_internalizable` (via `eval_const_B`) — sorry-free. · *Depends on:* Def 2.3, 2.4, 2.7.
 
@@ -552,6 +574,146 @@ load-bearing, not cosmetic. The reduction also avoids using ⊕, so hardness alr
 inside the {¬,∧,∨} fragment plus signs.
 
 > *Depends on:* Prop 4.30, 4.31. · *References:* [cook1971complexity; karp1972reducibility]. · *Lean:* not formalized as an algorithmic complexity theorem.
+
+**Theorem 4.33 (Progress-scheduler termination and order-independent completeness).** `[VERIFIED]`
+Let `B` be a finite branch and let `F₀ = [⟨B,[]⟩]`. Then:
+
+1. `→_F` is well founded; in particular, no infinite sequence
+   `F₀ →_F F₁ →_F F₂ →_F ⋯` exists.
+2. Every forest has a terminal forest reachable by finitely many progressing steps.
+   Hence repeatedly applying any progressing scheduler (Definition 3.80) terminates.
+3. For every terminal `F` with `F₀ →_F* F`,
+   `ForestClosed(F)` iff `B` is FOUR-unsatisfiable iff `Closes B`.
+4. If such an `F` is not closed, some open atomic leaf `W.lits` in `F` has a canonical
+   valuation satisfying both `W.lits` and `B`.
+5. Any two terminal forests reachable from `F₀` agree on whether they are closed.
+
+*Proof.*
+
+1. The recursion defining `c` in Definition 3.80 is well founded because every child
+   has smaller worklist weight (Theorem 4.8). For a step selecting `W`, the source cost
+   contains `c(W)`, while the target replaces it by
+   `Σ_{W'∈children(W)}c(W')`. By the defining equation for `c`, the target forest
+   cost is exactly `C(F)-1`. Natural-number order is well founded, so `→_F` is well
+   founded. If an infinite transition sequence existed, its costs would form an
+   infinite strictly descending sequence of natural numbers, a contradiction.
+2. A forest with no enabled step is terminal: if some member `W` had nonempty `todo`,
+   splitting the list as `pre ++ [W] ++ post` would exhibit an `expand` step. Conversely,
+   no terminal member may be selected. Well-founded induction on `→_F` now gives a
+   terminal reachable forest: stop at a terminal state; otherwise take any legal child
+   and apply the induction hypothesis.
+3. First prove the one-step invariant
+   `ForestSat(v,F) ↔ ForestSat(v,G)` whenever `F →_F G`. For the selected branch,
+   the atomic-transfer case only permutes constraints. Each compound case is the
+   corresponding local semantic equivalence from Lemmas 4.1–4.4; a branching rule is
+   disjunction over its two children. The unselected prefix and suffix are unchanged.
+   Induction on the `ForestReach` constructors proves the invariant for every finite
+   trace. The same induction proves that all atomic accumulators remain atomic.
+
+   At a terminal forest, represented constraints equal the atomic accumulators. If all
+   leaves close, Theorem 4.5 rules out a model of the forest and the trace invariant
+   rules out a model of `B`. Conversely, if an atomic leaf is open, its canonical
+   valuation (Definition 4.9) satisfies it: positive signs determine the two bits and
+   openness excludes the opposite positive sign required to falsify either negative
+   sign. The trace invariant then gives a model of `B`. Thus terminal closure is
+   equivalent to unsatisfiability of `B`; Theorem 4.13 gives equivalence with `Closes B`.
+4. If `F` is not closed, bounded universal negation yields a member `W ∈ F` whose
+   atomic accumulator is open. Apply the canonical-valuation construction from step 3,
+   then transport its satisfaction backward along the trace invariant.
+5. Apply clause 3 to each terminal forest; both closure propositions are equivalent to
+   the same semantic statement that `B` is unsatisfiable. ∎
+
+*R5 record:*
+
+- A rule that may replace `F` by itself admits an infinite idle trace; fairness would be
+  required only in that enlarged transition system. `ForestStep` deliberately records
+  progress and excludes stuttering.
+- If terminal branches were selectable, `children(W)=[]` would delete an open terminal
+  leaf and could create a false success. The nonterminal premise is load-bearing.
+- Replacing a branching occurrence by only one child is unsound:
+  `{T⁺(p∨q),T⁻p}` has a closed left child and a satisfiable right child.
+- The naive sum of worklist weights is not a global decrease: branching duplicates the
+  untouched tail, so a sufficiently large tail makes that sum increase. The recursive
+  full-tree cost `C` accounts for this duplication and decreases exactly by one.
+- The empty forest is terminal and closed by bounded universal quantification, but it is
+  not reachable from a singleton input forest under `ForestStep`. The reachability
+  hypothesis in clauses 3–4 therefore cannot be dropped.
+
+*Scope correction:* the former wording
+~~"every occurrence-aware fair scheduler terminates"~~ used undefined idle traces and
+fairness. Definition 3.80 replaces it with the stronger result relevant to actual proof
+search: every scheduler that performs a legal progress step must terminate, with no
+fairness assumption. A separate theorem about a transition system containing idle
+steps would require an explicit weak-fairness definition and is not asserted here.
+
+> *Lean:* `Operational.treeCost_children`, `forestStep_cost_lt`,
+> `forestStep_wellFounded`, `no_infinite_forestSteps`,
+> `sat_constraints_iff_children`, `forestStep_sat_iff`,
+> `ForestReach.sat_iff`, `ForestReach.atomicAcc`,
+> `no_forestStep_iff_terminal`, `exists_terminal_reachable`,
+> `terminal_reachable_closed_iff_unsat`,
+> `terminal_reachable_closed_iff_closes`,
+> `terminal_reachable_open_countermodel`, `terminal_outputs_agree` — sorry-free ·
+> *Depends on:* Def 3.2–3.3, 3.78–3.80, Def 4.9, Lem 4.1–4.4,
+> Thm 4.5, 4.8, 4.13 · *DR:* DR-0018.
+
+**Theorem 4.34 (Correctness and countermodel completeness of reference search).** `[VERIFIED]`
+For finite branches `todo`, `lits`, and every FOUR valuation `v`:
+
+1. if `lits` is atomic, every `L ∈ run(todo,lits)` is atomic;
+2. `v` satisfies `todo ++ lits` iff some `L ∈ run(todo,lits)` is satisfied by `v`;
+3. for every input branch `B`,
+   `referenceCloses(B)=true` iff `B` is FOUR-unsatisfiable iff `Closes B`;
+4. if `referenceCloses(B)=false`, then some open atomic
+   `L ∈ run(B,[])` has a canonical valuation `v_L` satisfying both `L` and `B`.
+
+Together with Theorem 4.8, these clauses make `referenceCloses` a terminating
+proof-search decision procedure with a closed proof exactly on positive instances and
+an explicit semantic countermodel on negative instances.
+
+*Proof.* Clause 1 is induction on the recursion defining `run`. The only operation on
+`lits` moves an atomic head into it; compound rules leave it unchanged. At a branching
+node, apply the induction hypothesis to both recursive result lists.
+
+For clause 2, use the same well-founded recursion. The atom case only permutes a
+constraint from `todo` to `lits`. Each negation case is one of Lemma 4.1's semantic
+equalities. For a non-branching binary rule, satisfaction of the parent is equivalent
+to simultaneous satisfaction of both products; for a branching rule it is equivalent
+to satisfaction of at least one child. Lemmas 4.2–4.4 establish these sixteen local
+equivalences, and list concatenation represents the disjunction of the two recursive
+result sets.
+
+For clause 3, first consider an atomic leaf `L`. If it has a complementary pair, it is
+unsatisfiable by Theorem 4.5. If it has none, define `v_L(p)` by the presence of
+`T⁺p` and `F⁺p` in `L` (Definition 4.9). Openness ensures that any negative atomic
+sign in `L` has the corresponding absent positive sign, so `v_L` satisfies every member
+of `L`. Thus an atomic leaf is unsatisfiable iff it is closed. Combine this fact with
+clauses 1–2 and the Boolean closure test. The equivalence with `Closes B` is Theorem
+4.13.
+
+For clause 4, Boolean failure means some returned leaf fails the closure test. Clause 1
+makes it atomic; the preceding canonical-valuation argument satisfies it. Clause 2 in
+the reverse direction lifts that same valuation to `B`. ∎
+
+*R5 record:*
+
+- Stopping immediately on `{T⁺(p∧q), T⁻p}` returns an open nonterminal branch even
+  though expansion closes it; terminality therefore requires `todo=[]`.
+- Reprocessing a retained compound can loop without decreasing a measure; selected
+  occurrences are therefore removed.
+- Exploring only the left child of `{T⁺(p∨q), T⁻p}` reaches a closed child but misses
+  the satisfiable right child; `run` must concatenate both results.
+- `run([],[])=[[]]`; the empty leaf is open and is satisfied by the canonical all-`N`
+  valuation. Duplicate occurrences are harmless because each contributes separately to
+  the decreasing worklist weight and closure is membership-based.
+
+> *Lean:* `Operational.run_leaves_atomic`, `satBranch_constraints_iff_run`,
+> `branchClosedB_eq_true_iff`, `atomic_open_canonical_sat`,
+> `atomic_unsat_iff_closed`, `referenceCloses_iff_unsat`,
+> `referenceCloses_false_countermodel`, `referenceCloses_iff_closes` — sorry-free;
+> executable regression witnesses checked by `native_decide` ·
+> *Depends on:* Def 3.2–3.3, 3.78–3.79, Def 4.9, Thm 4.5, 4.8, 4.13 ·
+> *DR:* DR-0017.
 
 ---
 

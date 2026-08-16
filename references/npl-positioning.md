@@ -1,8 +1,7 @@
-# NPL positioning against the literature — /related-work session 2026-07-03
+# NPL positioning against the literature — scope through 2026-08-16
 
-Scope of this check: the R8 debt list (INTAKE §F.5), the C4/C5 blockers, and the novelty
-status of NPL's five load-bearing features. Every verdict below cites its sources; the
-consulted-sources log (including dead ends) is at the end. **Any novelty wording in
+Scope of this check: the historical C4/C5 questions and the novelty status of NPL's
+load-bearing features. Every verdict below cites its sources. **Any novelty wording in
 `docs/` or `papers/` must link back to the relevant section of this file.**
 
 ---
@@ -52,7 +51,7 @@ Gentzen- and Hilbert-style calculi**. Hence:
   proof, and the threshold-signed consequence it feeds (see §5).
 - ✅ **Check RESOLVED 2026-07-03** (was: open bifilter check). Source: Rivieccio's
   presentation of the Arieli–Avron framework in [rivieccio2010algebraic], text
-  extracted from the thesis PDF (pypdf; pages 30, 43, 86 of the file):
+  verified against pages 30, 43, and 86 of the thesis PDF:
   * bifilter (his Prop 3.3.9(i)): F nonempty with `a∧b ∈ F ⟺ a⊗b ∈ F ⟺ (a ∈ F and b ∈ F)`;
     bifilters are upward closed w.r.t. both lattice orders (p. 43), hence contain ⊤;
   * logical bilattice (Def 2.1.3): ⟨B, F⟩ with F a prime bifilter;
@@ -68,8 +67,8 @@ Gentzen- and Hilbert-style calculi**. Hence:
   any fixed τ, so "threshold-quantified" must be presented as well-definedness, not
   strength.
 
-C4 itself (the lattice-theoretic claim) remains `[CONJECTURE]` pending `/prove` — but is
-now safe to state in bilattice vocabulary.
+C4 is now Lemma 2.18 `[VERIFIED]`; its statement uses the established bilattice
+terminology and the exact componentwise order laws.
 
 ## 3. Continuous {¬,∧,∨} on [0,1]² — verdict: **Subsumed**
 
@@ -150,7 +149,7 @@ gluts) is NPL's; the identity itself should be stated without a novelty flag.
 |---|---|---|
 | FOUR {¬,∧,∨} tables | Belnap 1977 / Dunn 1976 (FDE) | Subsumed **by design** (C5 identification proven) |
 | ⊕ = consensus, in language, complete calculus (FOUR) | Arieli–Avron 1996 (⊗, GBL) | **Subsumed** at FOUR level |
-| Two orders / bilattice square | Ginsberg 1988, Fitting 1991 | Anchored; C4 statement now safe to make |
+| Two orders / bilattice square | Ginsberg 1988, Fitting 1991 | Anchored; Lemma 2.18 `[VERIFIED]` |
 | Continuous {¬,∧,∨} on [0,1]², swap/min-max | Bílková et al. 2022 (G², twist product) | **Subsumed** |
 | π_τ + exactness core | α-cut cutworthiness, Klir–Yuan 1995 | Standard math; architecture ours |
 | Four-signed tableau form | Hähnle 1994; Priest 2008 | Paradigm known; specific verified system ours |
@@ -166,14 +165,14 @@ generative-tier interpretation (α/Θ, quasivance), not any single semantic ingr
 
 ## Search scope (for "novel as far as checked" claims)
 
-Searched 2026-07-03 (WebSearch/WebFetch): SEP (many-valued logic; truth values;
-relevance logic), CrossRef API, Semantic Scholar API, arXiv (1010.2552, 2203.01237,
+Search sources included SEP (many-valued logic; truth values; relevance logic),
+Crossref, Semantic Scholar, arXiv (1010.2552, 2203.01237,
 1711.05816 vicinity), publisher pages (Springer/Wiley/OUP/CUP). Query families:
 Arieli–Avron logical bilattices language/calculi; Hähnle signed tableaux sets-as-signs;
 fuzzy/continuous Belnap on [0,1]/[0,1]²; α-cut cutworthiness min/max; paraconsistent
 Gödel pair semantics; FDE tableaux signs.
 
-**Post-2022 sweep — completed 2026-07-03 (round-2 revision):** queries covered
+**Post-2022 sweep — completed 2026-07-03:** queries covered
 twist-product/bilattice calculi 2023–2026, consensus-connective completeness work, and
 proof-assistant formalizations of Belnap/FDE/paraconsistent logics. Findings:
 - **[bilkova2021constraint]** (TABLEAUX 2021, LNCS 12842:20–37, CrossRef-verified) —
@@ -191,39 +190,9 @@ proof-assistant formalizations of Belnap/FDE/paraconsistent logics. Findings:
 
 **Still not searched:** neutrosophic literature in depth (unconstrained (T,I,F)
 triples — adjacent but different signature); Vietnamese/Chinese-language literature.
-Disclosed, judged non-blocking by the round-2 panel.
+These limitations bound every novelty statement in the manuscripts.
 
-## Consulted-sources log (including dead ends)
-
-- SEP `entries/logic-fde/` — **404, no standalone FDE entry**; FDE covered in
-  `entries/logic-manyvalued/` §2.3 (fetched ✓, BD lattice presentation confirmed) and
-  `entries/truth-values/` (fetched ✓ but the model-extracted order summary was garbled —
-  not used for table verification).
-- CrossRef records (fetched ✓): Belnap chapter 10.1007/978-94-010-1161-7_2 (pp. 5–37);
-  Ginsberg 10.1111/j.1467-8640.1988.tb00280.x (4(3):265–316); Shannon
-  10.1002/j.1538-7305.1948.tb01338.x (27(3):379–423); Belnap "How a Computer Should
-  Think" 2019 reprint 10.1007/978-3-030-31136-0_4 (original pages 30–56 per the
-  CrossRef-carried reference; some records say 30–55 — discrepancy noted in .bib).
-- Semantic Scholar records (fetched ✓): Dunn 1976, Fitting 1991, Arieli–Avron 1996,
-  Priest 1979.
-- Rivieccio, arXiv 1010.2552 (PDF fetched ✓): bilattice language {∧,∨,⊗,⊕,¬(,→)},
-  complete Gentzen + Hilbert systems for Arieli–Avron logics.
-- Bílková–Frittella–Kozhemiachenko, arXiv 2203.01237 via ar5iv (fetched ✓): Definition 4
-  clauses quoted in §3 above; twist product [0,1]⋈; no (min,min) connective.
-- Hähnle 1994: OUP product page 403; CrossRef bibliographic query (fetched ✓):
-  OUP, 1994-01-06, DOI 10.1093/oso/9780198539896.001.0001. (Google Books shows the 2023
-  digital reissue — do not cite 2023 as the year.)
-- Priest, Introduction to Non-Classical Logic 2e, CUP 2008 (Cambridge frontmatter +
-  search ✓): FDE tableaux, ch. 8, signs A,+/A,−.
-- Klir–Yuan 1995 (multiple bookseller/review records ✓, ISBN 0-13-101171-5): α-cut
-  cutworthiness; min/max the only cutworthy t-norm/conorm pair.
-- PhilPapers records BELAUF/BELHAC — **403 Forbidden** (not used).
-- Fitting's bilattice bibliography page (comet.lehman.cuny.edu) — **connection refused**
-  (not used).
-- Wiley/Springer/ScienceDirect article landing pages — 403/redirect walls; metadata
-  taken from CrossRef/Semantic Scholar APIs instead.
-
-## 6. Finite-domain quantified NPL vs. the literature (related-work pass 2026-07-09)
+## 7. Finite-domain quantified NPL vs. the literature (updated 2026-08-16)
 
 Search scope: web searches on (a) tableaux for finitely-valued first-order logics
 (Carnielli, Haehnle, Baaz-Fermueller lines), (b) quantified Belnap-Dunn/FDE,
@@ -295,3 +264,34 @@ a quantified many-valued tableau"; phrase as "to our knowledge" citing this note
 - Springer/ACM metadata for Blanchette-Popescu-Traytel JAR 58(1).
 - Search results referencing Ridge-Margetson, From/Villadsen, TableauxRocq
   (arXiv:2605.16952), hybrid-logic Lean 4 completeness (arXiv:2606.19761).
+
+## 8. August 2026 corrective refresh
+
+This section supersedes only the stale bibliographic details in §7; its
+subsumption and search-scoped novelty verdicts remain unchanged.
+
+- **Běhounek--Daňková--Dvořák.** The final IUKM 2023 proceedings record is
+  LNCS 14375, pp. 15--26, DOI `10.1007/978-3-031-46775-2_2`, not merely a
+  conference presentation. The project bibliography now records the published
+  version and retains arXiv:2306.13079 as a cross-reference.
+- **TableauxRocq.** Rosain--Cailler, *TableauxRocq: Proving Soundness and
+  Certification of a Tableau Method in Rocq*, ITP 2026, LIPIcs 382, article 12,
+  DOI `10.4230/LIPIcs.ITP.2026.12`, is a recent primary comparator. It verifies
+  soundness and certificate checking for a classical first-order tableau. It
+  does not treat a many-valued logic and does not establish the quantified
+  many-valued completeness theorem claimed here. It therefore narrows the
+  mechanization comparison without subsuming the NPL result.
+- **Corrected categorization.** Villadsen--Schlichtkrull 2017 is cited as prior
+  proof-assistant work on paraconsistent metatheory, not as a classical
+  first-order sequent-calculus completeness result.
+
+**Updated verdict (2026-08-16).** The generic many-valued first-order tableau
+claim remains **SUBSUMED** by Carnielli/Hähnle. The narrower statement — a
+machine-checked completeness theorem for this quantified many-valued tableau —
+remains **NOVEL AS FAR AS CHECKED**, never an absolute priority claim. The search
+still does not cover all non-English or unpublished literature.
+
+Primary sources added in this refresh: Springer DOI metadata for
+`10.1007/978-3-031-46775-2_2`; the official LIPIcs ITP 2026 article and BibTeX
+record for `10.4230/LIPIcs.ITP.2026.12`; official Lean and mathlib release records
+for the reproducibility upgrade (not evidence for a mathematical novelty claim).

@@ -158,25 +158,27 @@ theorem quasivant_projects_N {F : GenFrame} (s : GenState F) (τ : ℝ) (hτ : 0
 /-- Prop 5.8: initialization is not injective; a quasivant and a non-quasivant state
 can initialize identically (witness at d = 1: polar vs neutral structure, both α = 0). -/
 theorem init_not_injective : ∃ (F : GenFrame) (s₁ s₂ : GenState F),
-    s₁.pos.Quasivant ∧ ¬ s₂.pos.Quasivant ∧ s₁.init = s₂.init := by
+    s₁.Quasivant ∧ ¬ s₂.Quasivant ∧ s₁.init = s₂.init := by
   refine ⟨canonFrame 1 one_pos,
-    ⟨⟨0, fun _ => 0, ?_, ?_⟩, ⟨0, fun _ => 1 / 2, ?_, ?_⟩⟩,
+    ⟨⟨0, fun _ => 0, ?_, ?_⟩, ⟨0, fun _ => 0, ?_, ?_⟩⟩,
     ⟨⟨0, fun _ => 1 / 2, ?_, ?_⟩, ⟨0, fun _ => 1 / 2, ?_, ?_⟩⟩, ?_, ?_, ?_⟩
+  · exact ⟨le_refl _, by norm_num⟩
+  · intro k; exact ⟨le_refl _, by norm_num⟩
   · exact ⟨le_refl _, by norm_num⟩
   · intro k; exact ⟨le_refl _, by norm_num⟩
   · exact ⟨le_refl _, by norm_num⟩
   · intro k; constructor <;> norm_num
   · exact ⟨le_refl _, by norm_num⟩
   · intro k; constructor <;> norm_num
-  · exact ⟨le_refl _, by norm_num⟩
-  · intro k; constructor <;> norm_num
-  · -- quasivant: α = 0 and polar Θ ≠ neutral Θ
-    refine ⟨rfl, fun hcon => ?_⟩
-    have := congrFun hcon ⟨0, (canonFrame 1 one_pos).d_pos⟩
-    norm_num [neutralΘ] at this
-  · -- not quasivant: Θ IS neutral
+  · -- quasivant state: both channels have α = 0 and polar Θ ≠ neutral Θ
+    constructor <;> refine ⟨rfl, fun hcon => ?_⟩
+    · have := congrFun hcon ⟨0, (canonFrame 1 one_pos).d_pos⟩
+      norm_num [neutralΘ] at this
+    · have := congrFun hcon ⟨0, (canonFrame 1 one_pos).d_pos⟩
+      norm_num [neutralΘ] at this
+  · -- non-quasivant state: both structures are neutral
     intro hcon
-    exact hcon.2 rfl
+    exact hcon.1.2 rfl
   · -- identical initialization: both channels have α = 0
     simp [GenState.init, Channel.eff]
 

@@ -1,97 +1,141 @@
-# Artifact: Nullivance Propositional Logic (Lean 4)
+# Reproducibility artifact for Nullivance Logic 0.7.0
 
-This repository is the machine-checked artifact for the manuscript
-*Nullivance Propositional Logic: Threshold-Signed Consequence on the Unit Square with a
-Machine-Checked Completeness Theorem* (`papers/npl-core/main.tex`).
+This artifact supports both manuscripts:
 
-## Build
+1. *Nullivance Propositional Logic: Threshold-Signed Consequence on the Unit
+   Square with a Machine-Checked Completeness Theorem*;
+2. *Finite-Domain Quantified Nullivance Logic: A Machine-Checked Complete Core
+   Tableau and Refuted Replay Bridges*.
 
+The artifact is the source tree of a tagged release, not a prebuilt binary image.
+The release ZIP is created only from the Git index by
+`scripts/New-ReleasePackage.ps1`; its SHA-256 sidecar identifies the bytes that
+were distributed.
+
+## Locked environment
+
+- Lean: `leanprover/lean4:v4.32.1`, pinned by `Nullivance/lean-toolchain`.
+- mathlib: tag `v4.32.1`, resolved to commit
+  `520045ab14e26149ee970e2e617ca04b09bde5d6` in
+  `Nullivance/lake-manifest.json`.
+- Library version: `0.7.0` in `Nullivance/lakefile.toml`.
+- LaTeX: `pdflatex` and `bibtex`; package requirements are exercised by the
+  checked build script rather than left implicit.
+- PDF timestamp epoch: `1786838400` (2026-08-16T00:00:00Z), set by
+  `scripts/Build-Papers.ps1` through `SOURCE_DATE_EPOCH` and
+  `FORCE_SOURCE_DATE`.
+
+Network access is needed only to install the pinned Lean toolchain and retrieve
+the pinned Lake dependencies/cache. No proof or manuscript result queries an
+external service at build time.
+
+## One-command release verification
+
+From the repository root:
+
+```powershell
+& ./scripts/Verify-Release.ps1
 ```
-cd Nullivance
-lake exe cache get      # fetch prebuilt mathlib oleans
-lake build              # builds the whole library
-```
 
-- **Toolchain:** `leanprover/lean4:v4.32.0-rc1` (pinned in `Nullivance/lean-toolchain`).
-- **Dependency:** mathlib, pinned in `Nullivance/lake-manifest.json` at rev
-  `8f5331973a3e2b3cc5fd307208f456ccd6d3b467`.
-- **Result:** the library builds with **no `sorry` and no errors** (≈700 top-level
-  declarations across 12 modules, count of 2026-07-09).
+The command intentionally fails if the worktree is dirty. During development,
+`-AllowDirty` permits the same mathematical and document checks without claiming
+that the current tree is an immutable release. In an extracted release archive,
+where Git metadata is intentionally absent, the same command verifies source,
+metadata, Lean, and manuscript contents without a worktree-cleanliness assertion.
 
-Verify the sorry-free claim:
-```
-grep -rn "\bsorry\b\|\badmit\b" Nullivance/Nullivance   # only the word in a comment
-```
+The gate performs:
 
-## Module map
+1. required-file, JSON, CFF, version, and stable-toolchain checks;
+2. independent enumeration of all numbered canonical items and their unique
+   epistemic labels;
+3. regeneration and byte-level comparison of `docs/CLAIM_LEDGER.md`;
+4. scans for `sorry`, `admit`, custom `axiom`, and `opaque` declarations;
+5. Lean resolution of every declaration named in a manuscript `[L]` marker;
+6. `lake build` of the complete import root;
+7. four-pass bibliography-aware construction of both PDFs;
+8. checks for unresolved references/citations, overfull boxes, and Git whitespace
+   errors.
 
-| Module | Manuscript / docs section | Content |
-|---|---|---|
-| `Nullivance/Basic.lean` | — | Library root doc-module (no declarations) |
-| `Nullivance/Syntax.lean` | §2 | `Formula` (atoms; ¬ ∧ ∨ ⊕; ⇒ abbreviation) |
-| `Nullivance/Semantics.lean` | §3, §5 | `V4` matrix, signs, `eval`, De Morgan / ⊕-algebra / latent collapse on FOUR |
-| `Nullivance/Continuous.lean` | §3, §4, §7 | `TruthObj`=ℝ×ℝ, `evalC`, `proj`, exact projection, bilattice orders |
-| `Nullivance/ProofTheory.lean` | §5, §7 | `Closes` (four-signed tableau), `Derives`, `ND`, `NDO` calculi |
-| `Nullivance/Tableau.lean` | §5 (Rem 3.6) | Explicit finite proof trees `TableauCloses`; equivalence `tableauCloses_iff_closes` |
-| `Nullivance/Metatheory.lean` | §6, §7 | soundness, completeness, lifting, τ-invariance, ND/ND⊕ metatheory, corollaries |
-| `Nullivance/Decidability.lean` | §6 (Thm 6.3) | Finite model checker `consequence4Bool` + `Decidable` instances |
-| `Nullivance/Compactness.lean` | §6 (Thm 6.4) | Set/Finset API, compactness, strong completeness |
-| `Nullivance/Classical.lean` | §7 | Boolean recovery on the glut/gap-free ⊕-free fragment |
-| `Nullivance/FiniteFO.lean` | second manuscript (`papers/npl-finite-fo/`); docs §2.I, §3.D–3.F | Finite-domain quantified layer, complete: semantics, exact projection, tableaux, refuted bridges, replay study, and **semantic completeness of the macro-free core calculus** (Thm 3.74/3.75) |
-| `Nullivance/Generative.lean` | §8 | `GenFrame`, initialization, quasivance (imported by no core module) |
+The continuous-integration workflow repeats the Lean and manuscript gates on a
+fresh hosted environment.
 
-## Correspondence: manuscript result → Lean declaration
+## Lean module map
 
-Every manuscript result marked **[L]** is backed by a sorry-free declaration. The only
-results still marked **[paper]** (full proofs in the paper, not formalized) are: the
-FDE-conservativity half of the conservativity corollary, the coNP-completeness
-proposition, and the bifilter-positioning proposition (it quantifies over another
-framework's definitions). Compactness/strong completeness (Thm 6.4) and decidability
-(Thm 6.3) — formerly [paper] — are **Lean-verified since 2026-07-04**. Key
-correspondences:
-
-| Manuscript | Lean declaration(s) |
+| Module | Scope |
 |---|---|
-| Exact projection (Thm 4.2) | `Continuous.exact_projection`, `sat_projection` |
-| Bilattice orders (Lem 3.4iv) | `Continuous.le_t`/`le_k` + meet/join lemma family |
-| Tableau soundness | `Metatheory.Closes.unsat` |
-| FOUR completeness (Thm 6.1) | `Metatheory.closes_of_unsat`, `derives_iff_consequence4` |
-| Continuous completeness (Thm 6.2) | `Metatheory.derives_iff_consequenceC` |
-| Decidability (Thm 6.3) | `Metatheory.consequence4Bool_correct`, `decidableDerives`, `decidableConsequenceC` |
-| Compactness; strong completeness (Thm 6.4) | `Metatheory.compactness_satisfiable4_set`, `compactness_consequence4_set`, `compactness_consequenceC_set`, `derivesSet_iff_consequenceCSet` |
-| Threshold invariance (Prop 3.4) | `Metatheory.consequenceCAt_iff_consequenceC` |
-| Paraconsistency (Cor 7.x) | `Metatheory.non_explosion` |
-| Detachment fails (Prop 7.x) | `Metatheory.modus_ponens_fails` |
-| ⊕ not FDE-definable (Prop 7.x) | `Metatheory.classical_closed`, `oplus_not_definable` |
-| ND incompleteness (Prop 7.x) | `ProofTheory.ND`, `Metatheory.ND.sound_w`, `nd_incomplete` |
-| Classical recovery (§7) | `Metatheory.consequence4OnClassical_iff_bool` |
-| ND⊕ completeness (docs Thm 3.16/3.20) | `Metatheory.NDO.complete`, `NDO.oplusFree_complete` |
-| Proof trees ≃ `Closes` (Rem 3.6) | `ProofTheory.tableauCloses_iff_closes` |
-| Signs not internalizable (Prop 9.1iii) | `Metatheory.signs_not_internalizable`, `eval_const_B` |
-| Generative interface (Def 8.1) | `Generative.GenState.init_mem` |
-| Quasivance → N (Prop 8.3) | `Generative.quasivant_projects_N`, `init_not_injective`, `polar_kills_intensity` |
-| Finite-FO layer (docs §2.I, §3.D–F; second manuscript) | `FiniteFO.finite_exact_projection`, `QClosesExt.unsat`, `QDerivesExt.complete`, refuted bridges `qcompleteness_current_refuted`, `qeqRefl0_not_derivable` |
-| Core semantic completeness (docs Thm 3.74) | `FiniteFO.QClosesExtCore.complete_of_unsat`, `qclosesExtCore_iff_unsat`, `QDerivesExtCore.complete`, `qDerivesExtCore_iff_qconsequence4` |
-| Constrained grounding reaches the core (docs Thm 3.75; Conj 3.39 settled) | `FiniteFO.groundBranch_closes_to_core`, `satBranch_groundVal_rigid` |
-| Tail consumer + dispatcher (docs Prop 3.72/3.73) | `FiniteFO.ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core` (+3 variants), `closeT/F_pair_dispatch_core`, `closeT/F_members_dispatch_core` |
+| `Basic` | Library root documentation |
+| `Syntax` | Propositional syntax and derived implication |
+| `Semantics` | FOUR, signs, evaluation, and algebraic laws |
+| `Continuous` | Unit-square semantics, threshold projection, bilattice orders |
+| `ProofTheory` | Tableau closure, derivability, ND, and ND-with-consensus |
+| `Tableau` | Explicit finite proof trees and equivalence with `Closes` |
+| `Metatheory` | Soundness, completeness, projection lifting, and separation results |
+| `Operational` | Terminating reference search, schedule independence, countermodels |
+| `Decidability` | Executable finite model checking and decidability instances |
+| `Compactness` | Set/Finset APIs, compactness, and strong completeness |
+| `Classical` | Boolean recovery on the glut/gap-free consensus-free fragment |
+| `FiniteFO` | Finite-domain syntax/semantics, tableaux, replay study, completeness |
+| `Generative` | Optional generative interface, isolated from the logical core |
 
-The full development documents are in `docs/` (chapters 0–5, design records, glossary,
-intake ledger, audit reports); the manuscript's numbering is presentational and does not
-match the stable `docs/` numbering (project rule R3).
+`Nullivance/Nullivance.lean` imports all thirteen modules and is the default Lake
+target.
 
-## Reproducing the manuscript PDFs
+## Evidence correspondence
 
-Two manuscripts share the bibliography in `references/bibliography.bib`:
-`papers/npl-core` (the propositional core) and `papers/npl-finite-fo`
-(the finite-domain quantified layer, headline Thm 3.74). For each:
+Every manuscript declaration marked `[L]` names its supporting Lean declaration.
+The exhaustive canonical crosswalk is `docs/DOC_LEAN_MATRIX.md`; the status
+inventory is `docs/CLAIM_LEDGER.md`. Headline anchors include:
 
+| Result | Lean evidence |
+|---|---|
+| Exact threshold projection | `Continuous.exact_projection`, `sat_projection` |
+| Propositional soundness/completeness | `Closes.unsat`, `closes_of_unsat`, `derives_iff_consequenceC` |
+| Explicit proof-tree equivalence | `tableauCloses_iff_closes` |
+| Reference-search correctness and countermodels | `referenceCloses_iff_Closes`, `referenceCloses_false_countermodel` |
+| Progressing scheduler independence | `all_terminal_reachable_agree` and its corollaries |
+| Finite-FO core soundness/completeness | `QClosesExtCore.unsat`, `QClosesExtCore.complete_of_unsat` |
+| Fixed-signature finite-FO completeness | `qDerivesExtCore_iff_qconsequence4Sig` |
+| Constrained grounding bridge | `groundBranch_closes_to_core` |
+| Universal repaired replay bridge | `admissible_ground_replay_bridge_mem_verified` |
+
+The three results explicitly marked `[paper]` in the propositional manuscript are
+paper-level only: the stated conservativity half, coNP-completeness, and the
+bifilter-positioning comparison. They must not be described as Lean-verified.
+
+## Build the PDFs directly
+
+```powershell
+& ./scripts/Build-Papers.ps1
 ```
-cd papers/<name>
-pdflatex main && bibtex main && pdflatex main && pdflatex main
+
+The script runs `pdflatex`, `bibtex`, and two final `pdflatex` passes for each
+manuscript and fails on missing output or unresolved references/citations. Two
+successive release builds on the declared environment produce identical PDF
+SHA-256 hashes.
+
+## Verify the source archive
+
+From the repository root or an extracted copy containing the archive and sidecar:
+
+```powershell
+& ./scripts/Verify-Archive.ps1 `
+  -ArchivePath ./dist/Nullivance-0.7.0.zip `
+  -ChecksumPath ./dist/Nullivance-0.7.0.zip.sha256
 ```
-Requires a LaTeX distribution with `amsmath`, `amssymb`, `booktabs`, `hyperref`,
-`cleveref`, `lmodern`, `microtype` (all standard). Bibliography style `plain`.
+
+This checks the archive bytes, filename binding, release prefix, required source
+and PDF entries, and absence of development-only/build-output paths.
+
+## Scope and non-claims
+
+- Formal verification checks derivability from the stated definitions; it does
+  not empirically validate the motivation or establish novelty by itself.
+- Novelty statements are search-scoped in `references/npl-positioning.md`.
+- Historical refutations and superseded approaches remain in the repository as
+  part of the research record.
+- A DOI or public repository URL is not invented in this release. It is
+  added to `CITATION.cff` and both manuscripts only after a real archival deposit.
 
 ## License
 
-CC-BY-4.0 (see `.zenodo.json`).
+CC BY 4.0; see `LICENSE`.

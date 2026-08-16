@@ -196,15 +196,16 @@ Open follow-up:
 - ~~Define any remaining generated-trace invariant needed by those fold-tail source
   cases~~ — **obsolete**: Prop 3.72/3.73 eliminated the need for generated-trace
   invariants in the dispatcher.
-- ~~Prove Conj 3.39 without invoking `propSim` or `rigidPropSim`~~ — **done
-  2026-07-09, Thm 3.75** (`FiniteFO.groundBranch_closes_to_core`), via the route
-  revision recorded below: semantic completeness of the core calculus
+- Prove Conj 3.39 without invoking `propSim` or `rigidPropSim` — **final implication
+  proved, constructor replay still open**. Thm 3.75
+  (`FiniteFO.groundBranch_closes_to_core`) uses the route revision recorded below:
+  semantic completeness of the core calculus
   (**Thm 3.74**, `FiniteFO.QClosesExtCore.complete_of_unsat`) proved by the
   quantified engine `qclosesCore_todo` with the domain-weighted measure
   `qsize(∀xφ) = (n+1)·qsize(φ) + 1`; every core rule strictly decreases todo
   weight, fold tails never arise, and the literal stage uses the canonical
-  finite model plus the equality and ground closure clauses. Conj 3.39's final
-  statement follows by semantic transfer through `Closes.unsat` +
+  finite model plus the equality and ground closure clauses. Conj 3.39's displayed
+  final implication follows by semantic transfer through `Closes.unsat` +
   `ground_truth`/`satBranch_groundVal_rigid`.
 - ~~Revisit Thm 3.35 after the core completeness lands~~ — **done 2026-07-09**:
   finite-domain completeness is restated with `QClosesExtCore` as target
@@ -214,6 +215,26 @@ Open follow-up:
   replay-trace calculus; the replay layer (Props 3.40–3.73) remains verified and
   documents the simulation program, but the publication path runs through
   Thm 3.74/3.75.
+- Thm 3.77 `[VERIFIED]` (2026-07-27) proves the semantic consequence for every
+  admissible trace:
+  `Closes T.groundBranch → QClosesExtCore T.qBranch`. Its satisfaction-transfer
+  proof consumes all admissibility cases, including the four empty-fold exclusions.
+  It does not construct `ReplayClosesCore T`, so Conj 3.50 remains open at exactly
+  the certificate level.
+
+Status correction (2026-07-27): Thm 3.75 proves the same final implication by a
+semantic reconstruction, not the constructor-by-constructor replay asserted by Conj
+3.39. Accordingly Conj 3.39 and its precise trace-level form Conj 3.50 remain
+`[CONJECTURE]`; only the final implication is `[VERIFIED]`.
+
+## Amendment 2026-08-13 (DR-0019)
+
+The preceding conjectural status is superseded. An admissible nonempty structured-fold
+trace has a canonical propositional closure but no `ReplayClosesCore` certificate. Lean
+verifies the witness and the negated universal bridge. Conjectures 3.39 and 3.50 are
+therefore `[REFUTED]` at the intended certificate level. Theorems 3.74, 3.75, and 3.77,
+and every definition introduced by this record, are unchanged. See DR-0019 for the
+inversion proof, repair candidates, and impact analysis.
 
 ## Verification
 

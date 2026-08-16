@@ -230,9 +230,14 @@ theorem _root_.Nullivance.ProofTheory.Closes.mono {B B' : Branch} (h : Closes B)
   | oplusFneg h _ _ ih1 ih2 =>
       exact .oplusFneg (hsub _ h) (ih1 (lift _ hsub)) (ih2 (lift _ hsub))
 
+/-- Def 4.9: the canonical FOUR valuation reads the two positive atomic signs off a
+branch. -/
+def canonicalVal (B : Branch) : Nat → V4 := fun m =>
+  ⟨decide ((Sign.Tpos, Formula.atom m) ∈ B),
+   decide ((Sign.Fpos, Formula.atom m) ∈ B)⟩
+
 /-- Literal stage (Def 4.9 + Lem 4.10): an unsatisfiable branch of atomic signed
-formulas contains a complementary pair, hence closes. The canonical valuation reads
-the positive literals off the branch. -/
+formulas contains a complementary pair, hence closes. -/
 theorem closes_lits (lits : Branch)
     (hlit : ∀ sφ ∈ lits, ∃ m, sφ.2 = Formula.atom m)
     (hunsat : ∀ v, ¬ satBranch v lits) : Closes lits := by
@@ -243,22 +248,21 @@ theorem closes_lits (lits : Branch)
   · obtain ⟨m, h1, h2⟩ := hF
     exact .closeF h1 h2
   exfalso
-  apply hunsat (fun m => ⟨decide ((Sign.Tpos, Formula.atom m) ∈ lits),
-                          decide ((Sign.Fpos, Formula.atom m) ∈ lits)⟩)
+  apply hunsat (canonicalVal lits)
   intro sφ hmem
   rcases sφ with ⟨S, φ⟩
   obtain ⟨m, hm⟩ := hlit _ hmem
   dsimp at hm
   subst hm
   cases S with
-  | Tpos => simp [sat4, eval, V4.sat, hmem]
+  | Tpos => simp [sat4, eval, V4.sat, canonicalVal, hmem]
   | Tneg =>
       have hnot : (Sign.Tpos, Formula.atom m) ∉ lits := fun hcon => hT ⟨m, hcon, hmem⟩
-      simp [sat4, eval, V4.sat, hnot]
-  | Fpos => simp [sat4, eval, V4.sat, hmem]
+      simp [sat4, eval, V4.sat, canonicalVal, hnot]
+  | Fpos => simp [sat4, eval, V4.sat, canonicalVal, hmem]
   | Fneg =>
       have hnot : (Sign.Fpos, Formula.atom m) ∉ lits := fun hcon => hF ⟨m, hcon, hmem⟩
-      simp [sat4, eval, V4.sat, hnot]
+      simp [sat4, eval, V4.sat, canonicalVal, hnot]
 
 /- Generic decomposition steps for the completeness engine. `c` is the compound at the
    head of the todo segment, `c1`/`c2` its decomposition products. -/
@@ -573,6 +577,10 @@ theorem derives_iff_consequence4 (Γ : Branch) (sφ : SignedFormula) :
 def satBranchC (v : Nat → TruthObj) (τ : ℝ) (B : Branch) : Prop :=
   ∀ sφ ∈ B, SatC τ (evalC v sφ.2) sφ.1
 
+@[simp] theorem model_satBranch_eq_unbundled (M : Continuous.Model) (B : Branch) :
+    M.satBranch B = satBranchC M.valuation M.threshold B := by
+  rfl
+
 /-- Embedding of FOUR corners into the unit square (Thm 4.15, ⇐ direction). -/
 def iota (x : V4) : TruthObj :=
   ((if x.t then 1 else 0 : ℝ), (if x.f then 1 else 0 : ℝ))
@@ -645,6 +653,22 @@ thresholds τ ∈ (0,1] (Def 2.6). -/
 def ConsequenceC (Γ : Branch) (sφ : SignedFormula) : Prop :=
   ∀ (v : Nat → TruthObj) (τ : ℝ), (∀ n, InSquare (v n)) → 0 < τ → τ ≤ 1 →
     satBranchC v τ Γ → SatC τ (evalC v sφ.2) sφ.1
+
+/-- Def 2.6, literally quantified over the bundled model of Def 2.2. -/
+def ConsequenceCModel (Γ : Branch) (sφ : SignedFormula) : Prop :=
+  ∀ M : Continuous.Model, M.satBranch Γ → M.satSigned sφ
+
+/-- WP2 encoding bridge: bundled-model and unbundled finite-branch consequence
+are extensionally identical. -/
+theorem consequenceCModel_iff_consequenceC (Γ : Branch) (sφ : SignedFormula) :
+    ConsequenceCModel Γ sφ ↔ ConsequenceC Γ sφ := by
+  constructor
+  · intro h v τ hv hτ0 hτ1 hΓ
+    let M := Continuous.Model.mk v hv τ hτ0 hτ1
+    exact h M hΓ
+  · intro h M hΓ
+    exact h M.valuation M.threshold M.valuation_mem M.threshold_pos
+      M.threshold_le_one hΓ
 
 theorem derives_iff_consequenceC (Γ : Branch) (sφ : SignedFormula) :
     Derives Γ sφ ↔ ConsequenceC Γ sφ := by
@@ -955,8 +979,7 @@ theorem eval_eq_of_agree (v w : Nat → V4) :
 
 /- Prop 4.27 (τ-invariance): the consequence relation at any FIXED threshold
    τ ∈ (0,1] coincides with FOUR consequence, hence with the all-τ consequence of
-   Def 2.6 — quantifying over thresholds does not change the induced relation.
-   (Answers referee question R2.Q2 of the 2026-07-03 panel review.) -/
+   Def 2.6 — quantifying over thresholds does not change the induced relation. -/
 
 /-- Signed satisfaction transfers along the embedding at any fixed τ ∈ (0,1]. -/
 theorem SatC_iota_at (τ : ℝ) (h0 : 0 < τ) (h1 : τ ≤ 1) (w : Nat → V4)

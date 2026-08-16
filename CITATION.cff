@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: >-
+  If you use this formal development, cite the software release and the
+  manuscript relevant to your result.
+title: "Nullivance Logic: formal development and reproducible manuscripts"
+type: software
+authors:
+  - family-names: Trinh
+    given-names: Tung Lam
+    email: lamtung0481@gmail.com
+version: 0.7.0
+date-released: 2026-08-16
+license: CC-BY-4.0
+keywords:
+  - nullivance logic
+  - paraconsistent logic
+  - many-valued logic
+  - analytic tableaux
+  - Lean 4
+abstract: >-
+  A Lean 4 formalization and two reproducible manuscripts for the
+  propositional and finite-domain quantified layers of nullivance logic.

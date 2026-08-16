@@ -19,7 +19,7 @@ Lean module: `Nullivance.FiniteFO`.
 
 ## Motivation
 
-The quantified-extension research note identified a real obstacle in the full
+The quantified-extension analysis identified a real obstacle in the full
 continuous infinite-domain semantics: threshold projection through `sup` may fail when
 the supremum is not attained. Finite domains avoid this hazard and give a Lean-first
 route where min/max style exact projection should be provable.

@@ -23,6 +23,14 @@ abbrev Branch := List SignedFormula
 def satBranch (v : Nat → V4) (B : Branch) : Prop :=
   ∀ sφ ∈ B, sat4 v sφ = true
 
+/-- Def 3.2: a closed tableau leaf contains a complementary truth-sign pair or
+a complementary falsity-sign pair. -/
+inductive BranchClosed : Branch → Prop where
+  | closeT {B : Branch} {φ : Formula} :
+      (Sign.Tpos, φ) ∈ B → (Sign.Tneg, φ) ∈ B → BranchClosed B
+  | closeF {B : Branch} {φ : Formula} :
+      (Sign.Fpos, φ) ∈ B → (Sign.Fneg, φ) ∈ B → BranchClosed B
+
 /-- Def 3.2 (closure) + Def 3.3 (the 16 rules) + Def 3.5, fused per Rem 3.6:
 `Closes B` iff some tableau with root `B` is closed. Branching rules take two
 subproofs (one per child branch); non-branching rules take one. -/
@@ -84,6 +92,12 @@ inductive Closes : Branch → Prop where
   | oplusFneg {B : Branch} {φ ψ : Formula} :
       (Sign.Fneg, Formula.oplus φ ψ) ∈ B →
       Closes ((Sign.Fneg, φ) :: B) → Closes ((Sign.Fneg, ψ) :: B) → Closes B
+
+/-- Every closed leaf is closable without applying a decomposition rule. -/
+theorem BranchClosed.closes {B : Branch} (h : BranchClosed B) : Closes B := by
+  cases h with
+  | closeT hpos hneg => exact Closes.closeT hpos hneg
+  | closeF hpos hneg => exact Closes.closeF hpos hneg
 
 /-- Def 3.5: signed derivability — Σ ⊢_A Sφ iff Σ together with the
 opposite-signed conclusion closes. -/

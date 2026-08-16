@@ -1,6 +1,6 @@
 % Bibliography for the nullivance project.
 % Rules: every entry must be verified against the publisher / arXiv / SEP page before
-% being added (skill /related-work). Never add an entry from memory alone.
+% being added. Never add an entry from memory alone.
 %
 % Verification log: all entries below verified 2026-07-03 via CrossRef API /
 % Semantic Scholar API / publisher search results; per-entry sources in
@@ -15,8 +15,7 @@
   address   = {Dordrecht},
   year      = {1977},
   pages     = {5--37},
-  doi       = {10.1007/978-94-010-1161-7_2},
-  note      = {Page range per CrossRef record of the chapter DOI}
+  doi       = {10.1007/978-94-010-1161-7_2}
 }
 
 @incollection{belnap1977computer,
@@ -27,12 +26,7 @@
   publisher = {Oriel Press},
   address   = {Stocksfield},
   year      = {1977},
-  pages     = {30--56},
-  note      = {No DOI (Oriel Press); page range 30--55 in some records, 30--56 per
-               the CrossRef-carried reference of the 2019 reprint. Reprinted in
-               H. Omori and H. Wansing (eds.), New Essays on Belnap--Dunn Logic,
-               Synthese Library 418, Springer, 2019, pp. 35--53,
-               doi:10.1007/978-3-030-31136-0\_4}
+  pages     = {30--56}
 }
 
 @article{dunn1976intuitive,
@@ -242,9 +236,149 @@
   year    = {2017}
 }
 
-@misc{behounek2023free,
-  author = {Libor B\v{e}hounek and Martina Da\v{n}kov\'{a} and Anton\'{i}n Dvo\v{r}\'{a}k},
-  title  = {Free Quantification in Four-Valued and Fuzzy Bilattice-Valued Logics},
-  year   = {2023},
-  note   = {Presented at IUKM 2023; arXiv:2306.13079}
+@inproceedings{behounek2023free,
+  author    = {Libor B\v{e}hounek and Martina Da\v{n}kov\'{a} and Anton\'{i}n Dvo\v{r}\'{a}k},
+  title     = {Free Quantification in Four-Valued and Fuzzy Bilattice-Valued Logics},
+  booktitle = {Integrated Uncertainty in Knowledge Modelling and Decision Making},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {14375},
+  publisher = {Springer},
+  year      = {2023},
+  pages     = {15--26},
+  doi       = {10.1007/978-3-031-46775-2_2},
+  eprint    = {2306.13079},
+  archiveprefix = {arXiv}
+}
+
+@inproceedings{rosain2026tableauxrocq,
+  author    = {Johann Rosain and Julie Cailler},
+  title     = {{TableauxRocq}: Proving Soundness and Certification of a Tableau Method in {Rocq}},
+  booktitle = {17th International Conference on Interactive Theorem Proving (ITP 2026)},
+  series    = {Leibniz International Proceedings in Informatics (LIPIcs)},
+  volume    = {382},
+  pages     = {12:1--12:22},
+  publisher = {Schloss Dagstuhl--Leibniz-Zentrum f{\"u}r Informatik},
+  year      = {2026},
+  doi       = {10.4230/LIPIcs.ITP.2026.12}
+}
+
+@book{nasem2012complexmodels,
+  author    = {{National Research Council}},
+  title     = {Assessing the Reliability of Complex Models: Mathematical and
+               Statistical Foundations of Verification, Validation, and Uncertainty
+               Quantification},
+  publisher = {The National Academies Press},
+  address   = {Washington, DC},
+  year      = {2012},
+  doi       = {10.17226/13395},
+  note      = {Verified 2026-07-27 against the National Academies Press record}
+}
+
+@techreport{nasa2024models,
+  author      = {{National Aeronautics and Space Administration}},
+  title       = {Standard for Models and Simulations},
+  institution = {NASA Office of the Chief Engineer},
+  number      = {NASA-STD-7009B},
+  year        = {2024},
+  month       = mar,
+  note        = {Active Version B, document date 2024-03-05; verified 2026-07-27
+                 against the NASA Technical Standards System}
+}
+
+@book{nasem2019reproducibility,
+  author    = {{National Academies of Sciences, Engineering, and Medicine}},
+  title     = {Reproducibility and Replicability in Science},
+  publisher = {The National Academies Press},
+  address   = {Washington, DC},
+  year      = {2019},
+  doi       = {10.17226/25303},
+  note      = {Verified 2026-07-27 against the National Academies Press and NCBI records}
+}
+
+@article{nosek2018preregistration,
+  author  = {Nosek, Brian A. and Ebersole, Charles R. and DeHaven, Alexander C. and
+             Mellor, David T.},
+  title   = {The Preregistration Revolution},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {115},
+  number  = {11},
+  pages   = {2600--2606},
+  year    = {2018},
+  doi     = {10.1073/pnas.1708274114},
+  note    = {Verified 2026-07-27 against the PNAS DOI record}
+}
+
+@article{chambers2013registered,
+  author  = {Chambers, Christopher D.},
+  title   = {Registered Reports: A New Publishing Initiative at Cortex},
+  journal = {Cortex},
+  volume  = {49},
+  number  = {3},
+  pages   = {609--610},
+  year    = {2013},
+  doi     = {10.1016/j.cortex.2012.12.016},
+  note    = {Verified 2026-07-27 against PubMed and the journal DOI record}
+}
+
+@article{wilkinson2016fair,
+  author  = {Wilkinson, Mark D. and Dumontier, Michel and Aalbersberg, I. Jsbrand Jan
+             and others},
+  title   = {The {FAIR} Guiding Principles for Scientific Data Management and
+             Stewardship},
+  journal = {Scientific Data},
+  volume  = {3},
+  pages   = {160018},
+  year    = {2016},
+  doi     = {10.1038/sdata.2016.18},
+  note    = {Verified 2026-07-27 against the Scientific Data and PubMed records}
+}
+
+@article{platt1964strong,
+  author  = {Platt, John R.},
+  title   = {Strong Inference: Certain Systematic Methods of Scientific Thinking May
+             Produce Much More Rapid Progress Than Others},
+  journal = {Science},
+  volume  = {146},
+  number  = {3642},
+  pages   = {347--353},
+  year    = {1964},
+  doi     = {10.1126/science.146.3642.347},
+  note    = {Verified 2026-07-27 against PubMed}
+}
+
+@article{gneiting2007scoring,
+  author  = {Gneiting, Tilmann and Raftery, Adrian E.},
+  title   = {Strictly Proper Scoring Rules, Prediction, and Estimation},
+  journal = {Journal of the American Statistical Association},
+  volume  = {102},
+  number  = {477},
+  pages   = {359--378},
+  year    = {2007},
+  doi     = {10.1198/016214506000001437},
+  note    = {Verified 2026-07-27 against the JASA DOI record}
+}
+
+@article{lakens2017equivalence,
+  author  = {Lakens, Dani{\"e}l},
+  title   = {Equivalence Tests: A Practical Primer for t Tests, Correlations, and
+             Meta-Analyses},
+  journal = {Social Psychological and Personality Science},
+  volume  = {8},
+  number  = {4},
+  pages   = {355--362},
+  year    = {2017},
+  doi     = {10.1177/1948550617697177},
+  note    = {Verified 2026-07-27 against the journal DOI and PubMed records}
+}
+
+@article{wasserstein2016pvalues,
+  author  = {Wasserstein, Ronald L. and Lazar, Nicole A.},
+  title   = {The {ASA}'s Statement on p-Values: Context, Process, and Purpose},
+  journal = {The American Statistician},
+  volume  = {70},
+  number  = {2},
+  pages   = {129--133},
+  year    = {2016},
+  doi     = {10.1080/00031305.2016.1154108},
+  note    = {Verified 2026-07-27 against the journal DOI record}
 }

@@ -8,7 +8,7 @@
 What is being introduced or modified, stated formally.
 
 ## Intent
-What this is supposed to achieve, in the user's terms (link to `drafts/` source if any).
+What this is supposed to achieve, stated independently of implementation details.
 
 ## Alternatives considered
 Each rejected candidate formalization and the concrete reason it was rejected

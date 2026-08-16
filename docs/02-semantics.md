@@ -1,8 +1,5 @@
 # 2. Semantics
 
-Source: intake from `drafts/NPL_Nullivance_Complete.md` (Def 8–14, §9–11) and
-`drafts/NPL_v2_detailed_completeness_proof_VI.md` (§2.2–3.5). See `docs/INTAKE.md`.
-
 The continuous two-channel semantics (§2.A–2.C) is the canonical semantics of NPL.
 The finite FOUR matrix (§2.D) is its exact threshold projection (Theorem 2.13); the
 metatheory of chapter 4 is proved on FOUR and lifted back.
@@ -11,20 +8,25 @@ metatheory of chapter 4 is proved on FOUR and lifted back.
 
 ## 2.A Continuous semantics
 
-**Definition 2.1 (Truth-object).** `[DRAFT]`
+**Definition 2.1 (Truth-object).** `[VERIFIED]`
 A *truth-object* is a pair `(t, f) ∈ [0,1]²`. The first coordinate is the *truth channel*
 (degree of support for truth), the second the *falsity channel* (degree of support for
 falsity). The channels are independent: no constraint relates t and f.
 
-> *Lean:* `Nullivance.Continuous.TruthObj` (ℝ×ℝ), membership `InSquare` · *DR:* DR-0002, DR-0004
+> *Lean:* bundled carrier `Nullivance.Continuous.SquareTruthObj`; raw ambient carrier
+> `TruthObj = ℝ×ℝ` with membership predicate `InSquare`; strictness witness
+> `exists_truthObj_not_inSquare` · *DR:* DR-0002, DR-0004, DR-0016
 
-**Definition 2.2 (Model).** `[DRAFT]`
+**Definition 2.2 (Model).** `[VERIFIED]`
 An NPL model is a pair `M = (v, τ)` where `v : Atom → [0,1]²` assigns a truth-object to
 every atom, and `τ ∈ (0,1]` is the *manifestation threshold*.
 
 > ⚠ Deviation from source: D2 writes `M = (d, v, τ)` with `d` never defined; normalized to `(v, τ)` (INTAKE §G.1). · *DR:* DR-0003 · *Depends on:* Def 1.1, 2.1
+> *Lean:* `Nullivance.Continuous.Model` (including square-valuedness and
+> `0 < threshold ≤ 1`), `Model.ofSquareValuation`, `Model.squareValuation`,
+> `Model.eq_of_valuation_threshold` · *DR:* DR-0016.
 
-**Definition 2.3 (Valuation).** `[DRAFT]`
+**Definition 2.3 (Valuation).** `[VERIFIED]`
 `v` extends uniquely to `V_M : Form → [0,1]²`, writing `V_M(φ) = (t_M(φ), f_M(φ))`:
 
 | φ | t_M(φ) | f_M(φ) |
@@ -44,11 +46,14 @@ Negation is channel *swap* (not `1 − x`); ⊕ takes the ∧-law on the truth c
 > connective ⊕ in the object language over this square is NPL-specific as far as checked;
 > see `references/npl-positioning.md` §3 and the summary table there.
 
-> *Lean:* FOUR instance `Nullivance.Semantics.eval`; continuous instance `Nullivance.Continuous.evalC` (clauses `neg2`, `conj2`, `disj2`, `oplus2`) · *DR:* DR-0002 · *Depends on:* Def 1.2, 2.2
+> *Lean:* FOUR instance `Nullivance.Semantics.eval`; continuous raw instance
+> `Nullivance.Continuous.evalC` (clauses `neg2`, `conj2`, `disj2`, `oplus2`);
+> square-valued instance `evalSquare` and bundled-model instance `Model.eval` ·
+> *DR:* DR-0002, DR-0016 · *Depends on:* Def 1.2, 2.2
 
 ## 2.B Signs, states, and consequence
 
-**Definition 2.4 (Meta-signs).** `[DRAFT]`
+**Definition 2.4 (Meta-signs).** `[VERIFIED]`
 For a model M and formula φ, the four *signed satisfaction* relations are:
 
 - `M ⊨ T⁺φ ⟺ t_M(φ) ≥ τ`  and  `M ⊨ T⁻φ ⟺ t_M(φ) < τ`;
@@ -57,9 +62,12 @@ For a model M and formula φ, the four *signed satisfaction* relations are:
 The *opposite sign* is defined by `T⁺̄ = T⁻`, `T⁻̄ = T⁺`, `F⁺̄ = F⁻`, `F⁻̄ = F⁺`; each sign
 and its opposite are jointly exhaustive and mutually exclusive in every model.
 
-> *Lean:* `Nullivance.Semantics.Sign`, `Sign.opp`, `V4.sat` (FOUR side; exhaustiveness/exclusivity = `V4.sat_opp`, verified); continuous side `Nullivance.Continuous.SatC` · *DR:* DR-0003 · *Depends on:* Def 2.3
+> *Lean:* `Nullivance.Semantics.Sign`, `Sign.opp`, `V4.sat` (FOUR side;
+> exhaustiveness/exclusivity = `V4.sat_opp`, verified); continuous side
+> `Nullivance.Continuous.SatC`, bundled form `Continuous.Model.satSigned` ·
+> *DR:* DR-0003, DR-0016 · *Depends on:* Def 2.3
 
-**Definition 2.5 (Unsigned satisfaction; four states).** `[DRAFT]`
+**Definition 2.5 (Unsigned satisfaction; four states).** `[VERIFIED]`
 `M ⊨ φ ⟺ t_M(φ) ≥ τ` (i.e. unsigned satisfaction is `T⁺`; it reads the truth channel only).
 The threshold induces four *states* for φ in M:
 
@@ -72,9 +80,11 @@ The threshold induces four *states* for φ in M:
 
 The *designated* states are {T, B}.
 
-> *DR:* DR-0003 · *Depends on:* Def 2.4
+> *Lean:* `Nullivance.Semantics.V4.T/F/B/N`, `V4.designated`,
+> `Nullivance.Continuous.SatC` (`Tpos` case) · *DR:* DR-0003 ·
+> *Depends on:* Def 2.4
 
-**Definition 2.6 (Consequence).** `[DRAFT]`
+**Definition 2.6 (Consequence).** `[VERIFIED]`
 For a set Σ of signed formulas and a signed formula Sφ:
 `Σ ⊨ Sφ` iff **every** model `M = (v, τ)` — all valuations *and all thresholds* — satisfying
 every member of Σ satisfies Sφ. Unsigned consequence `Γ ⊨ φ` is the special case with all
@@ -84,11 +94,15 @@ signs `T⁺`.
 > ⚠ **However (Prop 4.27, 2026-07-03):** the induced relation is τ-invariant — consequence
 > at any single fixed τ ∈ (0,1] already coincides with the all-τ relation. The
 > quantification is thus a well-definedness statement, not an added strength; docs and
-> papers must not advertise it otherwise. · *Lean:* `Metatheory.Consequence4` (FOUR side), `Metatheory.ConsequenceC` (continuous side, finite Σ as a list), `Metatheory.ConsequenceCAt` (fixed τ) · *Depends on:* Def 2.4, 2.5
+> papers must not advertise it otherwise. · *Lean:* exact arbitrary-set definitions
+> `Metatheory.Consequence4Set` and `Metatheory.ConsequenceCSetModel`; unbundled
+> implementation `ConsequenceCSet`; finite-list restriction `ConsequenceCModel`
+> (`ConsequenceC` unbundled); fixed-threshold restriction `ConsequenceCAt` ·
+> *DR:* DR-0016 · *Depends on:* Def 2.4, 2.5
 
 ## 2.C The FOUR matrix and the projection
 
-**Definition 2.7 (FOUR).** `[DRAFT]`
+**Definition 2.7 (FOUR).** `[VERIFIED]`
 `FOUR = {0,1}² ⊆ [0,1]²`, with corners named `T = (1,0)`, `F = (0,1)`, `B = (1,1)`,
 `N = (0,0)`. The connectives act by the *same* coordinate formulas as Definition 2.3
 (swap / (min,max) / (max,min) / (min,min)); FOUR is closed under them. Signed satisfaction
@@ -97,7 +111,7 @@ reading with any τ ∈ (0,1], since the coordinates are 0/1).
 
 > *Lean:* `Nullivance.Semantics.V4` with `neg`, `conj`, `disj`, `oplus` · *DR:* DR-0002 · *Depends on:* Def 2.3, 2.4
 
-**Definition 2.8 (Threshold projection).** `[DRAFT]`
+**Definition 2.8 (Threshold projection).** `[VERIFIED]`
 `π_τ : [0,1]² → FOUR`, `π_τ(x, y) = (𝟙[x ≥ τ], 𝟙[y ≥ τ])`.
 For a continuous model `M = (v, τ)`, the *projected valuation* is `v^π_M(p) = π_τ(V_M(p))`
 on atoms, extended over `Form` by the FOUR operations; write `V^π_M(φ)` for the result.
@@ -254,10 +268,11 @@ arieli1996reasoning] — terminology anchored in `references/npl-positioning.md`
 ## 2.I Finite-domain quantified NPL (first pass, 2026-07-05)
 
 This section installs the finite-domain route chosen after the quantified-extension
-research note. It is deliberately a **separate extension layer**: no theorem in chapters
-1–4 depends on it yet.
+extension specification. It is deliberately a **separate extension layer**: the preceding
+propositional semantics does not depend on it, while the finite-domain proof theory in
+Chapter 3 does.
 
-**Definition 2.19 (Finite quantified syntax).** `[DRAFT]`
+**Definition 2.19 (Finite quantified syntax).** `[VERIFIED]`
 A finite-domain quantified formula is generated by:
 
 `φ ::= P(x₀,…,xₙ) | x=y | ¬φ | φ∧φ | φ∨φ | φ⊕φ | ∀x φ | ∃x φ`.
@@ -269,19 +284,26 @@ evaluation never becomes partial.
 
 > *Lean:* `FiniteFO.QFormula` · *DR:* DR-0007 · *Depends on:* Def 1.2.
 
-**Definition 2.20 (Finite FOUR model).** `[DRAFT]`
+**Definition 2.20 (Finite FOUR model).** `[VERIFIED]`
 For each natural number n, the domain is `Fin(n+1)`, hence nonempty and finite. A model
 assigns each predicate symbol P and each list of domain arguments a FOUR value. Equality
 is **crisp**: `x=y` evaluates to T when the assigned domain elements are equal and to F
-otherwise.
+otherwise. An assignment is a total map `ρ : Var → Fin(n+1)`. Its update
+`ρ[x:=d]` sends `x` to `d` and agrees with `ρ` on every variable distinct from `x`.
 
 > *Lean:* `FiniteFO.QModel`, `FiniteFO.Assignment`, `FiniteFO.update` · *DR:* DR-0007 · *Depends on:* Def 2.7.
 
-**Definition 2.21 (Finite quantified evaluation and satisfaction).** `[DRAFT]`
-Evaluation extends the propositional FOUR clauses by:
+**Definition 2.21 (Finite quantified evaluation and satisfaction).** `[VERIFIED]`
+For a model `M` and assignment `ρ`, evaluation `V_{M,ρ}` is defined recursively.
+Predicate and equality atoms satisfy
 
-- `V(∀x φ) = (∀d. t(V(φ[x:=d])), ∃d. f(V(φ[x:=d])))`;
-- `V(∃x φ) = (∃d. t(V(φ[x:=d])), ∀d. f(V(φ[x:=d])))`.
+- `V_{M,ρ}(P(x₁,…,xₖ)) = M(P)(ρ(x₁),…,ρ(xₖ))`;
+- `V_{M,ρ}(x=y) = T` if `ρ(x)=ρ(y)`, and `F` otherwise.
+
+The propositional clauses are those of Definition 2.7. The quantifier clauses are:
+
+- `V_{M,ρ}(∀x φ) = (∀d. t(V_{M,ρ[x:=d]}(φ)), ∃d. f(V_{M,ρ[x:=d]}(φ)))`;
+- `V_{M,ρ}(∃x φ) = (∃d. t(V_{M,ρ[x:=d]}(φ)), ∀d. f(V_{M,ρ[x:=d]}(φ)))`.
 
 Signed satisfaction is unchanged: a sign reads the appropriate coordinate of the FOUR
 value as in Def 2.4.
@@ -335,7 +357,179 @@ the theorem requires `0 < τ`.
 
 > *Lean:* `FiniteFO.QCModel`, `FiniteFO.forallC`, `FiniteFO.existsC`, `FiniteFO.projectModel`, `FiniteFO.proj_forallC`, `FiniteFO.proj_existsC`, `FiniteFO.finite_exact_projection` — sorry-free, `lake build` 2026-07-05. · *Depends on:* Def 2.8, 2.19–2.21, Thm 2.13, Lem 2.23.
 
+**Definition 2.25 (Fixed signature and arity well-formedness).** `[VERIFIED]`
+A fixed function-free signature `Σ` assigns each predicate symbol `P` a natural-number
+arity `ar_Σ(P)`. A raw formula is `Σ`-well-formed when every occurrence
+`P(x₁,…,xₖ)` satisfies `k = ar_Σ(P)`. Equality atoms are well-formed, and a compound
+formula is well-formed exactly when all its immediate formula constituents are
+well-formed. A signed formula inherits the condition from its formula; a branch is
+well-formed when each of its members is.
+
+The raw syntax and total raw model of Definitions 2.19–2.20 remain an implementation
+layer. All claims presented as fixed-signature first-order claims are restricted to
+`Σ`-well-formed inputs.
+
+> *Lean:* `FiniteFO.QSignature`, `FiniteFO.QFormula.WellFormed`,
+> `FiniteFO.QSigned.WellFormed`, `FiniteFO.QBranch.WellFormed` · *DR:* DR-0014 ·
+> *Depends on:* Def 2.19, 2.20.
+
+**Lemma 2.26 (Off-arity model data are semantically irrelevant).** `[VERIFIED]`
+Let `M` and `N` be finite FOUR models on the same domain. Suppose that, for every
+predicate `P` and argument list `a` of length `ar_Σ(P)`, `M(P)(a)=N(P)(a)`. Then for
+every assignment `ρ` and every `Σ`-well-formed formula `φ`,
+
+`V_{M,ρ}(φ) = V_{N,ρ}(φ)`.
+
+*Proof.* Use structural induction on `φ`. For a predicate atom, well-formedness gives
+that the mapped argument list has length `ar_Σ(P)`, so the model-agreement hypothesis
+applies. Equality is independent of the predicate interpretation. For negation, apply
+the induction hypothesis to its unique constituent and then the deterministic channel
+swap. For each binary connective, apply the two induction hypotheses and then its
+deterministic FOUR operation. For `∀x ψ` and `∃x ψ`, well-formedness supplies the
+hypothesis for `ψ`; apply the induction hypothesis at every updated assignment
+`ρ[x:=d]`, and substitute the resulting pointwise equalities into the finite
+quantifier clauses of Definition 2.21. These constructors exhaust Definition 2.19. ∎
+
+*R5 record:* the well-formedness hypothesis is load-bearing. Let every predicate have
+declared arity one, let `M` and `N` agree on all singleton argument lists, and let them
+assign different values to `P([])`. They agree on all signature-admitted tuples but
+evaluate the malformed atom `P()` differently. Thus the lemma is false for unrestricted
+raw formulas.
+
+> *Lean:* `FiniteFO.QModel.AgreeOn`, `FiniteFO.qeval_eq_of_agreeOn`,
+> `FiniteFO.qeval_eq_of_agreeOn_requires_wellFormed`,
+> `FiniteFO.qinst_wellFormed` — sorry-free, `lake build Nullivance.FiniteFO`
+> 2026-07-27 (912 jobs). · *DR:* DR-0014 · *Depends on:* Def 2.19–2.21, 2.25.
+
+**Definition 2.27 (Signature-indexed finite FOUR model and consequence).** `[VERIFIED]`
+Fix a signature `Σ` and a domain `D_n = Fin(n+1)`. A *signature-indexed model* `S`
+assigns to each predicate symbol `P` a function
+
+`S_P : (Fin(ar_Σ(P)) → D_n) → FOUR`.
+
+Thus an interpretation argument for `P` has exactly its declared arity; off-arity
+interpretation data are not part of `S`.
+
+The *canonical raw extension* `Ext_Σ(S)` interprets a raw list `a` by `S_P` when
+`|a|=ar_Σ(P)` (using the induced finite tuple), and by `N` otherwise. The value `N` is a
+fixed implementation default and is not semantically observable on `Σ`-well-formed
+formulas by Lemma 2.26. Conversely, the *restriction* `Res_Σ(M)` of a raw model `M`
+interprets an arity-indexed tuple by converting it to its finite list and applying `M`.
+Evaluation and signed satisfaction in `S` are evaluation and signed satisfaction in
+`Ext_Σ(S)`.
+
+For a branch `Γ` and signed formula `sφ`, define
+`QConsequence4Sig_Σ(Γ,sφ)` to mean:
+
+1. `Γ` and `sφ` are `Σ`-well-formed; and
+2. every signature-indexed model `S` satisfying `Γ` also satisfies `sφ`.
+
+> *Lean:* `FiniteFO.QSigModel`, `QSigModel.toRaw`, `QModel.restrict`,
+> `QSigModel.eval`, `QSigModel.satSigned`, `QSigModel.satBranch`,
+> `FiniteFO.QConsequence4Sig` · *DR:* DR-0014 ·
+> *Depends on:* Def 2.20, 2.21, 2.25; Lem 2.26.
+
+**Theorem 2.28 (Raw/signature semantic equivalence).** `[VERIFIED]`
+For every signature `Σ` and finite domain:
+
+1. `Res_Σ(Ext_Σ(S)) = S` for every signature-indexed model `S`;
+2. `Ext_Σ(Res_Σ(M))` agrees with every raw model `M` on all
+   `Σ`-admitted predicate tuples; and
+3. for every `Σ`-well-formed `Γ` and `sφ`,
+
+   `QConsequence4Sig_Σ(Γ,sφ) ↔ QConsequence4(Γ,sφ)`.
+
+*Proof.*
+
+1. Fix `S`, a predicate `P`, and an arity-indexed tuple `a`. Restriction converts `a`
+   to `List.ofFn a`, whose length is `ar_Σ(P)`. Extension therefore takes its
+   equal-length branch. The induced tuple is equal to `a` by finite-function
+   extensionality and the `List.get_ofFn` identity. Hence both interpretations agree
+   at every `P,a`, and structure extensionality gives
+   `Res_Σ(Ext_Σ(S))=S`.
+2. Fix `M`, `P`, and a list `a` with `|a|=ar_Σ(P)`. Extension again takes the
+   equal-length branch. Restriction evaluates `M` on the list reconstructed from the
+   tuple induced by `a`; `List.ofFn_get` and the length equality identify this list
+   with `a`. Hence `Ext_Σ(Res_Σ(M))(P,a)=M(P,a)`, which is exactly model agreement from
+   Lemma 2.26.
+3. For left-to-right, assume signature consequence and let a raw model `M` satisfy
+   `Γ`. By step 2 and Lemma 2.26, `Ext_Σ(Res_Σ(M))` satisfies the same well-formed
+   branch. Apply signature consequence to `Res_Σ(M)`, then use Lemma 2.26 once more
+   for `sφ` to transfer the conclusion to `M`. For right-to-left, assume raw
+   consequence and let a signature model `S` satisfy `Γ`. Its raw extension
+   `Ext_Σ(S)` is one of the raw models quantified by raw consequence, so it satisfies
+   `sφ` by the hypothesis. This is signature satisfaction by Definition 2.27. These
+   arguments prove both directions. ∎
+
+*R5 record.* The well-formedness hypotheses in part 3 cannot be removed. With
+`ar_Σ(P)=1`, choose two raw models that agree on singleton lists and disagree on the
+empty list. The malformed atom `P()` distinguishes them, as recorded after Lemma 2.26.
+The default value used by `Ext_Σ` is therefore harmless only on the well-formed
+language. Nullary predicates cause no exception: their unique tuple is the empty
+function, represented by the empty list. The domain remains nonempty because it is
+`Fin(n+1)`.
+
+> *Lean:* `FiniteFO.QSigModel.toRaw_restrict`,
+> `FiniteFO.QModel.restrict_toRaw_agreeOn`,
+> `FiniteFO.qsatSigned_eq_of_agreeOn`,
+> `FiniteFO.qsatBranch_iff_of_agreeOn`,
+> `FiniteFO.qconsequence4Sig_iff_qconsequence4` · *DR:* DR-0014 ·
+> sorry-free, full `lake build` 2026-07-27 (2001 jobs); axiom audit:
+> `[propext, Quot.sound]`. · *Depends on:* Def 2.27; Lem 2.26.
+
+**Theorem 2.29 (Exact bundled/unbundled continuous encoding).** `[VERIFIED]`
+The documentation-level continuous semantics and its raw Lean implementation are
+extensionally identical in the following precise senses:
+
+1. `[0,1]²` is represented by the bundled subtype `SquareTruthObj`, while
+   `TruthObj = ℝ×ℝ` is only its ambient carrier equipped with `InSquare`;
+2. square-valued valuations with a threshold in `(0,1]` convert to `Model`, and
+   extracting and rebundling the valuation recovers the same model;
+3. bundled evaluation `evalSquare`/`Model.eval`, after forgetting its membership proof,
+   is exactly `evalC`;
+4. for finite branches, consequence quantified over bundled `Model` objects is
+   equivalent to the existing unbundled `ConsequenceC`;
+5. for arbitrary signed premise sets, bundled `ConsequenceCSetModel` is equivalent to
+   unbundled `ConsequenceCSet`, and the corresponding satisfiability notions also agree.
+
+*Proof.*
+
+1. `SquareTruthObj` is the subtype of raw pairs satisfying `InSquare`; subtype
+   introduction and projection are the two conversion maps.
+2. Given a square-valued valuation `v` and admissible `τ`, form the five fields of
+   `Model`. Conversely, map each atom to the subtype containing `M.valuation n` and its
+   stored proof `M.valuation_mem n`. Subtype extensionality proves valuation recovery;
+   pointwise valuation equality, threshold equality, and proof irrelevance prove model
+   recovery.
+3. Structural evaluation is `evalC` on the projected valuation, and `eval_mem` supplies
+   the codomain membership proof. Forgetting that proof is therefore definitional
+   equality.
+4. Unpack an arbitrary bundled model into its valuation, membership proof, threshold,
+   and two threshold bounds for one implication. For the converse, pack exactly those
+   five unbundled arguments into a model. The satisfaction antecedent and conclusion
+   are definitionally unchanged.
+5. Repeat step 4 memberwise for arbitrary sets. Existentially quantifying the same
+   conversion proves the satisfiability equivalence; universally quantifying it proves
+   the consequence equivalence. These cases exhaust the two definitions. ∎
+
+*R5 record.* The ambient raw carrier is genuinely larger: `(2,0) : ℝ×ℝ` is not in the
+square, machine-checked by `exists_truthObj_not_inSquare`; hence dropping
+`InSquare` would change the semantics. Thresholds `τ=0` and `τ>1` fail the stored model
+bounds. The empty premise set is handled by `satSetCModel_empty`. Duplicate list
+members do not alter satisfaction, and the existing Finset/list bridges
+`satFinsetC_iff_satBranchC_toList` and `consequenceCFinset_iff_branch` make that
+representation boundary explicit.
+
+> *Lean:* `Continuous.SquareTruthObj`, `exists_truthObj_not_inSquare`,
+> `Model.ofSquareValuation`, `Model.squareValuation`,
+> `Model.ofSquareValuation_squareValuation`, `Model.eq_of_valuation_threshold`,
+> `evalSquare`, `Model.eval`, `Metatheory.ConsequenceCModel`,
+> `consequenceCModel_iff_consequenceC`, `Metatheory.ConsequenceCSetModel`,
+> `satisfiableCSetModel_iff_satisfiableCSet`,
+> `consequenceCSetModel_iff_consequenceCSet` — sorry-free. ·
+> *Depends on:* Def 2.1–2.6. · *DR:* DR-0016.
+
 ---
 
-## Open items (chapter 2) — conjecture queue for `/prove`
+## Open items (chapter 2)
 - **C5** `[PROVEN]` The {¬,∧,∨}-fragment of FOUR coincides with the Belnap–Dunn FDE tables (with designated {T,B} matching BD's {t,b}). *Proof:* the BD tables are meet/join in the truth order of the square lattice with swap negation (SEP *Many-Valued Logic* §2.3; [belnap1977useful; dunn1976intuitive]); under the encoding t=(1,0), f=(0,1), b=(1,1), n=(0,0), truth-order meet = (min, max) = Def 2.3's ∧-clause, join = (max, min) = the ∨-clause, and negation = channel swap — entry-by-entry agreement of the 4×4 tables follows; full identification in `references/npl-positioning.md` §1. ∎ (The Lean side of the *NPL* tables is already `[VERIFIED]` — Lem 2.9; the identification itself is a literature comparison and stays paper-level by nature.)

@@ -1,8 +1,7 @@
 # 5. The generative tier (Tier 1)
 
-Source: `drafts/NPL_Nullivance_Complete.md` §§1–7 (Zero Postulate, α/Θ, Φ, quasivance),
-formalized via `/formalize` 2026-07-03. Philosophy stays in chapter 0; this chapter is
-the *formal* content only.
+Philosophical motivation stays in chapter 0; this chapter contains only the formal
+generative interface.
 
 **Architectural contract (D1 §6, load-bearing):** every metatheorem of chapters 2–4
 depends only on the Tier-2 truth-object (t,f) and the connective table — never on the
@@ -13,7 +12,7 @@ This chapter maintains that contract: nothing below is cited by chapters 1–4.
 
 ---
 
-**Definition 5.1 (Generative frame).** `[DRAFT]`
+**Definition 5.1 (Generative frame).** `[VERIFIED]`
 A *generative frame* is a triple `F = (d, Φ)` where `d ≥ 1` is the *structure dimension*
 and `Φ : [0,1]^d → [0,1]` is a *stability function* satisfying:
 
@@ -27,7 +26,7 @@ and `Φ : [0,1]^d → [0,1]` is a *stability function* satisfying:
 > the geometric mean is undefined at d = 0 (DR-0006).
 > *Lean:* `Nullivance.Generative.GenFrame` · *DR:* DR-0006 · *Depends on:* —
 
-**Definition 5.2 (Canonical stability function).** `[DRAFT]`
+**Definition 5.2 (Canonical stability function).** `[VERIFIED]`
 Componentwise stability `f : [0,1] → [0,1]`, `f(x) = 1 − 2·|x − ½|` — maximal (= 1) at
 the neutral point ½, zero at the poles 0 and 1. Canonical global stability of
 `Θ ∈ [0,1]^d`: the geometric mean
@@ -53,7 +52,7 @@ product of ones is 1, and `1^{1/d} = 1`. ∎
 
 > *Lean:* `Nullivance.Generative.canonFrame` (fields `stab_mem`, `stab_flip`, `stab_neutral` via `fstab_mem`, `fstab_flip`, `fstab_neutral`) — sorry-free, `lake build` 2026-07-03. · *Depends on:* Def 5.1, 5.2
 
-**Definition 5.4 (Support channels; generative state; initialization).** `[DRAFT]`
+**Definition 5.4 (Support channels; generative state; initialization).** `[VERIFIED]`
 Fix a frame F. A *support channel* is a pair `c = (α, Θ)` with `α ∈ [0,1]` (*existence
 intensity* — absolute) and `Θ ∈ [0,1]^d` (*structure* — relational). Its *effective
 intensity* is `eff(c) = α · Φ(Θ)`. A *generative state* of an atom is a pair of
@@ -83,7 +82,7 @@ chapters 2–4 (checked by the audit skill, not by a formula). ∎
 
 > *Lean:* `Nullivance.Generative.Channel.eff_mem`, `GenState.init_mem` — sorry-free. · *Depends on:* Def 2.1, 5.1, 5.4
 
-**Definition 5.6 (Quasivance).** `[DRAFT]`
+**Definition 5.6 (Quasivance).** `[VERIFIED]`
 Write `Θ_neutral = (½, …, ½)`. A channel `c = (α, Θ)` is *quasivant* iff `α = 0` and
 `Θ ≠ Θ_neutral`: fully unmanifest, yet genuinely structured. A generative state is
 quasivant iff both its channels are.
@@ -111,7 +110,13 @@ chapters 2–4 can (or should) distinguish structured from structureless absence
 
 *Proof.* Witness at d = 1: `c₁ = (0, Θ=0)` (quasivant — polar structure, zero intensity)
 and `c₂ = (0, Θ=½)` (not quasivant — neutral structure); both have effective intensity 0,
-so the states `(c₁, c₂)` and `(c₂, c₂)` both initialize to `(0,0)`. ∎
+so the states `s₁ = (c₁, c₁)` and `s₂ = (c₂, c₂)` both initialize to `(0,0)`.
+Both channels of s₁ are quasivant, whereas neither channel of s₂ is quasivant. ∎
+
+*R5 record (2026-07-27).* The former witness `s₁ = (c₁,c₂)` was refuted by
+Definition 5.6 itself: because c₂ is not quasivant, that mixed state is not quasivant.
+Replacing its second channel by c₁ repairs the witness without changing either
+initialization.
 
 *Consequence, stated honestly:* the philosophical content of quasivance ("nothingness
 with shape") lives strictly at Tier 1. Claims about N in chapters 2–4 are claims about
@@ -126,7 +131,7 @@ In the canonical frame: if any component `Θ_k ∈ {0, 1}` (fully polarized), th
 *Proof.* `f(0) = f(1) = 0`, a product with a zero factor is 0, and `0^{1/d} = 0` for
 `d ≥ 1`. ∎
 
-*This is a real semantic commitment* (surfaced by the stress test, R5/formalize step 4):
+*This is a real semantic commitment* (surfaced by the R5 stress test):
 full presence with fully polarized structure does not manifest. It is faithful to D1 §7
 ("bằng 0 tại hai cực") but was nowhere stated as a consequence; recorded here so it can
 be revisited deliberately (an R4 event if the pole behavior of f is ever changed).

@@ -1,13 +1,15 @@
 % =========================================================================
-% NPL finite-domain quantified paper — draft v0.2 (2026-07-09).
-% v0.2: panel-review round 1 applied (reviews/2026-07-09-referee-reports.md):
-%  [1] propositional + quantifier rule tables printed (self-containedness);
-%  [2] branch/semantic-consequence definition added; [3] reduction-objection
-%  paragraph in the intro; [4] artifact availability sentence; [5] soundness
-%  proof sketch; [6] three refutations named consistently (incl. bare
-%  grounding bridge as a numbered proposition); [7] fixed-domain and
-%  sets-as-signs delimitations in related work; [8] minor hygiene.
-% v0.1 (superseded): initial draft after the related-work pass.
+% NPL finite-domain quantified paper — release v0.7 (2026-08-16).
+% Release normalization: stable Lean/mathlib pair, self-contained replay definition,
+% refreshed related work, synchronized artifact and reproducibility metadata.
+% v0.7: full flat replay compiler and universal membership-certificate bridge proved.
+% v0.6: membership-selecting replay repair, soundness and regression boundary;
+% universal completeness of the new certificate recorded as conjectural (superseded).
+% v0.5: admissible replay-certificate bridge refuted by a nonempty fold cascade.
+% v0.4: genuine signature-indexed model semantics, raw/signature bridge,
+% and completeness against signature consequence.
+% v0.3: fixed-signature/arity layer and well-formed completeness scope added;
+% constructor-replay status corrected.
 % Companion to papers/npl-core. Headline: semantic completeness of the
 % macro-free core extensional tableau (docs Thm 3.74), plus Thm 3.75.
 % Manuscript numbering is presentational; the stable numbering lives in
@@ -49,6 +51,9 @@
 \newcommand{\Tp}{T^{+}}\newcommand{\Tm}{T^{-}}
 \newcommand{\Fp}{F^{+}}\newcommand{\Fm}{F^{-}}
 \newcommand{\lean}[1]{\texttt{#1}}
+\newenvironment{leanrefs}
+  {\par\smallskip\noindent\begin{minipage}{\linewidth}\small\raggedright}
+  {\end{minipage}\par\smallskip}
 % finite-FO specific
 \newcommand{\qder}{\vdash_{\mathrm{core}}}
 \newcommand{\qmod}{\models_{Q,n}}
@@ -58,16 +63,15 @@
 \title{Finite-Domain Quantified Nullivance Logic:\\
 A Machine-Checked Completeness Theorem\\
 for a Macro-Free Extensional Tableau\thanks{%
-Draft v0.2 (July 2026). Companion to \emph{Nullivance Propositional Logic:
+Release v0.7 (August 2026). Companion to \emph{Nullivance Propositional Logic:
 Threshold-Signed Consequence on the Unit Square with a Machine-Checked
-Completeness Theorem} (same repository, \texttt{papers/npl-core}). Results
+Completeness Theorem}. Results
 marked [L] are verified sorry-free in the Lean~4 artifact described in
-Appendix~\ref{app:lean}. Related-work positioning is backed by the
-literature pass of 2026-07-09 recorded with the source
-(\texttt{references/npl-positioning.md}~\S6); novelty claims are
-search-scoped.}}
-\author{Trinh Tung Lam\thanks{Contact: \texttt{lamyofficialvn@gmail.com}.}}
-\date{July 2026 --- draft v0.2}
+Appendix~\ref{app:lean}. Related-work positioning is backed by a dated,
+source-by-source literature record supplied with the artifact; novelty claims
+are search-scoped.}}
+\author{Trinh Tung Lam\thanks{Contact: \texttt{lamtung0481@gmail.com}.}}
+\date{August 2026 --- release v0.7}
 
 \begin{document}
 \maketitle
@@ -76,17 +80,18 @@ search-scoped.}}
 We extend nullivance propositional logic (NPL) --- a paraconsistent,
 two-channel logic on the unit square with a harmonization connective $\hmz$
 and four threshold signs $\Tp,\Tm,\Fp,\Fm$ --- by finite-domain quantifiers.
-The language is function-free first-order with crisp equality; models
+The language is function-free first-order over a fixed signature with crisp equality; models
 interpret predicates over a fixed finite nonempty domain by values in the
 four-element matrix $\FOUR$, and the finite universal (existential)
 quantifier takes the pointwise minimum (maximum) on the truth channel and
 the dual on the falsity channel. Main results, each machine-checked in
 Lean~4: (i)~the exact threshold projection of the propositional theory
-lifts to the quantified language over finite domains; (ii)~three tempting
+lifts to the quantified language over finite domains; (ii)~four tempting
 proof routes are \emph{refuted} by explicit countermodels: the naive
 lifted tableau (crisp $x{=}x$ is valid but underivable), the bare
 grounding reduction to propositional consequence, and a dispatcher
-shortcut in the simulation program; (iii)~the
+shortcut and the head-sensitive certificate bridge in the simulation
+program; (iii)~the
 repaired \emph{core extensional tableau}, whose closure conditions add
 four crisp-equality clauses and two ground-closure clauses to the
 decomposition rules, is sound and \emph{complete}: a branch closes exactly
@@ -97,10 +102,14 @@ of size $n{+}1$) under which every rule strictly decreases branch weight,
 together with a canonical-model construction at the literal stage keyed by
 an injective ground-atom encoding. As a corollary, closure of the grounded
 propositional branch under rigid constraints reaches the core calculus with
-no propositional-simulation macro --- settling the artifact's final
-open bridge conjecture. We also document the failure analysis that led
-from a derivation-by-derivation simulation program to the weighted-measure
-proof.
+no propositional-simulation macro --- settling the semantic bridge. We
+also document the failure analysis that led from a derivation-by-derivation
+simulation program to the weighted-measure proof, and a conservative
+membership-selecting repair of the replay certificate. The repair is
+sound, passes the motivating regression, and is complete for every
+admissible ground-closed trace. Its completeness is proved by fold-first
+membership saturation followed by a domain-weighted compiler, rather than
+inferred from semantic completeness.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -156,13 +165,19 @@ declarations.
   propositional-simulation macro rule appears anywhere: the propositional
   derivation is consumed through its soundness and the core closure is
   rebuilt semantically.
-\item \emph{A documented dead end} (\cref{sec:simulation}): the
+\item \emph{A documented failure and conservative repair} (\cref{sec:simulation}): the
   derivation-by-derivation simulation program (replay traces with residual
   fold tails) is developed to the point where its exact obstruction is
   isolated — the binary propositional decomposition cascade cannot be
   reassembled into the core's $(n{+}1)$-ary quantifier rules — and the
-  weighted-measure proof is shown to dissolve the obstruction. The
-  simulation layer remains machine-verified as a study of the approach.
+  weighted-measure proof is shown to dissolve the obstruction. A minimal
+  admissible two-element fold cascade now refutes the proposed universal
+  replay-certificate bridge itself, while leaving the semantic bridge
+  intact. A separate certificate selects residual folds by membership;
+  its projection to the core calculus and its repair of the minimal
+  cascade are machine-checked. A fold-first saturation theorem and a
+  domain-weighted flat compiler prove completeness of that new certificate
+  for every admissible ground-closed trace.
 \end{enumerate}
 
 \paragraph{Isn't this just propositional logic?} A reader may object that
@@ -210,45 +225,106 @@ machine-checked in the same artifact this paper extends.
 
 \section{Finite-domain quantified NPL}\label{sec:syntax}
 
-\begin{definition}[Syntax]\label{def:syntax}
-Fix countable stocks of variables and predicate symbols. Quantified
+\begin{definition}[Signature and syntax]\label{def:syntax}
+Fix countable stocks of variables and predicate symbols and a signature
+$\Sigma$ assigning each predicate symbol $P$ one arity
+$\operatorname{ar}_{\Sigma}(P)\in\mathbb{N}$. Quantified
 formulas are generated by
 \[
 \varphi \;::=\; P(x_0,\dots,x_k) \;\mid\; x = y \;\mid\; \lnot\varphi
 \;\mid\; \varphi\wedge\varphi \;\mid\; \varphi\vee\varphi \;\mid\;
 \varphi\hmz\varphi \;\mid\; \forall x\,\varphi \;\mid\; \exists x\,\varphi.
 \]
-Predicate atoms carry a list of variables; arity is a well-formedness
-discipline of the intended signature, and evaluation is total on the raw
-syntax. [L:\,\lean{FiniteFO.QFormula}]
+A formula is $\Sigma$-well-formed iff every occurrence
+$P(x_1,\ldots,x_k)$ has $k=\operatorname{ar}_{\Sigma}(P)$; the condition
+is inherited structurally by compound formulas. The artifact retains a
+total raw list syntax underneath this well-formed language.
+[L:\,\lean{FiniteFO.QSignature}, \lean{FiniteFO.QFormula},
+\lean{QFormula.WellFormed}]
 \end{definition}
 
 \begin{definition}[Models and assignments]\label{def:model}
 For a fixed $n\in\mathbb{N}$, the domain is $\mathrm{Fin}(n{+}1)$ — finite
-and nonempty by construction. A \emph{model} $M$ assigns to each predicate
-symbol and argument list a value in $\FOUR$. An \emph{assignment} $\rho$
+and nonempty by construction. A \emph{$\Sigma$-model} $M$ assigns to each
+predicate symbol $P$ a map from tuples in
+$\mathrm{Fin}(n{+}1)^{\operatorname{ar}_{\Sigma}(P)}$ to $\FOUR$.
+Off-arity arguments are therefore absent from the model type. The artifact
+retains a separate total raw list model for the tableau engine and connects
+the two model classes by extension and restriction
+(\cref{prop:sigbridge}). An \emph{assignment} $\rho$
 maps variables to domain elements; $\rho[x{\mapsto}d]$ updates it.
-[L:\,\lean{FiniteFO.QModel}, \lean{FiniteFO.Assignment}]
+[L:\,\lean{FiniteFO.QSigModel}, \lean{FiniteFO.QModel},
+\lean{FiniteFO.Assignment}]
 \end{definition}
 
 \begin{definition}[Evaluation]\label{def:eval}
 Evaluation extends the propositional $\FOUR$ clauses by crisp equality and
 finite channel-wise quantifiers:
 \[
-V(x{=}y) = \begin{cases}\vT & \rho(x)=\rho(y)\\ \vF &
-\text{otherwise,}\end{cases}
-\qquad
-V(\forall x\,\varphi) = \Bigl(\textstyle\bigwedge_{d} t_d,\;
-\bigvee_{d} f_d\Bigr),
-\qquad
-V(\exists x\,\varphi) = \Bigl(\textstyle\bigvee_{d} t_d,\;
-\bigwedge_{d} f_d\Bigr),
+V(x{=}y) =
+\begin{cases}
+\vT & \rho(x)=\rho(y),\\
+\vF & \text{otherwise}.
+\end{cases}
+\]
+\[
+\begin{aligned}
+V(\forall x\,\varphi)
+  &= \Bigl(\textstyle\bigwedge_{d} t_d,\;\bigvee_{d} f_d\Bigr),\\
+V(\exists x\,\varphi)
+  &= \Bigl(\textstyle\bigvee_{d} t_d,\;\bigwedge_{d} f_d\Bigr).
+\end{aligned}
 \]
 where $(t_d,f_d)$ is the value of $\varphi$ under $\rho[x{\mapsto}d]$ and
 the extrema range over the finite domain. Signed satisfaction reads one
 bit of the value, exactly as in the propositional case.
-[L:\,\lean{FiniteFO.qeval}, \lean{forallV4}, \lean{existsV4}]
+[L:\,\lean{FiniteFO.QSigModel.eval}, \lean{FiniteFO.qeval},
+\lean{forallV4}, \lean{existsV4}]
 \end{definition}
+
+\begin{proposition}[Off-arity irrelevance]\label{lem:offarity}
+If two models agree on every predicate tuple whose length is declared by
+$\Sigma$, then they give the same value to every $\Sigma$-well-formed
+formula under every assignment.
+\end{proposition}
+
+\begin{proof}
+Structural induction on the formula. At a predicate atom,
+well-formedness makes the model-agreement hypothesis applicable; equality
+does not consult predicate data. The unary and binary cases follow from
+the induction hypotheses and the corresponding deterministic $\FOUR$
+operations. In a quantified case, apply the induction hypothesis at
+every updated assignment and substitute the pointwise equalities into
+the finite extrema. The hypothesis cannot be dropped: models may agree
+on all declared unary tuples and disagree on the malformed atom $P()$.
+[L:\,\lean{FiniteFO.qeval\_eq\_of\_agreeOn}]
+\end{proof}
+
+\begin{proposition}[Raw/signature semantic bridge]\label{prop:sigbridge}
+Every $\Sigma$-model has a canonical total raw extension, obtained by
+assigning an arbitrary fixed value to off-arity lists. Every raw model
+restricts to a $\Sigma$-model. Restriction after extension recovers the
+original $\Sigma$-model, while extension after restriction agrees with the
+raw model on every declared-arity tuple. Consequently, for well-formed
+$\Gamma,s\varphi$, semantic consequence over $\Sigma$-models is equivalent
+to semantic consequence over raw models.
+\begin{leanrefs}
+[L:\,\lean{FiniteFO.QSigModel.toRaw\_restrict},\\
+\quad\lean{FiniteFO.QModel.restrict\_toRaw\_agreeOn},\\
+\quad\lean{FiniteFO.qconsequence4Sig\_iff\_qconsequence4}]
+\end{leanrefs}
+\end{proposition}
+
+\begin{proof}
+For a $\Sigma$-model, convert an arity-indexed tuple to its finite list and
+back; finite-function extensionality and the list \texttt{ofFn/get}
+identities recover the tuple. For a raw model, a declared-arity list is
+recovered after conversion to the induced tuple, so the extension of its
+restriction agrees on admitted tuples. For the consequence equivalence,
+transfer branch and conclusion satisfaction along this agreement using
+\cref{lem:offarity}. In the reverse direction, apply raw consequence
+directly to the canonical extension of an arbitrary $\Sigma$-model.
+\end{proof}
 
 \begin{definition}[Branches; semantic consequence]\label{def:consequence}
 A \emph{signed branch member} is a triple $s(\rho,\varphi)$ of a sign, an
@@ -257,8 +333,13 @@ A \emph{branch} is a finite list of members; a model \emph{satisfies} a
 branch iff it satisfies every member. \emph{Semantic consequence} is
 domain-indexed: $\Gamma \qmod s\varphi$ iff every model over
 $\mathrm{Fin}(n{+}1)$ that satisfies every member of $\Gamma$ satisfies
-$s\varphi$. [L:\,\lean{FiniteFO.QSigned}, \lean{qsatSigned},
-\lean{qsatBranch}, \lean{QConsequence4}]
+$s\varphi$.
+\begin{leanrefs}
+[L:\,\lean{FiniteFO.QSigned}, \lean{qsatSigned}, \lean{qsatBranch},\\
+\quad\lean{FiniteFO.QSigModel.satSigned},
+\lean{FiniteFO.QSigModel.satBranch},\\
+\quad\lean{QConsequence4Sig}]
+\end{leanrefs}
 \end{definition}
 
 \begin{proposition}[Quantifier duality]\label{prop:duality}
@@ -352,7 +433,7 @@ $\varphi\hmz\psi$ & $\Tp\varphi,\Tp\psi$ & $\Tm\varphi\mid\Tm\psi$
 The eight finite quantifier rules come in two shapes, determined by which
 channel bit the sign reads of the finite extrema:
 
-\begin{center}
+\begin{center}\small
 \begin{tabular}{ll}
 \toprule
 \emph{block} (add all $n{+}1$ instances, non-branching) &
@@ -440,17 +521,23 @@ quantifier rules, the signed reading of the finite extrema.
 \section{The completeness theorem}\label{sec:completeness}
 
 \begin{theorem}[Semantic completeness of the core calculus]\label{thm:complete}
-Let $B$ be a finite branch of signed quantified members over domain size
-$n{+}1$. If no model with domain $\mathrm{Fin}(n{+}1)$ satisfies $B$, then
-$B$ closes in the core calculus. With \cref{prop:soundness}, closure is
-\emph{exactly} finite unsatisfiability, and
+Fix $\Sigma$. Let $B$ be a finite $\Sigma$-well-formed branch of signed
+quantified members over domain size $n{+}1$. If no model with domain
+$\mathrm{Fin}(n{+}1)$ satisfies $B$, then $B$ closes in the core
+calculus. With \cref{prop:soundness}, closure is \emph{exactly} finite
+unsatisfiability. For every well-formed $\Gamma$ and $s\varphi$,
 \[
 \Gamma \qder s\varphi \quad\Longleftrightarrow\quad \Gamma \qmod s\varphi .
 \]
-[L:\,\lean{FiniteFO.QClosesExtCore.complete\_of\_unsat},
-\lean{qclosesExtCore\_iff\_unsat},
-\lean{QDerivesExtCore.complete},
-\lean{qDerivesExtCore\_iff\_qconsequence4}]
+The artifact proves the same equivalence first for its stronger raw
+list syntax, proves the raw/signature semantic equivalence of
+\cref{prop:sigbridge}, and composes the two equivalences.
+\begin{leanrefs}
+[L:\,\lean{FiniteFO.QClosesExtCore.complete\_of\_unsat},\\
+\quad\lean{qclosesExtCore\_iff\_unsat},
+\lean{QDerivesExtCore.complete},\\
+\quad\lean{qDerivesExtCore\_iff\_qconsequence4Sig}]
+\end{leanrefs}
 \end{theorem}
 
 \begin{proof}[Proof (engine; full details in the artifact)]
@@ -534,7 +621,7 @@ quantified branch is satisfiable under the induced valuation
 propositional completeness theorem of the companion paper into a
 round-trip between the two levels.
 
-\section{The simulation program: a documented dead end}\label{sec:simulation}
+\section{The simulation program: failure and repair}\label{sec:simulation}
 
 An earlier phase of the project attempted \cref{thm:grounding} by
 \emph{simulation}: induction on the propositional closure derivation,
@@ -559,6 +646,171 @@ the root: the core's quantifier rules are $(n{+}1)$-ary, so the binary
 cascade never appears. We record the dead end because the failure
 analysis, not luck, produced the measure; the simulation layer remains in
 the artifact as a verified study.
+
+\begin{definition}[Replay traces and the two certificate predicates]
+\label{def:replay}
+Let $u=(\rho,\varphi)$ and write $q(S,u)$ for the quantified signed item
+$(S,\rho,\varphi)$. A replay item is one of
+\[
+ q(S,u),\quad r(s),\quad C_S(L),\quad D_S(L),\quad
+ C^q_S(U),\quad D^q_S(U),
+\]
+where $s$ is a ground signed formula, $L$ is a list of ground formulas,
+and $U$ is a list of assignment--formula pairs. A replay trace is a finite
+list of replay items. Its ground branch maps these six forms respectively to
+the grounding of $q(S,u)$, $s$, the signed conjunction/disjunction folds of
+$L$, and the signed folds of the groundings in $U$. Its quantified
+projection keeps $q(S,u)$ and expands $C^q_S(U),D^q_S(U)$ to the list of
+$q(S,u)$ for $u\in U$; the other forms contribute nothing.
+
+A trace is \emph{admissible} iff every rigid item belongs to the printed rigid
+constraint set, no unstructured $C_S(L)$ or $D_S(L)$ occurs, and the empty
+structured folds $C^q_{\Tm}(\varnothing)$,
+$C^q_{\Fp}(\varnothing)$, $D^q_{\Tp}(\varnothing)$, and
+$D^q_{\Fm}(\varnothing)$ do not occur. These are exactly the four false
+signed empty-fold cases.
+
+The head-sensitive predicate $R(T)$ is the least proof predicate obtained by
+applying every closure and decomposition scheme of \cref{def:core} to a
+matching $q$-item in $T$, together with the corresponding rigid-equality
+closure schemes, and the following fold schemes. For conjunction,
+$S\in\{\Tp,\Fm\}$ consumes a nonempty list as head plus residual tail, while
+$S\in\{\Tm,\Fp\}$ selects the list head; for disjunction the two sign pairs
+are exchanged. Empty folds are erased precisely in the four admissible empty
+cases. In all eight nonempty schemes the structured fold must be the
+\emph{head} of $T$.
+
+The membership-selecting predicate $R_{\in}(T)$ is the least predicate with
+$R(T)\Rightarrow R_{\in}(T)$ and the following eight schemes, where the
+displayed fold may occur anywhere in $T$:
+\[
+\begin{array}{c|c|c}
+\text{fold} & \text{signs} & \text{recursive premise implying }R_{\in}(T)\\ \hline
+C^q_S(u::U)\in T & S\in\{\Tp,\Fm\} &
+ R_{\in}(q(S,u)::C^q_S(U)::T)\\
+C^q_S(U)\in T,\ u\in U & S\in\{\Tm,\Fp\} &
+ R_{\in}(q(S,u)::T)\\
+D^q_S(u::U)\in T & S\in\{\Tm,\Fp\} &
+ R_{\in}(q(S,u)::D^q_S(U)::T)\\
+D^q_S(U)\in T,\ u\in U & S\in\{\Tp,\Fm\} &
+ R_{\in}(q(S,u)::T)
+\end{array}
+\]
+Each row abbreviates one constructor for each of its two signs. This definition
+is a proof-object layer only: induction over its nine constructor schemes proves
+$R_{\in}(T)\Rightarrow\textsc{QClosesExtCore}(q(T))$.
+\begin{leanrefs}
+[L:\,\lean{FiniteFO.ReplayItem.Admissible},
+\lean{ReplayClosesCore}, \lean{ReplayClosesCoreMem},\newline
+\lean{ReplayClosesCoreMem.toCore}]
+\end{leanrefs}
+\end{definition}
+
+The old head-sensitive certificate conjecture also fails.  Over a two-element
+domain, choose distinct ground predicate atoms $p_0,p_1$ and the admissible
+trace consisting of a positive structured conjunction tail for
+$[p_0,p_1]$ followed by the quantified source of $\Tm p_1$.  Its ground
+branch is
+\[
+  \Tp\bigl(p_0\land(p_1\land\top_g)\bigr),\quad \Tm p_1,
+\]
+and closes by two positive-conjunction steps followed by atomic closure on
+$p_1$.  Inverting a replay certificate first exposes $p_0$ ahead of the
+residual one-element fold.  Since the exposed item is atomic, the residual
+fold is no longer at the head where the certificate's fold constructors
+require it, and the only possible atomic close would identify
+$p_0=p_1$.  Injectivity of the ground-atom encoding contradicts that
+equality.  Thus admissibility plus propositional closure does not imply an
+existing replay certificate.  This is a failure of the head-sensitive
+certificate representation, not of core soundness or completeness.
+[L:\,\lean{FiniteFO.admissible\_ground\_replay\_bridge\_refuted}]
+
+The repair is deliberately a new proof-object type rather than a revision
+of the refuted claim.  The membership-selecting certificate embeds every
+old certificate, but its structured-fold constructors may select a fold
+occurrence anywhere in the trace.  All-item signs expose the head and
+residual tail; branching signs select any represented item.  Induction on
+the nine new constructor schemes proves sound projection into the
+macro-free core calculus.  On the exact counterexample above, two
+membership selections expose $p_1$ and an embedded atomic close finishes
+the certificate.  Conversely, the earlier inadmissible empty-fold witness
+still has no new certificate: sound projection would close the empty
+quantified branch.  Thus the extension repairs the observed defect without
+certifying the known false positive.
+\begin{leanrefs}
+[L:\,\lean{FiniteFO.ReplayClosesCoreMem.toCore},
+\lean{FiniteFO.replayCascadeTrace\_\lb old\_\lb refuted\_\lb mem\_\lb verified},
+\lean{FiniteFO.replayEmptyBadTailTrace\_\lb not\_\lb replayClosesCoreMem}]
+\end{leanrefs}
+
+We now prove the universal bridge for the repaired certificate.  For a
+trace $T$ and quantified worklist $B$, let its flat normal form consist of
+four signed atoms fixing the empty conjunction and disjunction folds, the
+grounding of $B$, and exactly the rigid items retained by $T$.  A finite
+reach relation generated by the membership-selecting constructors first
+extends $T$ until every member of its quantified projection occurs as a
+direct quantified item.  This removes the global-choice obstruction: all
+branching alternatives may be materialized before compilation.
+
+\begin{theorem}[Universal membership replay bridge]\label{thm:memreplay}
+Every admissible replay trace whose ground branch closes has a
+membership-selecting replay certificate.
+\end{theorem}
+\begin{proof}
+Fold-first saturation gives an admissible extension $U$ containing the
+original trace and directly representing every member of its quantified
+projection.  Ground closure is monotone under this extension.  Any
+valuation satisfying the flat normal form of $U$ satisfies its original
+ground trace: direct quantified and rigid items transfer immediately;
+structured folds transfer by induction over their represented finite
+lists, with the four fixed atoms discharging empty residual folds.
+Propositional soundness and completeness therefore close the flat normal
+form of $U$.
+
+It remains to compile that closure into the old head-sensitive certificate
+over $U$.  We prove a stronger statement by induction on an upper bound for
+the domain-weighted size of a worklist $\mathit{todo}$.  A second list
+$\mathit{lits}$ contains only predicate or crisp-equality literals, and
+every member of $\mathit{todo}\mathbin{+\!+}\mathit{lits}$ is required to
+occur directly in $U$.  With empty $\mathit{todo}$, atomic closure
+inversion exhausts the identity, quantified, and rigid sources and builds
+an old certificate.  A literal at the head is moved to $\mathit{lits}$;
+the resulting permutation preserves satisfaction and reduces the
+worklist weight.
+
+For negation and the three binary connectives, prepend the child item or
+items prescribed by the old replay constructor.  The applicable
+$\FOUR$ truth-table equation shows that satisfaction of each required
+child flat branch implies satisfaction of the parent flat branch.  Parent
+unsatisfiability and propositional completeness consequently close the
+child branches.  Their measures are smaller: the outer connective unit is
+removed, and a selecting branch also discards a subformula of positive
+size.  Apply the induction hypothesis and the corresponding replay
+constructor.
+
+For an all-instance quantifier rule, prepend its $(n+1)$-element instance
+block.  Its weight is $(n+1)\qsize(\varphi)$, one below the parent's
+$(n+1)\qsize(\varphi)+1$, and satisfaction of all grounded instances
+implies satisfaction of the parent finite fold.  For a selecting rule,
+repeat the argument for each $d\in\operatorname{Fin}(n+1)$ using
+membership of the selected grounding in the fold.  Positivity of $n+1$
+gives
+$\qsize(\varphi)\leq(n+1)\qsize(\varphi)<
+(n+1)\qsize(\varphi)+1$; this includes $n=0$.  These cases cover both
+quantifiers and all four signs.  The resulting old certificate for $U$
+is transported backwards along the finite saturation path, yielding the
+required membership-selecting certificate for $T$.
+\end{proof}
+\begin{leanrefs}
+[L:\,\lean{FiniteFO.ReplayTrace.flat\_closes\_to\_replay},
+\lean{FiniteFO.admissible\_ground\_replay\_bridge\_mem\_verified}]
+\end{leanrefs}
+
+The semantic route alone would still be insufficient: it produces core
+closure rather than a value of the certificate type.  The theorem above
+supplies the separate normalization and compilation argument.  It does not
+resurrect the refuted old bridge, whose conclusion uses the strictly
+smaller head-sensitive certificate.
 
 \section{Related work}\label{sec:related}
 
@@ -607,13 +859,14 @@ harmonization connective $\hmz$ in the object language and the threshold
 reading remain the NPL-specific propositional base, positioned against
 the bilattice literature in the companion paper.
 
-\emph{Machine-checked completeness.} Formalized completeness theorems
-exist for classical first-order logic — sequent calculi
-\cite{villadsen2017formalizing} and a coinductive framework with a
-formalized tableau for many-sorted classical logic with equality
-\cite{blanchette2017soundness} — and for modal, hybrid and
-intuitionistic systems. Our literature pass (recorded in the repository,
-\texttt{references/npl-positioning.md} \S6, 2026-07-09) found no
+\emph{Machine-checked completeness.} Formalized metatheory exists for
+classical first-order proof systems, including a coinductive framework with a
+tableau instance for many-sorted classical logic with equality
+\cite{blanchette2017soundness}. TableauxRocq gives a recent Rocq verification
+of soundness and certificate checking for a classical first-order tableau
+\cite{rosain2026tableauxrocq}; it does not claim a many-valued completeness
+result. Formalized paraconsistent metatheory also predates this work
+\cite{villadsen2017formalizing}. Our updated literature pass (2026-08-16) found no
 machine-checked completeness theorem for a many-valued quantified tableau
 calculus; to our knowledge, the present development is the first, and we
 phrase this as a search-scoped claim rather than an absolute one.
@@ -629,34 +882,50 @@ restrictions are design choices worth revisiting.
 (3)~\emph{Complexity}: finite-domain consequence is decidable by
 finiteness of the model space; its exact complexity as a function of
 domain size and formula size is open here.
-(4)~\emph{The trace-calculus bridge}: the optional sharpening that the
-replay-trace calculus itself absorbs constrained propositional closure
-remains a conjecture in the repository (no longer on any critical path).
+(4)~\emph{Certificate complexity and normalization}: the repaired
+membership-selecting certificate is complete by \cref{thm:memreplay}, but
+the present proof materializes all quantified-projection members before
+compilation.  Tight upper bounds on certificate growth, and a focused or
+zipper-style compiler that avoids unnecessary materialization, remain
+open.
 
 \appendix
 \section{The Lean artifact}\label{app:lean}
 The results of this paper are verified in the \lean{Nullivance} Lean~4
-library (module \lean{Nullivance.FiniteFO}, $\approx$380 declarations),
-part of the same artifact as the companion paper. \textbf{Availability.}
-The library will be archived with a DOI at submission (the repository
-carries Zenodo metadata); until then it is available from the author on
-request. \textbf{Toolchain.}
-Lean~4 (\texttt{leanprover/lean4:v4.32.0-rc1}) with mathlib pinned via the
-Lake manifest; \texttt{lake exe cache get \&\& lake build} (approx.\ 2000
-jobs). \textbf{Coverage policy.} The build is \texttt{sorry}-free; every
-result above is stated against the calculus \lean{QClosesExtCore}
-directly. Axiom audit: every named declaration depends only on
+library, principally module \lean{Nullivance.FiniteFO}, and share the
+artifact of the companion paper. \textbf{Availability.} The complete source
+artifact is supplied with this release, including citation/license
+metadata, exact dependency locks, both manuscripts, and verification scripts.
+The identical tagged archive will be deposited in a durable public repository;
+the real DOI is inserted only after that deposit. \textbf{Toolchain.}
+Lean~4 (\texttt{leanprover/lean4:v4.32.1}) and mathlib \texttt{v4.32.1} at
+commit \texttt{520045ab14e26149ee970e2e617ca04b09bde5d6}; run
+\texttt{scripts/Verify-Release.ps1}. \textbf{Coverage policy.} The build is
+\texttt{sorry}-free. The headline theorems are stated directly against
+\lean{QClosesExtCore}; replay-certificate results use the separately defined
+proof-object predicates of \cref{def:replay} and project into that core.
+Axiom audit: every named declaration depends only on
 \lean{propext}, \lean{Classical.choice}, \lean{Quot.sound}.
-\textbf{Key declarations.} Semantics:\ \lean{qeval}, \lean{qsatBranch};
-projection:\ \lean{finite\_exact\_projection}; refutations:\
-\lean{qcompleteness\_current\_refuted},
-\lean{qeqRefl0\_not\_derivable}; calculus:\ \lean{QClosesExtCore};
-soundness:\ \lean{QClosesExtCore.unsat}; completeness engine:\
-\lean{qsize}, \lean{qweightB}, \lean{qclosesCore\_todo},
-\lean{qclosesCore\_lits}; headline:\
-\lean{QClosesExtCore.complete\_of\_unsat},
-\lean{qDerivesExtCore\_iff\_qconsequence4}; grounding:\
-\lean{ground\_truth}, \lean{groundBranch\_closes\_to\_core}.
+\textbf{Key declarations.}
+\begin{leanrefs}
+Semantics: \lean{QSigModel}, \lean{qeval}, \lean{qsatBranch}.\\
+Projection: \lean{finite\_exact\_projection}.\\
+Refutations: \lean{qcompleteness\_current\_refuted},
+\lean{qeqRefl0\_not\_derivable}.\\
+Calculus: \lean{QClosesExtCore};
+soundness: \lean{QClosesExtCore.unsat}.\\
+Completeness engine: \lean{qsize}, \lean{qweightB},
+\lean{qclosesCore\_todo}, \lean{qclosesCore\_lits}.\\
+Headline: \lean{QClosesExtCore.complete\_of\_unsat},\\
+\quad\lean{qDerivesExtCore\_iff\_qconsequence4Sig}.\\
+Grounding: \lean{ground\_truth},
+\lean{groundBranch\_closes\_to\_core}.\\
+Replay repair: \lean{ReplayClosesCoreMem},
+\lean{ReplayClosesCoreMem.toCore},
+\lean{replayCascadeTrace\_\lb old\_\lb refuted\_\lb mem\_\lb verified}.\\
+Replay completeness: \lean{ReplayTrace.flat\_\lb closes\_\lb to\_\lb replay},
+\lean{admissible\_\lb ground\_\lb replay\_\lb bridge\_\lb mem\_\lb verified}.
+\end{leanrefs}
 
 \bibliographystyle{plain}
 \bibliography{../../references/bibliography}

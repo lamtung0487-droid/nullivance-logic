@@ -1,5 +1,5 @@
 /- Mirror of docs/02-semantics.md, FOUR level (Def 2.4, 2.7; Lemmas 2.9-2.11).
-   Continuous [0,1]^2 layer deferred pending mathlib (DR-0004). -/
+   The completed continuous [0,1]^2 layer is in `Nullivance.Continuous` (DR-0004). -/
 import Nullivance.Syntax
 
 namespace Nullivance.Semantics

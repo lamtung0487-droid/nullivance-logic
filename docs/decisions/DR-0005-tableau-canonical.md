@@ -1,7 +1,7 @@
 # DR-0005: The four-signed tableau calculus is the canonical proof system
 
 - **Date:** 2026-07-02
-- **Status:** accepted (encoding gap open)
+- **Status:** accepted (proof-tree encoding closed; fair-search layer paper-level)
 - **Concerns:** chapter 3 (Def 3.1–3.5, Rem 3.6, §3.B), future chapter 4
 
 ## Change
@@ -37,13 +37,20 @@ closed (Def 3.5)" is proved on paper by induction on the tableau tree but is not
 formalized. Chapter 4's soundness/completeness will be formalized **against `Closes`
 directly**, which discharges the gap for all downstream results; until then, ch. 3
 Lean pointers are faithful modulo this remark.~~
-**Discharged 2026-07-03:** chapter 4's soundness (`Metatheory.Closes.unsat`) and
+**Discharged for closed proof trees:** `Nullivance.Tableau` defines
+`TableauCloses` and proves `tableauCloses_iff_closes`; chapter 4's soundness
+(`Metatheory.Closes.unsat`) and
 completeness (`Metatheory.closes_of_unsat`, `derives_iff_consequence4`,
 `derives_iff_consequenceC`) are formalized against `Closes` directly, so no downstream
-`[VERIFIED]` result depends on the tableau-tree/`Closes` equivalence. That equivalence
-remains a paper remark (Rem 3.6); the search-procedure results (Thm 4.8 termination,
-Thm 4.11 Truth Lemma) stay `[PROVEN]` paper-level by design — the Lean completeness
-route replaces them (deviation note at Thm 4.13).
+`[VERIFIED]` result depends on an unproved tableau-tree/`Closes` equivalence. The
+search-procedure results (Thm 4.8 termination, Thm 4.11 Truth Lemma, Thm 4.33 fair
+operational completeness) stay `[PROVEN]` paper-level by design — the Lean
+completeness route replaces them (deviation note at Thm 4.13).
+
+**Status correction 2026-07-27:** Theorem 4.13 is restricted to the machine-checked
+equivalence between unsatisfiability, `Closes`, and `TableauCloses`. The statement about
+every fair fully expanded search is separated as Theorem 4.33 `[PROVEN]`; no
+`[VERIFIED]` label covers the unformalized fairness scheduler.
 
 ## Impact analysis
 
@@ -58,3 +65,20 @@ route replaces them (deviation note at Thm 4.13).
   (non-explosion, ch. 4) — paraconsistency is structural, not stipulated.
 - Adding knowledge-join (max,max) would add a 17th–20th rule column: an R4 event
   (recorded in ch. 3 open items).
+
+## Amendment 2026-08-13 (DR-0017)
+
+The paper-level operational status above is superseded in part. Definition 3.5 now
+contains only the exact finite proof-tree and derivability notions and is `[VERIFIED]`.
+Definitions 3.78–3.79 and Theorems 4.8 and 4.34 define and verify a deterministic
+head-worklist reference search. The broader claim about every fair scheduler is retained
+as Theorem 4.33 `[DRAFT]`; no verified result depends on it. See DR-0017 for the
+specification, counterexamples, and impact analysis.
+
+## Amendment 2026-08-13 (DR-0018)
+
+Theorem 4.33 is no longer the undefined general-fairness statement. Definition 3.80
+introduces exact forest states, progress transitions, finite traces, and schedulers;
+Theorem 4.33 now verifies termination and order-independent completeness for every
+scheduler that performs legal progress steps. Idle-step weak fairness remains outside
+the theorem. See DR-0018.

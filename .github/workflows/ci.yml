@@ -1,0 +1,42 @@
+name: Reproducibility gates
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: Nullivance
+          build: true
+          use-mathlib-cache: true
+          nanoda: true
+          nanoda-allow-sorry: false
+      - name: Metadata, status, and source gates
+        shell: pwsh
+        run: ./scripts/Verify-Release.ps1 -SkipLeanBuild -SkipPdfBuild
+
+  papers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LaTeX dependencies
+        run: >-
+          sudo apt-get update && sudo apt-get install -y
+          texlive-latex-base texlive-latex-extra texlive-fonts-recommended
+      - name: Build both manuscripts
+        shell: pwsh
+        run: ./scripts/Build-Papers.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nullivance-manuscripts
+          path: |
+            papers/npl-core/main.pdf
+            papers/npl-finite-fo/main.pdf

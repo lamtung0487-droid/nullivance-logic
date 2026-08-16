@@ -70,6 +70,50 @@ def ConsequenceCSet (Gamma : Set SignedFormula) (sphi : SignedFormula) : Prop :=
   ∀ (v : Nat -> TruthObj) (tau : ℝ), (∀ n, InSquare (v n)) -> 0 < tau -> tau ≤ 1 ->
     SatSetC v tau Gamma -> SatC tau (evalC v sphi.2) sphi.1
 
+/-- Continuous satisfaction of an arbitrary signed set, quantified through
+the bundled model of Def 2.2. -/
+def SatSetCModel (M : Continuous.Model) (Gamma : Set SignedFormula) : Prop :=
+  ∀ sphi, sphi ∈ Gamma -> M.satSigned sphi
+
+/-- Continuous satisfiability of an arbitrary signed set, bundled-model form. -/
+def SatisfiableCSetModel (Gamma : Set SignedFormula) : Prop :=
+  ∃ M : Continuous.Model, SatSetCModel M Gamma
+
+/-- Def 2.6 for arbitrary signed sets, literally quantified over bundled models. -/
+def ConsequenceCSetModel (Gamma : Set SignedFormula) (sphi : SignedFormula) : Prop :=
+  ∀ M : Continuous.Model, SatSetCModel M Gamma -> M.satSigned sphi
+
+@[simp] theorem satSetCModel_iff_unbundled
+    (M : Continuous.Model) (Gamma : Set SignedFormula) :
+    SatSetCModel M Gamma ↔ SatSetC M.valuation M.threshold Gamma := by
+  rfl
+
+@[simp] theorem satSetCModel_empty (M : Continuous.Model) :
+    SatSetCModel M ∅ := by
+  simp [SatSetCModel]
+
+/-- WP2 encoding bridge for arbitrary-set satisfiability. -/
+theorem satisfiableCSetModel_iff_satisfiableCSet (Gamma : Set SignedFormula) :
+    SatisfiableCSetModel Gamma ↔ SatisfiableCSet Gamma := by
+  constructor
+  · rintro ⟨M, hM⟩
+    exact ⟨M.valuation, M.threshold, M.valuation_mem, M.threshold_pos,
+      M.threshold_le_one, hM⟩
+  · rintro ⟨v, tau, hv, htau0, htau1, hsat⟩
+    exact ⟨Continuous.Model.mk v hv tau htau0 htau1, hsat⟩
+
+/-- WP2 encoding bridge for the arbitrary-set consequence relation:
+bundled and unbundled model quantification are extensionally identical. -/
+theorem consequenceCSetModel_iff_consequenceCSet
+    (Gamma : Set SignedFormula) (sphi : SignedFormula) :
+    ConsequenceCSetModel Gamma sphi ↔ ConsequenceCSet Gamma sphi := by
+  constructor
+  · intro h v tau hv htau0 htau1 hsat
+    exact h (Continuous.Model.mk v hv tau htau0 htau1) hsat
+  · intro h M hsat
+    exact h M.valuation M.threshold M.valuation_mem M.threshold_pos
+      M.threshold_le_one hsat
+
 /-- Continuous consequence for finite signed sets. -/
 def ConsequenceCFinset (Delta : Finset SignedFormula) (sphi : SignedFormula) : Prop :=
   ∀ (v : Nat -> TruthObj) (tau : ℝ), (∀ n, InSquare (v n)) -> 0 < tau -> tau ≤ 1 ->

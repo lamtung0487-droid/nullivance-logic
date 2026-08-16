@@ -1,7 +1,9 @@
 {
-  "title": "Nullivance Propositional Logic: Lean 4 formalization and manuscript",
+  "title": "Nullivance Logic: formal development and reproducible manuscripts",
   "upload_type": "software",
-  "description": "<p>Machine-checked development of nullivance propositional logic (NPL), a two-channel logic valued in the unit square [0,1]^2 with a harmonization (bilattice consensus) connective and a threshold-indexed family of signed consequence relations. The Lean 4 library (<code>Nullivance/</code>) verifies: the continuous two-channel semantics and its bilattice structure; the exact threshold projection onto the four-valued matrix; a four-signed analytic tableau calculus with soundness and completeness (over the matrix and, by the projection, over the continuous semantics); paraconsistency, non-definability of the consensus connective from the FDE fragment, incompleteness of the source natural-deduction system; a generative tier deriving truth-objects from (intensity, structure) channel pairs; and a complete finite-domain quantified layer (function-free syntax with crisp equality over finite nonempty domains, exact threshold projection, and a machine-checked semantic completeness theorem for a macro-free extensional tableau calculus). The accompanying manuscript (<code>papers/npl-core/</code>) mirrors the development; results marked [L] are verified sorry-free.</p><p>Toolchain: Lean 4 v4.32.0-rc1, mathlib (pinned). Build: <code>cd Nullivance &amp;&amp; lake exe cache get &amp;&amp; lake build</code>.</p>",
+  "version": "0.7.0",
+  "publication_date": "2026-08-16",
+  "description": "<p>Lean 4 formalization and reproducibility artifact for nullivance logic (NPL). The release includes the propositional two-channel semantics, exact threshold projection to FOUR, a four-signed tableau with verified soundness and completeness, terminating operational proof search with countermodels and progressing-schedule independence, and a finite-domain quantified layer with a verified complete macro-free extensional core tableau. It also retains checked counterexamples refuting two older head-sensitive replay-certificate conjectures and verifies a separate complete membership-selecting repair.</p><p>Release 0.7.0 is pinned to Lean 4.32.1 and mathlib v4.32.1 at commit <code>520045ab14e26149ee970e2e617ca04b09bde5d6</code>. See <code>ARTIFACT.md</code> and run <code>pwsh ./scripts/Verify-Release.ps1</code>.</p>",
   "creators": [
     {
       "name": "Trinh, Tung Lam"
@@ -15,12 +17,13 @@
     "bilattice",
     "many-valued logic",
     "analytic tableaux",
+    "finite-domain first-order logic",
     "completeness",
     "Lean 4",
     "formal verification",
-    "interactive theorem proving"
+    "reproducible research"
   ],
   "license": "CC-BY-4.0",
   "access_right": "open",
-  "notes": "Lean toolchain leanprover/lean4:v4.32.0-rc1; mathlib pinned at rev 8f5331973a3e2b3cc5fd307208f456ccd6d3b467. The library builds sorry-free; see ARTIFACT.md for the correspondence between manuscript results and Lean declarations."
+  "notes": "The public DOI and repository URL are added only after an actual archival deposit. The source package is generated from the annotated release tag with scripts/New-ReleasePackage.ps1 and accompanied by a SHA-256 checksum."
 }

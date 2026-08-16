@@ -1,30 +1,29 @@
 # 3. Proof theory
 
-Source: intake from `drafts/NPL_v2_detailed_completeness_proof_VI.md` (§4) — the
-**four-signed analytic tableau calculus**, the canonical proof system of NPL (it is the
-system carrying the completeness program, DR-0005) — and
-`drafts/NPL_Nullivance_Complete.md` (§14) — the natural-deduction rules, kept as a
-secondary system whose rules should become admissibility results.
+The **four-signed analytic tableau calculus** is the canonical proof system of NPL and
+carries the completeness development (DR-0005). The natural-deduction calculus is a
+secondary system whose rules are studied through admissibility results.
 
 ---
 
 ## 3.A The four-signed analytic calculus
 
-**Definition 3.1 (Signed formula).** `[DRAFT]`
+**Definition 3.1 (Signed formula).** `[VERIFIED]`
 A *signed formula* is a pair `Sφ` with `S ∈ {T⁺, T⁻, F⁺, F⁻}` (Def 2.4) and `φ ∈ Form`.
 A model (or FOUR valuation) *satisfies* `Sφ` per Definition 2.4 / 2.7.
 
 > *Lean:* `Nullivance.ProofTheory.SignedFormula`, satisfaction `sat4` · *Depends on:* Def 1.2, 2.4
 
-**Definition 3.2 (Branch; closure).** `[DRAFT]`
+**Definition 3.2 (Branch; closure).** `[VERIFIED]`
 A *branch* B is a finite set of signed formulas. A FOUR valuation v *satisfies* B iff it
 satisfies every member. B is **closed** iff for some φ, `{T⁺φ, T⁻φ} ⊆ B` or
 `{F⁺φ, F⁻φ} ⊆ B`; otherwise B is **open**. (A closed branch is unsatisfiable, since a
 sign and its opposite are exclusive — Def 2.4.)
 
-> *Lean:* `Nullivance.ProofTheory.Closes.closeT/.closeF` (closure clauses) · *Depends on:* Def 3.1
+> *Lean:* `Nullivance.ProofTheory.Branch`, `satBranch`, `BranchClosed`,
+> `BranchClosed.closes` · *Depends on:* Def 3.1
 
-**Definition 3.3 (Decomposition rules).** `[DRAFT]`
+**Definition 3.3 (Decomposition rules).** `[VERIFIED]`
 Sixteen rules, one per sign × connective. "`A, B`" = add both to the branch
 (non-branching); "`A | B`" = split the branch in two (branching).
 
@@ -46,33 +45,40 @@ conjunctive), and the F⁺-rule is conjunctive as well (min on the falsity chann
 > [arieli1996reasoning]. What is NPL-specific is this particular threshold-signed system
 > and its verified completeness for consequence over all τ — `references/npl-positioning.md` §5.
 
-**Definition 3.4 (Saturation — Hintikka branch).** `[DRAFT]`
+**Definition 3.4 (Saturation — Hintikka branch).** `[PROVEN]`
 An open branch B is *saturated* iff for every compound signed formula in B:
 - if its rule is non-branching, both resulting signed formulas are in B;
 - if its rule is branching, at least one of the two alternatives is in B.
 
 > *Depends on:* Def 3.3
 
-**Definition 3.5 (Tableau; fairness; derivability).** `[DRAFT]`
+**Definition 3.5 (Tableau; derivability).** `[VERIFIED]`
 A *tableau* for a finite branch B₀ is a finite binary tree of branches with root B₀, each
 child obtained from its parent by applying one decomposition rule to one member.
-An expansion strategy is **fair** iff every signed formula that is unprocessed on an open
-branch is eventually processed on every extension of that branch. *(This makes precise the
-"chiến lược công bằng" left informal in D2 §6.3 — INTAKE §F.4.)*
 A tableau is *closed* iff every leaf is closed.
 **Derivability:** for finite Σ and signed conclusion Sφ,
 `Σ ⊢_A Sφ  ⟺  some tableau for Σ ∪ {S̄φ} is closed` (S̄ the opposite sign, Def 2.4).
 Unsigned derivability `Γ ⊢ φ` is the case all-signs-`T⁺`.
 
-> *Lean:* `Nullivance.ProofTheory.Closes` (closability predicate), `Derives` · *DR:* DR-0005 · *Depends on:* Def 3.2–3.4
+General scheduler fairness is deliberately not part of this canonical definition: the
+earlier prose clause did not specify occurrence identity, transition states, or traces.
+That wording is retained only as historical material. Definitions 3.78–3.79 give the
+exact deterministic reference-search semantics; Definition 3.80 and Theorem 4.33 verify
+arbitrary progressing active-branch selection. A transition system admitting idle steps
+and a weak-fairness condition for it remain outside the canonical calculus.
 
-**Remark 3.6 (Lean encoding note).**
+> *Lean:* `Nullivance.ProofTheory.TableauCloses`, `Closes`, `Derives`, and
+> `tableauCloses_iff_closes` · *DR:* DR-0005, DR-0017 · *Depends on:* Def 3.2–3.4
+
+**Remark 3.6 (Lean encoding note).** `[VERIFIED]`
 
 **2026-07-04 verification update.** The explicit finite proof-tree presentation is now
 formalized as Lean predicate `Nullivance.ProofTheory.TableauCloses`; the theorem
 `Nullivance.ProofTheory.tableauCloses_iff_closes` proves equivalence with `Closes`.
-This closes the proof-tree encoding point. Fairness, saturation, and proof-search
-termination remain paper-level (Thm 4.8).
+This closes the proof-tree encoding point. The former general-fairness claim remains
+only as superseded historical wording. Deterministic reference search is verified by
+Definitions 3.78–3.79 and Theorem 4.34; progressing schedule independence is verified by
+Definition 3.80 and Theorem 4.33.
 
 The Lean mirror encodes "some tableau closes" directly as an inductive predicate `Closes B`
 (two closure axioms + sixteen rule constructors, branching rules taking two subproofs).
@@ -159,7 +165,7 @@ Propositions 3.7–3.10 establish each D1 §14 rule *individually* as a derived 
 ask the completeness question (INTAKE §F.1) the rules must first be assembled into a
 calculus:
 
-**Definition 3.11 (The ND calculus ⊢_ND).** `[DRAFT]`
+**Definition 3.11 (The ND calculus ⊢_ND).** `[VERIFIED]`
 `Γ ⊢_ND φ` is the least relation between finite premise lists and formulas closed under:
 assumption (φ ∈ Γ); ∧-introduction and both eliminations; both ∨-introductions;
 ∨-elimination by cases (from `Γ ⊢ φ∨ψ`, `φ,Γ ⊢ χ`, `ψ,Γ ⊢ χ` infer `Γ ⊢ χ`); ¬¬-
@@ -208,7 +214,7 @@ target; the observation that no rule applies to `¬(·⊕·)` became the proof i
 
 > *Lean:* `Metatheory.nd_incomplete` (both halves) — sorry-free. · *Depends on:* Def 3.11, Lem 2.9, Prop 3.12, Def 2.7.
 
-**Definition 3.14 (The ⊕-De-Morgan extension ⊢_ND⊕).** `[DRAFT]`
+**Definition 3.14 (The ⊕-De-Morgan extension ⊢_ND⊕).** `[VERIFIED]`
 `Γ ⊢_ND⊕ φ` is the least relation closed under all rules of Definition 3.11 plus the two
 harmonization De Morgan directions:
 
@@ -449,7 +455,7 @@ This layer extends the finite-domain syntax of Def 2.19–2.21. It is separate f
 propositional branch calculus: branch entries carry both a sign and an assignment, because
 quantifier instantiation changes the value assigned to a variable.
 
-**Definition 3.21 (Finite-domain quantified signed tableau).** `[DRAFT]`
+**Definition 3.21 (Finite-domain quantified signed tableau).** `[VERIFIED]`
 For a fixed domain `Fin(n+1)`, a quantified signed formula is a triple `(S, ρ, φ)` where
 `S` is one of the four meta-signs, `ρ` is an assignment of variables into `Fin(n+1)`, and
 `φ` is a finite-domain quantified formula. A quantified branch is a finite list of such
@@ -542,7 +548,7 @@ base closure condition for crisp equality.
 > `FiniteFO.qcompleteness_current_refuted` — sorry-free, `lake build` 2026-07-06.
 > · *Depends on:* Def 2.20, Def 2.21, Def 3.21.
 
-**Definition 3.25 (Equality-completed finite-domain quantified tableau).** `[DRAFT]`
+**Definition 3.25 (Equality-completed finite-domain quantified tableau).** `[VERIFIED]`
 The equality-completed version of Def 3.21 adds four crisp-equality closure clauses:
 
 1. `T⁻(x=y)` closes when `ρ(x)=ρ(y)`;
@@ -609,7 +615,7 @@ propositional formula under their carried assignments.
 > `FiniteFO.qcompleteness_repaired_refuted` -- sorry-free, `lake build` 2026-07-06.
 > *Depends on:* Def 2.20, Def 2.21, Def 3.25, Def 3.28, Lem 3.29.
 
-**Definition 3.28 (Finite grounding bridge).** `[DRAFT]`
+**Definition 3.28 (Finite grounding bridge).** `[VERIFIED]`
 For a fixed finite domain `Fin(n+1)` and assignment `rho`, the finite grounding bridge
 maps each finite-domain quantified formula `phi` to a propositional formula
 `ground rho phi`.
@@ -664,7 +670,7 @@ in Def 3.28 and in the Lean theorem statements.
 > `FiniteFO.ground_truth` -- sorry-free, `lake build` 2026-07-06.
 > *Depends on:* Def 2.19-2.21, Def 3.28.
 
-**Definition 3.30 (Full extensional finite-domain tableau).** `[DRAFT]`
+**Definition 3.30 (Full extensional finite-domain tableau).** `[VERIFIED]`
 The full extensional closure predicate `QClosesExt` extends the equality-completed
 closure predicate of Def 3.25 in two ways.
 
@@ -772,7 +778,7 @@ propositional valuations.
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 2.20, Def 3.28, Lem 3.29.
 
-**Definition 3.34 (Rigid finite-ground constraints).** `[DRAFT]`
+**Definition 3.34 (Rigid finite-ground constraints).** `[VERIFIED]`
 For each finite domain `Fin(n+1)`, `rigidGroundConstraints n` is the finite
 propositional signed branch containing:
 
@@ -837,7 +843,7 @@ construction does not collapse arbitrary predicate interpretations.
 > the completeness statement; this theorem remains valid and is kept as the
 > historical first completeness result of the finite-domain program.
 
-**Definition 3.36 (Core extensional finite-domain tableau).** `[DRAFT]`
+**Definition 3.36 (Core extensional finite-domain tableau).** `[VERIFIED]`
 `QClosesExtCore` is the full extensional finite-domain tableau of Def 3.30 with the
 two propositional macro-rules removed. It contains:
 
@@ -879,7 +885,7 @@ and predicate extensionality uses the ground-extensional closure clause directly
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 3.30, Def 3.36, Thm 3.31.
 
-**Definition 3.38 (Replay trace with residual fold tails).** `[DRAFT]`
+**Definition 3.38 (Replay trace with residual fold tails).** `[VERIFIED]`
 A replay trace is a finite list of replay items. A replay item is one of:
 
 1. a quantified signed formula;
@@ -912,27 +918,30 @@ without pretending it is a quantified formula.
 > `lake build Nullivance.FiniteFO` 2026-07-07. *DR:* DR-0013.
 > *Depends on:* Def 3.28, Def 3.34, Def 3.36.
 
-**Conjecture 3.39 (Constructor replay into the core calculus).** — **settled
-2026-07-09**: the final-case statement is `[VERIFIED]` as **Theorem 3.75** (via the
-semantic completeness of the core calculus, Theorem 3.74), with no use of
-`QClosesExt.propSim` or `QClosesExt.rigidPropSim`. The derivation-by-derivation
-replay formulation below is kept for the record; its trace-simulation content
-survives as the optional Conj 3.50.
-
-~~There is a constructor-by-constructor replay theorem from constrained propositional
+**Conjecture 3.39 (Constructor replay into the core calculus).** `[REFUTED]`
+There is a constructor-by-constructor replay theorem from constrained propositional
 closure of a replay trace into the core extensional finite-domain tableau, with final
-case:~~
+case:
 
 if `Closes (rigidGroundConstraints n ++ groundBranch B)`, then `QClosesExtCore B`.
 
-*(statement `[VERIFIED]` as Thm 3.75)*
+The proof was required not to use `QClosesExt.propSim` or `QClosesExt.rigidPropSim`.
+Its intended exact certificate-level refinement was Conjecture 3.50.
 
-~~The proof must not use `QClosesExt.propSim` or `QClosesExt.rigidPropSim`. The
-intended proof is induction on the propositional closure derivation, using trace items
-for residual fold tails or equivalent fold-block lemmas for finite
-conjunction/disjunction groundings.~~ *(the macro-free requirement is met by Thm 3.75;
-the induction-on-derivation route is superseded — see the Conj 3.50 progress note for
-its exact obstruction.)*
+*Status correction (2026-07-27):* Theorem 3.75 verifies the displayed final
+implication by a semantic route, but does not construct the conjectured
+derivation-by-derivation replay. The replay claim was subsequently refuted
+and was refined by Conjecture 3.50. Theorem 3.75 must not be cited as a proof of the
+full Conjecture 3.39.
+
+*Resolution (2026-08-13):* the intended universal constructor-certificate reading is
+false. Conjecture 3.50, which was introduced as its precise trace-level form, is refuted
+by the admissible two-item fold cascade recorded there. The counterexample uses only two
+ordinary `conjTpos` constructors followed by `closeT`, so it is within the intended
+fold-decomposition fragment rather than an artifact of a macro rule. The displayed
+final implication is **not** refuted: it remains independently `[VERIFIED]` as Theorem
+3.75. Thus the false part is derivation-preserving replay through the present
+head-sensitive `ReplayClosesCore` certificate.
 
 *R5 record:* a direct theorem targeting `QClosesExt` is rejected as publication
 insufficient, because it is discharged by the macro constructor `rigidPropSim`. A direct
@@ -940,7 +949,10 @@ theorem targeting only `QBranch` is too small for quantified formulas: decomposi
 grounded finite quantifier creates residual fold tails that are not groundings of single
 quantified formulas. Def 3.38 is the repaired proof state.
 
-> *Lean:* no theorem yet. Supporting definitions in Def 3.38 compile.
+> *Lean:* refutation `FiniteFO.admissible_ground_replay_bridge_refuted`; concrete
+> witness `replayCascadeTrace_admissible`, `replayCascadeTrace_ground_closes`,
+> `replayCascadeTrace_not_replayClosesCore`. The final implication alone is
+> `FiniteFO.groundBranch_closes_to_core` (Thm 3.75). *DR:* DR-0013, DR-0019.
 > *Depends on:* Def 3.34, Def 3.36, Def 3.38.
 
 **Proposition 3.40 (Local replay rules for quantified trace items).** `[VERIFIED]`
@@ -1103,7 +1115,7 @@ nonempty head in the branching cases.
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 3.38, Prop 3.42.
 
-**Definition 3.44 (Admissible core replay closure).** `[DRAFT]`
+**Definition 3.44 (Admissible core replay closure).** `[VERIFIED]`
 `ReplayClosesCore T` is the trace-level closure predicate whose constructors are exactly
 the replay steps currently admitted for the macro-free core calculus:
 
@@ -1180,7 +1192,7 @@ states.
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 3.38, Def 3.44, Prop 3.45.
 
-**Definition 3.47 (Admissible replay trace invariant).** `[DRAFT]`
+**Definition 3.47 (Admissible replay trace invariant).** `[VERIFIED]`
 A replay trace is `Admissible` when every item satisfies the following syntactic
 invariant:
 
@@ -1242,20 +1254,25 @@ constructor of `ReplayClosesCore` and Prop 3.45 discharge the core projection. �
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 3.44, Def 3.47.
 
-**Conjecture 3.50 (Admissible ground-to-replay bridge).** `[CONJECTURE]`
+**Conjecture 3.50 (Admissible ground-to-replay bridge).** `[REFUTED]`
 *(Demoted 2026-07-09: no longer on the critical path — the program's endgame is
 discharged by Thm 3.74/3.75. This remains an optional sharpening about the
 replay-trace calculus itself.)*
-For every admissible replay trace `T`, if the propositional branch
-`ReplayTrace.groundBranch T` closes by a constructor-respecting derivation, then
-`ReplayClosesCore T`.
+The exact strongest natural reading is:
 
-This is the repaired form of the final bridge after Prop 3.46. The proof is expected to
-be induction on the propositional closure derivation, with additional inversion lemmas
-mapping membership in `ReplayTrace.groundBranch T` back to either a quantified item, a
-rigid equality item, or an admissible structured fold-tail item.
+`∀ T, ReplayTrace.Admissible T → Closes (ReplayTrace.groundBranch T) → ReplayClosesCore T`.
 
-**Progress note (2026-07-09, dispatcher session).** The **closure cases** of the
+This formalizes “constructor-respecting” by requiring the ordinary inductive
+propositional closure certificate and asking for the corresponding inductive replay
+certificate. It is false.
+
+This was the repaired form of the final bridge after Prop 3.46. Before the refutation
+below, the planned proof was induction on the propositional closure derivation, with
+additional inversion lemmas mapping membership in `ReplayTrace.groundBranch T` back to
+either a quantified item, a rigid equality item, or an admissible structured fold-tail
+item.
+
+**Historical proof analysis.** The **closure cases** of the
 intended induction are fully discharged by the close-pair dispatcher (Prop 3.73).
 The **rule cases** were analyzed to the exact remaining obstruction: when the
 propositional derivation decomposes the grounding of a *branching-sign* quantifier
@@ -1269,7 +1286,7 @@ not make the induction well-founded (inversion does not shrink the derivation).
 The non-branching-sign quantifier decompositions, all propositional connective
 decompositions, and all fold-tail decompositions do go through (duplicate-absorption
 by Prop 3.42 monotonicity, plus the `n = 0` empty-tail child handled by dropping the
-right branch). **Recommended route recorded in DR-0013:** prove semantic completeness
+right branch). **Replacement route (DR-0013):** prove semantic completeness
 of the core calculus directly — `no finite model satisfies B ⟹ QClosesExtCore B` —
 by mirroring the verified propositional engine (`Metatheory.closes_todo`) at the
 quantified level with the domain-weighted measure `qweight(∀xφ) = 1 + (n+1)·qweight(φ)`
@@ -1281,11 +1298,49 @@ simulation, and Conj 3.50 would remain as a sharpening about the trace calculus.
 
 > *Lean:* closure cases `FiniteFO.ReplayTrace.closeT_members_dispatch_core`,
 > `closeF_members_dispatch_core` (Prop 3.73) -- sorry-free. Rule cases: no theorem
-> yet; obstruction and route analysis in
-> `drafts/2026-07-07-constructor-replay-research.md` (2026-07-09 entry).
+> yet; the obstruction and the replacement route are stated above and governed by
+> DR-0013.
 > *Depends on:* Def 3.47, Prop 3.48, Prop 3.49, Prop 3.73.
+>
+> **Semantic replacement:** Theorem 3.77 proves that admissible ground closure
+> always yields `QClosesExtCore (ReplayTrace.qBranch T)`. This discharges the semantic
+> closure consequence for arbitrary admissible traces. It does not produce the stronger
+> `ReplayClosesCore T` certificate required here, so Conjecture 3.50 remained open at
+> that date; the counterexample below subsequently refutes it.
 
-**Definition 3.51 (Replay ground source).** `[DRAFT]`
+*Counterexample and proof.* Work over the two-element domain (`n = 1`). Let
+`φ = P(x₀)`, let `ρ₀` and `ρ₁` send every variable to `0` and `1`, respectively, and
+write `pᵢ = ground ρᵢ φ`. Injectivity of ground-atom coding gives `p₀ ≠ p₁`. Put
+
+`T = [qFoldConjTail T⁺ [(ρ₀,φ),(ρ₁,φ)], q(T⁻,ρ₁,φ)]`.
+
+The trace is admissible: its fold tail is nonempty and neither item is one of the
+excluded empty or unstructured tails. Its ground branch is
+
+`[T⁺(p₀ ∧ (p₁ ∧ ⊤)), T⁻p₁]`.
+
+It closes by two applications of the propositional `conjTpos` constructor followed by
+`closeT` on `p₁`. Suppose instead that `ReplayClosesCore T`. Inversion on the outer
+certificate leaves only `qFoldConjTposCons`, whose premise is a certificate for
+
+`[q(T⁺,ρ₀,φ), qFoldConjTail T⁺ [(ρ₁,φ)], q(T⁻,ρ₁,φ)]`.
+
+The leading quantified item is atomic. Inversion on this premise eliminates every
+decomposition, equality-rigid, and head-fold constructor. The only remaining possible
+constructor is `closeGroundT`, which requires `p₀ = p₁`, contradicting injectivity.
+Hence `¬ ReplayClosesCore T`, and the universal implication is refuted. ∎
+
+*R5 consequence.* The earlier inadmissible empty-tail counterexample (Prop 3.46) did not
+settle this conjecture. The new witness is admissible, uses a nonempty structured tail,
+and follows the canonical fold cascade. Strengthening only the existing admissibility
+predicate therefore cannot repair the theorem; the certificate state or its fold
+constructors must change.
+
+> *Lean:* `FiniteFO.replayCascadeTrace_admissible`,
+> `replayCascadeTrace_ground_closes`, `replayCascadeTrace_not_replayClosesCore`,
+> `admissible_ground_replay_bridge_refuted` -- sorry-free. *DR:* DR-0019.
+
+**Definition 3.51 (Replay ground source).** `[VERIFIED]`
 `ReplayGroundSource T s` classifies the source of a signed propositional formula `s`
 inside `ReplayTrace.groundBranch T`. The admitted sources are:
 
@@ -1322,7 +1377,7 @@ assignment/formula data needed for quantified replay.
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Def 3.47, Def 3.51.
 
-**Definition 3.53 (Replay close-pair sources).** `[DRAFT]`
+**Definition 3.53 (Replay close-pair sources).** `[VERIFIED]`
 `ReplayCloseTPair T phi` records the two source classifications for a propositional
 `T`-closure pair `(T+, phi)` and `(T-, phi)` in `ReplayTrace.groundBranch T`.
 `ReplayCloseFPair T phi` is the analogous record for an `F`-closure pair
@@ -1568,7 +1623,7 @@ tail. This is the next obstacle.
 > `lake build Nullivance.FiniteFO` 2026-07-07.
 > *Depends on:* Prop 3.40, Prop 3.58.
 
-**Definition 3.62 (Generated q-fold alignment invariant).** `[DRAFT]`
+**Definition 3.62 (Generated q-fold alignment invariant).** `[VERIFIED]`
 For a replay trace `T`, a sign `S`, an assignment `ρ`, a variable `x`, and a quantified
 formula `φ`, `HasQInstBlock T S ρ x φ` means that every finite-domain instance
 `qinst S ρ x φ d` occurs in `ReplayTrace.qBranch T`.
@@ -1628,7 +1683,7 @@ equivalent alignment invariant.
 > `lake build Nullivance.FiniteFO` 2026-07-08.
 > *Depends on:* Prop 3.40, Prop 3.58.
 
-**Definition 3.64 (Generated replay ground source).** `[DRAFT]`
+**Definition 3.64 (Generated replay ground source).** `[VERIFIED]`
 `ReplayGeneratedGroundSource T s` refines the source classification of Def 3.51 under
 the generated q-fold alignment invariant of Def 3.62. Its quantified and rigid source
 cases match Def 3.51. Its structured q-fold cases additionally carry the following
@@ -1669,7 +1724,7 @@ grounding is the q-fold formula, the generated source can recover the correspond
 > `lake build Nullivance.FiniteFO` 2026-07-08.
 > *Depends on:* Def 3.47, Def 3.62, Def 3.64.
 
-**Definition 3.66 (Generated replay close-pair source).** `[DRAFT]`
+**Definition 3.66 (Generated replay close-pair source).** `[VERIFIED]`
 `ReplayGeneratedCloseTPair T phi` is the pair-level generated source classification
 for a propositional close pair `(T+, phi)` and `(T-, phi)` in the grounded branch of a
 replay trace. `ReplayGeneratedCloseFPair T phi` is the corresponding classification
@@ -1928,7 +1983,9 @@ the four non-branching steps of Prop 3.71, which live on the other four sign pai
 *Consequence for the program:* with Prop 3.72, the q-versus-fold family of the
 generated close-pair dispatcher (Def 3.66, Prop 3.67) reduces to supplying the
 alignment equation from the generated sources; the remaining work toward Conj 3.39/3.50
-is dispatcher assembly over the source classification, not new replay mathematics.
+was then believed to be dispatcher assembly over the source classification. DR-0019's
+later admissible cascade shows that the head-sensitive certificate itself was also an
+obstruction.
 
 > *Lean:* consumers
 > `FiniteFO.ReplayTrace.closeT_qFoldConjTpos_qTneg_tailConsume_core`,
@@ -2007,7 +2064,8 @@ longer on the critical path of the bridge program.
 *Consequence:* the closure cases of the ground-to-replay bridge (Conj 3.50) and
 of the final constructor replay (Conj 3.39) are fully discharged: whenever the
 propositional derivation closes a pair, the membership form of this proposition
-produces the core closure directly.
+produces the core closure directly. DR-0019 later shows that this core-closure result
+does not imply existence of a `ReplayClosesCore` certificate for the original trace.
 
 > *Lean:* dispatchers `FiniteFO.ReplayTrace.closeT_pair_dispatch_core`,
 > `FiniteFO.ReplayTrace.closeF_pair_dispatch_core`; membership form
@@ -2109,8 +2167,7 @@ one of the four breaks the literal stage.
 > *Depends on:* Def 2.19, 2.20, 2.21, 3.25, 3.28, 3.36, Lem 2.22, Prop 3.37,
 > Prop 3.42; mirrors the engine of Thm 4.13.
 
-**Theorem 3.75 (Constrained grounding closure reaches the core — Conj 3.39
-settled).** `[VERIFIED]`
+**Theorem 3.75 (Constrained grounding closure reaches the core).** `[VERIFIED]`
 For every finite-domain quantified branch `B`:
 
 if `Closes (rigidGroundConstraints n ++ groundBranch B)`, then `QClosesExtCore B`,
@@ -2128,15 +2185,490 @@ branch `rigidGroundConstraints n ++ groundBranch B` is satisfiable, contradictin
 propositional soundness (Thm 4.5, `Closes.unsat`). Hence no finite model
 satisfies `B`, and Theorem 3.74 closes `B` in the core calculus. ∎
 
-*Route note (R9):* this settles the **final-case statement** of Conj 3.39 by the
+*Route note (R9):* this proves the **final implication** displayed in Conj 3.39 by the
 semantic route recorded in DR-0013 — the propositional derivation is consumed
 through its soundness and the core closure is rebuilt by the engine of Thm 3.74 —
 not by the constructor-by-constructor trace simulation originally envisaged. The
-simulation formulation survives as the optional Conj 3.50 (a sharpening about the
-replay-trace calculus, no longer on the critical path). The macro-free
-publication requirement that motivated Conj 3.39 is met.
+simulation formulation was retained temporarily as the optional Conj 3.50 (a
+sharpening about the replay-trace calculus, no longer on the critical path). The
+macro-free publication requirement that motivated Conj 3.39 is met. DR-0019
+subsequently refutes the stronger replay-certificate conjecture without affecting this
+theorem.
 
 > *Lean:* `FiniteFO.groundBranch_closes_to_core`,
 > `FiniteFO.satBranch_groundVal_rigid` -- sorry-free, full `lake build`
 > 2026-07-09; axiom audit clean.
 > *Depends on:* Def 3.28, 3.34, Lem 3.29, Thm 3.74, Thm 4.5.
+
+**Theorem 3.76 (Fixed-signature finite-domain completeness).** `[VERIFIED]`
+Fix a function-free signature `Σ`, a finite-domain quantified branch `Γ`, and a signed
+formula `sφ`. If `Γ` and `sφ` are `Σ`-well-formed, then
+
+`QDerivesExtCore Γ sφ` if and only if `QConsequence4Sig_Σ Γ sφ`.
+
+*Proof.*
+
+1. By Theorem 2.28(3), the well-formedness hypotheses give
+   `QConsequence4Sig_Σ Γ sφ ↔ QConsequence4 Γ sφ`.
+2. By Theorem 3.74 in derivability form,
+   `QDerivesExtCore Γ sφ ↔ QConsequence4 Γ sφ`.
+3. Compose step 2 with the reverse orientation of step 1. The intermediate raw
+   consequence relation is identical in both equivalences, so the result is
+   `QDerivesExtCore Γ sφ ↔ QConsequence4Sig_Σ Γ sφ`. ∎
+
+*R5 record:* without a fixed signature, the raw theorem remains mathematically correct
+for a language in which the pair `(P,k)` behaves as an independently interpretable
+predicate occurrence at every list length `k`. That is not the advertised
+fixed-signature first-order language. Definition 2.27 removes off-arity data from the
+model type, and Theorem 2.28 proves—not merely assumes—that its consequence relation
+coincides with the raw implementation semantics on well-formed inputs.
+
+> *Lean:* `FiniteFO.qDerivesExtCore_iff_qconsequence4Sig` (compatibility name
+> `qDerivesExtCore_iff_qconsequence4_wellFormed`) — sorry-free, full
+> `lake build` 2026-07-27 (2001 jobs); axiom audit:
+> `[propext, Classical.choice, Quot.sound]`.
+> *Depends on:* Def 2.25, 2.27; Lem 2.26; Thm 2.28, 3.74.
+
+**Theorem 3.77 (Admissible replay ground closure reaches the core).** `[VERIFIED]`
+For every admissible replay trace `T`,
+
+`Closes (ReplayTrace.groundBranch T) → QClosesExtCore (ReplayTrace.qBranch T)`.
+
+*Proof.* First prove a satisfaction-transfer lemma. Let a finite FOUR model `M` satisfy
+`ReplayTrace.qBranch T`. Each trace-item case then satisfies its member of
+`ReplayTrace.groundBranch T` under `groundVal M`:
+
+1. for a quantified item, use the grounding truth lemma;
+2. for a rigid item, admissibility places it in `rigidGroundConstraints n`, all of which
+   `groundVal M` satisfies;
+3. unstructured fold tails are excluded by admissibility;
+4. for a structured conjunction or disjunction tail, its projected signed items all
+   occur in `ReplayTrace.qBranch T`. Induction on the item list and the FOUR fold clauses
+   transfers their satisfaction to the signed fold.
+
+The four dangerous empty folds are exactly
+`T⁻ foldConj []`, `F⁺ foldConj []`, `T⁺ foldDisj []`, and
+`F⁻ foldDisj []`; Definition 3.47 excludes them. The four remaining empty folds have
+the correct rigid identity value and satisfy their signs.
+
+Now suppose the ground branch closes. If some `M` satisfied the quantified projection,
+the transfer lemma would make `groundVal M` satisfy the closed propositional branch,
+contradicting global soundness (Theorem 4.5). Thus the quantified projection is
+unsatisfiable, and core completeness (Theorem 3.74) yields its core closure. ∎
+
+*R5 record:* dropping admissibility makes the theorem false. Proposition 3.46 supplies
+the minimal witness: an empty `T⁻` conjunction tail closes against the rigid truth atom
+while its quantified projection is empty and cannot close. This is why all four
+empty-fold exclusions are consumed explicitly in the Lean proof.
+
+*Scope note:* this theorem establishes the semantic closure consequence formerly
+sought through Conjecture 3.50, not a value of type `ReplayClosesCore T`. DR-0019
+refutes that head-sensitive certificate bridge. Definition 3.81 introduces a
+conservative membership-selecting extension; its universal completeness is stated
+separately as Conjecture 3.84.
+
+> *Lean:* `FiniteFO.qsat_qTailBranch_ground_foldConj`,
+> `FiniteFO.qsat_qTailBranch_ground_foldDisj`,
+> `FiniteFO.ReplayTrace.qsat_qBranch_implies_groundBranch`,
+> `FiniteFO.ReplayTrace.admissible_ground_closes_to_core` — sorry-free,
+> `lake build Nullivance.FiniteFO` 2026-07-27 (912 jobs).
+> *Depends on:* Def 3.28, 3.34, 3.36, 3.38, 3.47, Lem 3.29, Prop 3.46,
+> Thm 3.74, Thm 4.5.
+
+## 3.F Verified operational reference search
+
+**Definition 3.78 (Reference search branch and head transition).** `[VERIFIED]`
+An operational search branch is a pair `W = (todo,lits)` of finite lists of signed
+formulas. Its represented constraint branch is `todo ++ lits`. The intended invariant
+is that every member of `lits` is atomic. The state is terminal exactly when `todo = []`.
+
+The deterministic scheduler always selects the head occurrence of `todo`:
+
+1. an atomic head is removed from `todo` and prepended to `lits`;
+2. a compound head is removed and replaced at the front of `todo` by the product or
+   products prescribed by its row of Definition 3.3;
+3. a branching rule produces the two corresponding child states, in the left-to-right
+   order displayed in Definition 3.3.
+
+Write `children(W)` for this zero-, one-, or two-element list and
+`W →_ref W'` iff `W' ∈ children(W)`. Define formula size by
+
+`|p| = 1`, `|¬φ| = |φ|+1`, and
+`|φ○ψ| = |φ|+|ψ|+1` for `○ ∈ {∧,∨,⊕}`,
+
+and worklist weight `μ(W) = Σ_{Sφ ∈ todo} |φ|`, counting list occurrences.
+
+> *Lean:* `Operational.SearchBranch`, `SearchBranch.constraints`,
+> `SearchBranch.Terminal`, `children`, `RefStep`, `SearchBranch.weight` ·
+> *DR:* DR-0017 · *Depends on:* Def 1.2, 3.1–3.3.
+
+**Definition 3.79 (Reference execution and success).** `[VERIFIED]`
+`run(todo,lits)` is the exhaustive left-first depth-first recursion induced by
+Definition 3.78. At a terminal state it returns the singleton list `[lits]`; at a
+one-child state it returns that child's result; at a two-child state it concatenates
+the left and right results. For an input branch `B`, the reference search starts at
+`(B,[])`.
+
+The Boolean `branchClosedB(L)` tests whether `L` contains a signed formula and its
+opposite. Define `referenceCloses(B)` to be true exactly when `branchClosedB` is true on
+every `L ∈ run(B,[])`.
+
+This is a reference decision procedure. Definition 3.80 generalizes the order of active
+branch selection without changing the deterministic head rule inside each branch.
+
+> *Lean:* `Operational.run`, `AtomicBranch`, `branchClosedB`, `referenceCloses` ·
+> *DR:* DR-0017 · *Depends on:* Def 3.2, 3.3, 3.78.
+
+**Definition 3.80 (Progressing forest search and scheduler).** `[VERIFIED]`
+A *search forest* is a finite list `F` of reference search branches (Definition 3.78).
+It is terminal iff every `W ∈ F` is terminal. Its atomic-accumulator invariant holds
+iff the `lits` component of every `W ∈ F` is atomic. A terminal forest is closed iff
+every accumulated `lits` branch contains an opposite-sign pair.
+
+For a FOUR valuation `v`, write `ForestSat(v,F)` iff `v` satisfies the represented
+constraints `W.todo ++ W.lits` of at least one `W ∈ F`.
+
+One *progressing forest step* has the exact form
+
+`pre ++ [W] ++ post  →_F  pre ++ children(W) ++ post`,
+
+where `W` is nonterminal. Thus a step may select any active forest occurrence, but it
+must remove that occurrence and insert **all** children from Definition 3.78. A finite
+progress trace `F →_F* G` is the reflexive-transitive closure of this step relation.
+A *progressing scheduler* maps every nonterminal forest to a legal successor:
+
+`σ : (F : SearchForest) → ¬Terminal(F) → {G // F →_F G}`.
+
+The scheduler is not permitted to stutter. Consequently no fairness premise is built
+into this definition; a separate weak-fairness notion would be required only for a
+transition system that explicitly permits idle steps.
+
+Define the remaining expansion-tree cost recursively by
+
+`c([])=1`, and `c(W)=1+Σ_{W' ∈ children(W)}c(W')` for nonterminal `W`,
+
+where the cost depends on `todo` and ignores the unchanged atomic accumulator. Define
+the forest cost `C(F)=Σ_{W∈F}c(W)`, counting list occurrences.
+
+> *Lean:* `Operational.SearchForest`, `ForestTerminal`, `ForestAtomicAcc`,
+> `ForestClosed`, `ForestSat`, `ForestStep`, `ForestReach`, `ProgressScheduler`,
+> `treeCost`, `forestCost` · *DR:* DR-0018 ·
+> *Depends on:* Def 3.2, 3.78–3.79.
+
+## 3.G Membership-selecting replay repair
+
+**Definition 3.81 (Membership-selecting core replay certificate).** `[VERIFIED]`
+For a replay trace `T`, `ReplayClosesCoreMem T` is the least inductive predicate closed
+under the following nine constructor schemes.
+
+1. **Embedding.** Every `ReplayClosesCore T` certificate gives a
+   `ReplayClosesCoreMem T` certificate.
+2. **Four all-item fold steps.** If a nonempty structured fold-tail item occurs
+   anywhere in `T`, then the signs `T⁺/F⁻` for conjunction folds and `T⁻/F⁺` for
+   disjunction folds may prepend the signed head item and the structured residual tail
+   to `T`. A membership-selecting certificate for that child trace gives one for `T`.
+3. **Four selecting fold steps.** If a structured fold-tail item occurs anywhere in
+   `T`, then the signs `T⁻/F⁺` for conjunction folds and `T⁺/F⁻` for disjunction folds
+   may select any assignment–formula pair occurring in the represented item list. A
+   certificate after prepending the corresponding quantified signed item gives one for
+   `T`.
+
+There is no constructor for an unstructured fold tail. The predicate is a finite proof
+object: although a child retains the original trace, only a finite inductive derivation
+counts as a certificate. The definition is a conservative extension of Definition
+3.44, not a modification of it.
+
+*Well-formedness and design review.* Every premise uses only Definitions 3.38 and 3.44,
+ordinary list membership, and a strictly positive recursive occurrence of
+`ReplayClosesCoreMem`; hence the definition is noncircular and accepted by Lean's
+positivity checker. The four all-item signs and four selecting signs exhaust the two
+structured fold constructors and their four signs. Empty all-item folds need no new
+rule because their old neutral constructors embed through clause 1. Empty selecting
+folds have no selectable member; Definition 3.47 already excludes them from admissible
+traces. See DR-0020 for the rejected permutation-only and focused-state alternatives.
+
+> *Lean:* `FiniteFO.ReplayClosesCoreMem`,
+> `FiniteFO.ReplayClosesCore.toMem` — sorry-free, full `lake build` 2026-08-13.
+> *DR:* DR-0020 · *Depends on:* Def 3.38, Def 3.44, Def 3.47.
+
+**Proposition 3.82 (Soundness of membership-selecting replay).** `[VERIFIED]`
+For every replay trace `T`,
+
+`ReplayClosesCoreMem T → QClosesExtCore (ReplayTrace.qBranch T)`.
+
+*Proof.* Use the induction principle generated by Definition 3.81. The induction
+hypothesis in each recursive case states core closure of the quantified projection of
+that constructor's exact child trace.
+
+1. In the embedding case, apply Proposition 3.45.
+2. In each of the four all-item fold cases, unfolding the child's quantified projection
+   gives the corresponding cons-child branch. Apply the matching membership replay
+   lemma of Proposition 3.59 to the fold-occurrence premise and the induction
+   hypothesis.
+3. In each of the four selecting cases, membership of the chosen pair in the represented
+   item list puts its signed image in the fold's `qTailBranch`. Proposition 3.58 then
+   puts that signed formula in `ReplayTrace.qBranch T`. Thus every member of the child
+   branch consisting of the selected item prepended to `ReplayTrace.qBranch T` already
+   belongs to the parent branch. Apply core monotonicity (Proposition 3.42) to the
+   induction hypothesis.
+
+These are all nine constructors of Definition 3.81, so the induction is exhaustive. ∎
+
+*Scope.* The proposition proves sound projection into the quantified core calculus. It
+does not assert that every core derivation, or every ground closure, has such a
+certificate; that converse is Conjecture 3.84.
+
+> *Lean:* `FiniteFO.ReplayClosesCoreMem.toCore` — sorry-free, full
+> `lake build` 2026-08-13; axiom audit uses only the project's standard logical
+> foundations.
+> *Depends on:* Def 3.81, Prop 3.42, Prop 3.45, Prop 3.58, Prop 3.59.
+
+**Proposition 3.83 (Conservative embedding and cascade regression).** `[VERIFIED]`
+The membership-selecting certificate has the following three checked boundary
+properties.
+
+1. `ReplayClosesCore T → ReplayClosesCoreMem T` for every trace `T`.
+2. The admissible two-element cascade used to refute Conjecture 3.50 has no
+   `ReplayClosesCore` certificate but does have a `ReplayClosesCoreMem` certificate.
+3. The inadmissible empty-tail witness of Proposition 3.46 has no
+   `ReplayClosesCoreMem` certificate.
+
+*Proof.* Clause 1 is the embedding constructor of Definition 3.81. For clause 2, apply
+the all-item conjunction-fold constructor twice, selecting the two successive heads of
+the represented list. The resulting trace contains both `q(T⁺,ρ₁,φ)` and the original
+`q(T⁻,ρ₁,φ)`, so the embedded `closeGroundT` constructor finishes the certificate. The
+nonexistence of the old certificate is the inversion proof recorded under Conjecture
+3.50. For clause 3, Proposition 3.82 would map any proposed certificate to core closure
+of the witness's empty quantified projection. Core soundness and the model satisfying
+the empty branch rule this out. ∎
+
+*R5 record.* This test distinguishes a targeted repair from an indiscriminate one: the
+new rule repairs the exact admissible residual-cascade obstruction, while it does not
+certify the earlier empty-projection false positive. Domain size two remains the
+minimal cascade test; domain size one has no nontrivial residual before the target.
+
+> *Lean:* `FiniteFO.ReplayClosesCore.toMem`,
+> `FiniteFO.replayCascadeTrace_old_refuted_mem_verified`,
+> `FiniteFO.replayEmptyBadTailTrace_not_replayClosesCoreMem` — sorry-free, full
+> `lake build` 2026-08-13.
+> *DR:* DR-0019, DR-0020 · *Depends on:* Prop 3.46, Conj 3.50, Def 3.81, Prop 3.82.
+
+**Conjecture 3.84 (Universal membership replay bridge).** `[VERIFIED]`
+For every finite-domain replay trace `T`,
+
+`ReplayTrace.Admissible T → Closes (ReplayTrace.groundBranch T) → ReplayClosesCoreMem T`.
+
+*Proof.* Proposition 3.89 reduces the statement to the following compiler premise:
+every admissible membership-saturated trace `U` with `Closes U.flatBranch` has an old
+certificate `ReplayClosesCore U`. Proposition 3.90 supplies exactly that compiler.
+Instantiating Proposition 3.89 with Proposition 3.90 therefore yields
+`ReplayClosesCoreMem T`. ∎
+
+*R5 record.* The following boundary attacks were checked before the proof was
+accepted:
+
+1. removing admissibility is false: the empty-tail witness of Proposition 3.46 remains
+   uncertifiable by Proposition 3.83(3);
+2. the minimal admissible two-element residual cascade now succeeds by Proposition
+   3.83(2);
+3. arbitrary leading trace items do not reproduce the old obstruction because every
+   new fold rule selects its source by membership;
+4. empty and singleton domains introduce no new residual cascade (the semantic domain
+   is always nonempty, `Fin (n+1)`), while the two-element boundary is covered by the
+   regression theorem;
+5. Proposition 3.86 now promotes the fold-materialization observation to a finite
+   normalization theorem: every member of the quantified projection can be represented
+   simultaneously by a direct `q` item before the old certificate is embedded.
+
+The proof also covers the one-element semantic domain (`n=0`), repeated formulas,
+empty residual all-item folds through the four identity constraints, and every one of
+the four signs for both finite quantifiers. The refuted old bridges, Conjectures 3.39
+and 3.50, remain false because their conclusion is the strictly smaller
+head-sensitive certificate `ReplayClosesCore`.
+
+> *Lean:* `FiniteFO.admissible_ground_replay_bridge_mem_verified` — sorry-free, full
+> `lake build` 2026-08-14.
+> *DR:* DR-0020 · *Depends on:* Def 3.47, Def 3.81, Prop 3.83, Prop 3.89–3.90.
+
+**Definition 3.85 (Flat replay normal form).** `[VERIFIED]`
+For a replay trace `T` and quantified worklist `B`, define
+
+`flatFor(T,B) = I_n ++ groundBranch(B) ++ rigidProjection(T)`,
+
+where `I_n` consists of the four signed fold identities `T⁺⊤`, `F⁻⊤`, `T⁻⊥`,
+and `F⁺⊥`, and `rigidProjection(T)` retains exactly, and only, the signed formulas
+carried by rigid items of `T`. Define `flatBranch(T)=flatFor(T,T.qBranch)`.
+
+*Validation.* The definition is a structural list projection and is therefore
+well-founded and noncircular. The four identity signs are exactly the neutral empty
+tails of the all-item conjunction/disjunction signs. No equality constraint absent
+from `T` is inserted; this restriction is load-bearing for later certificate
+reification.
+
+> *Lean:* `FiniteFO.foldIdentityConstraints`,
+> `FiniteFO.ReplayTrace.rigidProjection`, `FiniteFO.ReplayTrace.flatFor`,
+> `FiniteFO.ReplayTrace.flatBranch` — sorry-free, `lake build` 2026-08-13.
+> *Depends on:* Def 3.38, Def 3.47.
+
+**Proposition 3.86 (Finite fold-first membership saturation).** `[VERIFIED]`
+For every admissible trace `T`, if every admissible extension `U` that contains `T`
+and directly represents every member of `T.qBranch` has an old certificate
+`ReplayClosesCore U`, then `ReplayClosesCoreMem T`.
+
+*Proof.* Define a one-step relation containing exactly the eight non-embedding
+constructor schemes of Definition 3.81, and its finite reflexive-transitive closure.
+Each step preserves admissibility, contains every old trace item, and introduces no
+new member of the quantified projection. Invert membership in `T.qBranch`: its source
+is either a direct `q` item or a member of a structured conjunction/disjunction fold.
+For an all-item fold, induction on the represented list repeatedly exposes the head
+and residual tail. For a selecting fold, one membership step exposes the chosen item.
+Finite induction over the list `T.qBranch` composes these paths and materializes every
+projected member simultaneously. Apply the assumed old certificate at the resulting
+extension and reverse the finite path using the matching constructors of Definition
+3.81. ∎
+
+*R5 record.* Repeated items, several independent fold occurrences, empty all-item
+folds, and all four branching signs are covered by the construction. Empty selecting
+folds cannot supply a requested member and are independently excluded by admissibility.
+
+> *Lean:* `FiniteFO.ReplayTrace.membership_saturation_elim` and its private
+> `ReplayMemStep`/`ReplayMemReach` infrastructure — sorry-free, `lake build`
+> 2026-08-13.
+> *Depends on:* Def 3.47, Def 3.81.
+
+**Proposition 3.87 (Flat semantic reduction).** `[VERIFIED]`
+If `T` is admissible and `Closes T.groundBranch`, then `T.flatBranch` is
+propositionally unsatisfiable and hence `Closes T.flatBranch`.
+
+*Proof.* Suppose a FOUR valuation satisfies `T.flatBranch`. Direct quantified items
+and retained rigid items then satisfy their corresponding ground-trace entries. For a
+structured fold, every represented item belongs to `T.qBranch`. The all-item signs are
+proved by induction on the represented list, with `I_n` discharging the empty residual;
+for a branching sign, admissibility supplies a head and its satisfaction suffices.
+Unstructured fold items contradict admissibility. Thus the valuation satisfies
+`T.groundBranch`, contradicting tableau soundness. Propositional tableau completeness
+then yields closure of the flat branch. ∎
+
+*Failed candidate retained.* Omitting `I_n` is invalid for arbitrary valuations:
+the encoded empty folds are atoms, so their intended `⊤/⊥` values are not automatic.
+This is why Definition 3.85 contains exactly four identity constraints.
+
+> *Lean:* `FiniteFO.ReplayTrace.flatBranch_unsat_of_ground_closes`,
+> `FiniteFO.ReplayTrace.flatBranch_closes_of_ground_closes` — sorry-free,
+> `lake build` 2026-08-13.
+> *Depends on:* Def 3.47, Def 3.85, Thm 4.5, propositional completeness.
+
+**Proposition 3.88 (Literal flat compiler).** `[VERIFIED]`
+Let `T` be admissible and membership-saturated, and suppose every member of
+`T.qBranch` is a predicate or equality literal. Then
+
+`Closes T.flatBranch → ReplayClosesCore T`.
+
+*Proof.* Every formula in the flat branch is atomic: this is immediate for the four
+identities, follows from literal grounding for the quantified part, and follows from
+admissibility for the rigid projection. Inverting an atomic tableau closure produces a
+truth- or falsity-channel complementary pair. Invert both flat sources. The nine source
+combinations are exhausted by identity, direct quantified literal, and retained rigid
+item. Identity–identity and identity–ground pairs are impossible by injectivity of the
+ground-atom code; forbidden identity–rigid and rigid–rigid pairs contradict the rigid
+constraints. A quantified–quantified pair invokes `closeGroundT/F`. A
+quantified–rigid pair cannot contain a predicate atom and, in the equality case,
+invokes the matching equality/rigid constructor. These cases exhaust the pair. ∎
+
+> *Lean:* `FiniteFO.ReplayTrace.flat_qLits_closes_to_replay` — sorry-free,
+> `lake build` 2026-08-13.
+> *Depends on:* Def 3.44, Def 3.47, Def 3.85.
+
+**Proposition 3.89 (Exact reduction to the flat compiler).** `[VERIFIED]`
+Assume a compiler which, for every admissible membership-saturated trace `U`, maps
+`Closes U.flatBranch` to `ReplayClosesCore U`. Then Conjecture 3.84 holds.
+
+*Proof.* Apply Proposition 3.86 to materialize every member of `T.qBranch`. The finite
+normalization path preserves admissibility, contains the original trace, and does not
+add a new quantified-projection member. Ground-branch closure transports to the
+extension by monotonicity. Proposition 3.87 closes its flat branch; apply the assumed
+compiler and reverse the normalization path. ∎
+
+This proposition by itself is a reduction, not a proof of Conjecture 3.84:
+Proposition 3.88 supplies only the literal base case of its compiler premise.
+Proposition 3.90 supplies the required induction over negation, the three binary
+connectives, and both finite quantifiers while strictly decreasing the worklist
+measure; together Propositions 3.89–3.90 prove Conjecture 3.84.
+
+> *Lean:* `FiniteFO.ReplayTrace.membership_bridge_of_flat_compiler` — sorry-free,
+> `lake build` 2026-08-13.
+> *Depends on:* Def 3.85, Prop 3.86–3.87. Proposition 3.88 verifies the base case of
+> the compiler premise but is not used by the conditional reduction itself.
+
+**Proposition 3.90 (Full flat replay compiler).** `[VERIFIED]`
+Let `T` be an admissible membership-saturated replay trace. Then
+
+`Closes T.flatBranch → ReplayClosesCore T`.
+
+*Proof.* We use ordinary induction on a natural-number bound `k` to prove the following
+stronger statement. For every replay trace `T` and quantified branches `todo,lits`, if:
+
+1. `qweightB(todo) ≤ k`;
+2. every member of `todo ++ lits` occurs directly as a `q` item of `T`;
+3. every formula in `lits` is a predicate atom or crisp equality; and
+4. `Closes flatFor(T,todo ++ lits)`.
+
+then `ReplayClosesCore T`. The induction hypothesis is this entire universally
+quantified statement at bound `k`; it may therefore be applied to any admissible trace
+extension and worklist of weight at most `k`.
+
+1. **Zero and empty-worklist cases.** Positivity of `qsize` implies that
+   `qweightB(todo)=0` only when `todo=[]`. Proposition 3.88's exhaustive atomic-source
+   inversion then applies to `lits`. The same argument handles `todo=[]` at a successor
+   bound.
+2. **Literal head.** Suppose `todo=c::rest` and `c` is a predicate atom or crisp
+   equality. Move `c` to `lits`. The old and new flat branches contain the same members,
+   so every valuation satisfying the new branch satisfies the old one. Theorem 4.5
+   makes the old closed branch unsatisfiable, and Theorem 4.13 closes the new branch.
+   The new `todo` weight is smaller because `qsize(c)=1`; apply the induction
+   hypothesis.
+3. **Propositional constructors.** For negation and the three binary connectives,
+   extend the trace with the child `q` item or items prescribed by Definition 3.44.
+   Direct inspection of Definitions 3.47 and 3.85 shows that these extensions preserve
+   admissibility and the rigid projection. For each nonbranching
+   rule, the two child signs jointly imply the parent sign by the applicable FOUR truth
+   table from Definitions 2.4 and 2.7. For each branching rule, either child sign implies the
+   parent sign. Thus every valuation satisfying a required child flat branch satisfies
+   the parent flat branch. Theorems 4.5 and 4.13 yield closure of the child branch.
+   Apply the induction hypothesis and then the matching constructor of Definition
+   3.44. The measure decreases because a negation removes its outer unit, a two-child
+   rule removes its outer unit, and a one-child rule also discards a sibling whose
+   `qsize` is positive.
+4. **All-instance quantifier constructors.** Prepend the full block `qinstAll` to the
+   trace. Its weight is `(n+1)qsize(φ)`, whereas the parent has weight
+   `(n+1)qsize(φ)+1`. The grounding clauses of Definition 3.28 and the FOUR operations
+   of Definition 2.7 show that satisfaction of every grounded instance implies
+   satisfaction of the grounded parent. The four
+   identity constraints of Definition 3.85 supply the empty residual folds. Theorems
+   4.5 and 4.13 close the child flat branch; the induction hypothesis and the applicable
+   constructor of Definition 3.44 then produce the parent certificate.
+5. **Selecting quantifier constructors.** For each `d : Fin(n+1)`, prepend the selected
+   instance. Its grounded formula is a member of the finite fold, and the corresponding
+   fold equation from Definitions 2.7 and 3.28 shows that its signed satisfaction implies the
+   parent sign. Its weight satisfies
+   `qsize(φ) ≤ (n+1)qsize(φ) < (n+1)qsize(φ)+1` because `n+1>0`. Apply Theorems 4.5 and
+   4.13, the induction hypothesis for every `d`, and the matching quantifier constructor
+   of Definition 3.44.
+6. **Exhaustiveness.** Definition 2.19 gives exactly two atomic constructors, one
+   negation constructor, three binary constructors, and two quantifier constructors;
+   Definition 2.4 gives exactly four signs. Steps 1–5 discharge every resulting case,
+   including `n=0`. This completes the natural-number induction. ∎
+
+*R5 record.* The proof uses neither inversion of an arbitrary propositional tableau
+derivation nor a permutation theorem for proof trees. Each reverse decomposition is
+derived semantically: child satisfaction implies parent satisfaction, parent closure
+gives parent unsatisfiability, and propositional completeness reconstructs child
+closure. A failed reduction without the four identity constraints is retained under
+Proposition 3.87. The strict measure checks include `n=0`, where the instance block has
+one member.
+
+> *Lean:* `FiniteFO.ReplayTrace.flat_closes_to_replay`; private supporting compiler
+> `replayFlat_todo` and its reverse-step/fold lemmas — sorry-free, full `lake build`
+> 2026-08-14.
+> *Depends on:* Def 3.44, Def 3.47, Def 3.85, Prop 3.88, Thm 4.5, propositional
+> completeness (Thm 4.13).

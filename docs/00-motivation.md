@@ -1,7 +1,6 @@
 # 0. Motivation
 
-Source: `drafts/NPL_Nullivance_Complete.md` §§1–6 (PHẦN I) + §6 architecture, condensed
-2026-07-03. This is the only chapter of `docs/` allowed to be informal; nothing below is
+This is the only chapter of `docs/` allowed to be informal; nothing below is
 citable by a proof. Formal counterparts: chapter 5 (generative tier), chapters 1–4
 (logical core).
 

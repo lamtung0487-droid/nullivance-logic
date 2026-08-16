@@ -16,6 +16,70 @@ def InUnit (x : ℝ) : Prop := 0 ≤ x ∧ x ≤ 1
 
 def InSquare (p : TruthObj) : Prop := InUnit p.1 ∧ InUnit p.2
 
+/-- Def 2.1, bundled form: the mathematical carrier `[0,1]²`.
+`TruthObj` remains the raw ambient carrier used by the computational clauses. -/
+abbrev SquareTruthObj := {p : TruthObj // InSquare p}
+
+/-- R5 witness: the raw ambient carrier is strictly larger than the square.
+Consequently an `InSquare` hypothesis cannot be erased from an unbundled valuation. -/
+theorem exists_truthObj_not_inSquare : ∃ p : TruthObj, ¬ InSquare p := by
+  refine ⟨(2, 0), ?_⟩
+  norm_num [InSquare, InUnit]
+
+/-- Def 2.2: a continuous NPL model with a square-valued atomic valuation and
+a manifestation threshold in `(0,1]`. -/
+structure Model where
+  valuation : Nat → TruthObj
+  valuation_mem : ∀ n, InSquare (valuation n)
+  threshold : ℝ
+  threshold_pos : 0 < threshold
+  threshold_le_one : threshold ≤ 1
+
+/-- Bundle an explicitly square-valued valuation and an admissible threshold. -/
+def Model.ofSquareValuation (v : Nat → SquareTruthObj) (τ : ℝ)
+    (hτ0 : 0 < τ) (hτ1 : τ ≤ 1) : Model where
+  valuation n := (v n).1
+  valuation_mem n := (v n).2
+  threshold := τ
+  threshold_pos := hτ0
+  threshold_le_one := hτ1
+
+/-- Recover the square-valued valuation carried by a model. -/
+def Model.squareValuation (M : Model) : Nat → SquareTruthObj :=
+  fun n => ⟨M.valuation n, M.valuation_mem n⟩
+
+@[simp] theorem Model.ofSquareValuation_valuation
+    (v : Nat → SquareTruthObj) (τ : ℝ) (hτ0 : 0 < τ) (hτ1 : τ ≤ 1) :
+    (Model.ofSquareValuation v τ hτ0 hτ1).valuation = fun n => (v n).1 := rfl
+
+@[simp] theorem Model.squareValuation_ofSquareValuation
+    (v : Nat → SquareTruthObj) (τ : ℝ) (hτ0 : 0 < τ) (hτ1 : τ ≤ 1) :
+    (Model.ofSquareValuation v τ hτ0 hτ1).squareValuation = v := by
+  funext n
+  apply Subtype.ext
+  rfl
+
+@[simp] theorem Model.ofSquareValuation_squareValuation (M : Model) :
+    Model.ofSquareValuation M.squareValuation M.threshold
+      M.threshold_pos M.threshold_le_one = M := by
+  cases M
+  rfl
+
+/-- Bundled models are determined extensionally by their valuation and threshold;
+the proof fields carry no additional mathematical data. -/
+theorem Model.eq_of_valuation_threshold {M N : Model}
+    (hv : ∀ n, M.valuation n = N.valuation n)
+    (hτ : M.threshold = N.threshold) : M = N := by
+  cases M with
+  | mk mv mvm mt mt0 mt1 =>
+    cases N with
+    | mk nv nvm nt nt0 nt1 =>
+      have hv' : mv = nv := funext hv
+      subst nv
+      change mt = nt at hτ
+      subst nt
+      rfl
+
 /- Def 2.3, value-level clauses. -/
 
 /-- Negation: channel swap. -/
@@ -59,6 +123,21 @@ theorem eval_mem (v : Nat → TruthObj) (hv : ∀ n, InSquare (v n)) :
   | .oplus φ ψ =>
       ⟨(eval_mem v hv φ).1.min' (eval_mem v hv ψ).1,
        (eval_mem v hv φ).2.min' (eval_mem v hv ψ).2⟩
+
+/-- Def 2.3, bundled form: evaluation is an endomap on square-valued
+valuations, with boundedness built into the codomain. -/
+def evalSquare (v : Nat → SquareTruthObj) (φ : Formula) : SquareTruthObj :=
+  ⟨evalC (fun n => (v n).1) φ, eval_mem (fun n => (v n).1) (fun n => (v n).2) φ⟩
+
+@[simp] theorem evalSquare_val (v : Nat → SquareTruthObj) (φ : Formula) :
+    (evalSquare v φ).1 = evalC (fun n => (v n).1) φ := rfl
+
+/-- Evaluation directly from the bundled model of Def 2.2. -/
+def Model.eval (M : Model) (φ : Formula) : SquareTruthObj :=
+  evalSquare M.squareValuation φ
+
+@[simp] theorem Model.eval_val (M : Model) (φ : Formula) :
+    (M.eval φ).1 = evalC M.valuation φ := rfl
 
 /- C2 (latent collapse, continuous — Thm 1 of D1): V(φ ⊕ ¬φ) = (m, m). -/
 
@@ -152,6 +231,17 @@ def SatC (τ : ℝ) (x : TruthObj) : Sign → Prop
   | .Tneg => ¬ τ ≤ x.1
   | .Fpos => τ ≤ x.2
   | .Fneg => ¬ τ ≤ x.2
+
+/-- Def 2.4, signed satisfaction stated directly for the bundled model. -/
+def Model.satSigned (M : Model) (sφ : Sign × Formula) : Prop :=
+  SatC M.threshold (M.eval sφ.2).1 sφ.1
+
+/-- Def 2.6, finite-branch satisfaction stated directly for the bundled model. -/
+def Model.satBranch (M : Model) (B : List (Sign × Formula)) : Prop :=
+  ∀ sφ ∈ B, M.satSigned sφ
+
+@[simp] theorem Model.satSigned_eq_unbundled (M : Model) (sφ : Sign × Formula) :
+    M.satSigned sφ = SatC M.threshold (evalC M.valuation sφ.2) sφ.1 := rfl
 
 theorem sat_proj (τ : ℝ) (x : TruthObj) (S : Sign) :
     (proj τ x).sat S = true ↔ SatC τ x S := by

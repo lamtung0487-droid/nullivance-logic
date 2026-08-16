@@ -1,21 +1,7 @@
 % =========================================================================
-% NPL core paper — draft v0.5 (2026-07-03): round-2 fixes (cref slip in Thm 6.4(iii),
-% collapse-theorem attribution via secondary, single label, opposite signs, abstract
-% trim) + post-2022 sweep engaged (bilkova2021constraint, villadsen2017formalizing)
-% + Prop 9.1(iii) inexpressibility of negative signs (Lean-verified).
-% v0.4 (superseded): full revision per panel review round 1
-% papers/npl-core/reviews/2026-07-03-referee-reports.md. Changes:
-%  [1] stale compactness remark deleted; bifilter comparison RESOLVED (Prop 9.1);
-%  [2] Contribution 1 rewritten (unsigned subsumed; negative signs provably
-%      outside the bifilter framework; tau-invariance stated honestly);
-%  [3] full 16-rule tableau table + explicit ND rule list printed;
-%  [4] \models_FOUR defined; indicator notation defined (\ind, \mathbf{1});
-%  [5] full compactness proof printed (non-Lean at the time; Lean-verified
-%      2026-07-04, marker upgraded to [L] — see Thm 6.4);
-%  [6] proof sketches added to all [L]-only results; [L] coverage made accurate;
-%  [7] artifact statement (toolchain, build, coverage policy);
-%  [8] draft residue removed; bibliographystyle plain; sect. 7 retitled;
-%  [9] Fitting engagement, neologism footnote, tau-invariance (Prop 3.4).
+% NPL core paper — release v0.7 (2026-08-16).
+% v0.7: stable Lean/mathlib release pair; reproducibility gates; artifact and
+% related-work refresh; finite-FO companion status synchronized.
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
 % =========================================================================
 \documentclass[11pt]{article}
@@ -57,16 +43,19 @@
 \newcommand{\dershort}{\vdash_{\!A}}
 \newcommand{\ndder}{\vdash_{\mathrm{ND}}}
 \newcommand{\lean}[1]{\texttt{#1}}
+\newenvironment{leanrefs}
+  {\par\smallskip\noindent\begin{minipage}{\linewidth}\small\raggedright}
+  {\end{minipage}\par\smallskip}
 
 \title{Nullivance Propositional Logic:\\
 Threshold-Signed Consequence on the Unit Square\\
 with a Machine-Checked Completeness Theorem\thanks{%
-Draft v0.5 (July 2026). Results marked [L] are verified in the Lean~4 artifact
+Release v0.7 (August 2026). Results marked [L] are verified in the Lean~4 artifact
 described in Appendix~\ref{app:lean}; results marked [paper] carry full proofs
-here and are not yet formalized. Panel-review history and revision log are kept
-with the source.}}
-\author{Trinh Tung Lam\thanks{Contact: \texttt{lamyofficialvn@gmail.com}.}}
-\date{July 2026 --- draft v0.5}
+here and are not yet formalized. Complete verification and citation metadata are
+included with the source.}}
+\author{Trinh Tung Lam\thanks{Contact: \texttt{lamtung0481@gmail.com}.}}
+\date{August 2026 --- release v0.7}
 
 \begin{document}
 \maketitle
@@ -92,7 +81,7 @@ harmonized contradictions $\varphi\hmz\lnot\varphi$ collapse to an unmanifest
 state; (iv)~$\hmz$ is not definable from the $\{\lnot,\wedge,\vee\}$ fragment,
 and the natural-deduction rule set of the source system is provably
 incomplete for it --- its rules constrain only the truth channel of $\hmz$;
-(v)~a generative tier beneath the semantics derives truth-objects from
+(v)~an optional generative tier, logically independent of the core, derives truth-objects from
 (intensity, structure) channel pairs through a replaceable stability
 function, with the logic provably independent of that choice. We position
 NPL against Belnap--Dunn logic, bilattice logics, and paraconsistent
@@ -165,7 +154,7 @@ an instance of Arieli--Avron's logical-bilattice consequence
   --- \cref{prop:nd}); $\hmz$ is interderivable with $\wedge$ but not
   congruent to it, and not definable from the FDE fragment
   (\cref{prop:primitive}).
-\item \textbf{A verified generative tier} (\cref{sec:generative}):
+\item \textbf{An optional verified generative tier} (\cref{sec:generative}):
   truth-objects arise from (intensity, structure) channel pairs through an
   axiomatized, replaceable stability function; independence of the logic
   from that choice is witnessed by the artifact's import graph, and the
@@ -173,7 +162,7 @@ an instance of Arieli--Avron's logical-bilattice consequence
   initialization) are machine-checked.
 \end{enumerate}
 
-Results carry [L:\,\lean{name}] markers naming the verifying Lean
+Results carry [L:\,\texttt{declaration}] markers naming the verifying Lean
 declaration; results not covered by the artifact are marked [paper] and
 carry full proofs here. The artifact policy is in
 Appendix~\ref{app:lean}.
@@ -259,8 +248,16 @@ the $\tle$ meet/join, $\hmz$ is the $\lek$ meet, and $(0,0),(1,1)$ are the
 $\lek$ extrema --- the square is a reduct of the product bilattice
 $[0,1]\odot[0,1]$ \cite{ginsberg1988multivalued} with $\hmz$ its consensus;
 the $\lek$-join (gullibility) is deliberately not a connective.
-[L:\,\lean{eval\_mem}, \lean{latent\_collapse}, \lean{oplus2\_*},
-\lean{le\_t}/\lean{le\_k} family]
+\begin{leanrefs}
+[L:\,\lean{eval\_mem}, \lean{latent\_collapse},
+\lean{oplus2\_comm}, \lean{oplus2\_assoc}, \lean{oplus2\_idem},
+\lean{neg2\_oplus2}, \lean{B2\_oplus}, \lean{oplus2\_B2},\newline
+\lean{conj2\_le\_t\_left}, \lean{conj2\_le\_t\_right},
+\lean{le\_t\_conj2}, \lean{disj2\_le\_t\_left},
+\lean{disj2\_le\_t\_right}, \lean{disj2\_le\_t},\newline
+\lean{oplus2\_le\_k\_left}, \lean{oplus2\_le\_k\_right},
+\lean{le\_k\_oplus2}, \lean{N2\_le\_k}, \lean{le\_k\_B2}]
+\end{leanrefs}
 \end{lemma}
 
 \section{The four-valued matrix and exact projection}\label{sec:projection}
@@ -388,9 +385,86 @@ formula (structural induction --- the verified lemma), and the occurring
 atoms $A$ of $\Sigma\cup\{S\varphi\}$ are finitely many. Hence
 $\Sigma\models_{\FOUR}S\varphi$ holds iff it holds for the $4^{|A|}$
 valuations extending assignments $A\to\FOUR$ by $\vN$ elsewhere --- a
-finite computation on the tables. (Alternatively: fair tableau expansion
-terminates, by the usual subformula/finiteness argument, and decides
-$\dershort$.)
+finite computation on the tables.
+\end{proof}
+
+\begin{definition}[Reference search and progressing forest transition]
+\label{def:reference-search}
+For a compound signed formula $c$, let
+$\mathrm{child}(c)=[\Delta_1,\ldots,\Delta_k]$ be the ordered list of
+one or two child blocks printed for $c$ in \cref{def:calculus}. Define the
+terminal-leaf function on a worklist $W$ and atomic accumulator $L$ by
+\[
+\begin{aligned}
+\operatorname{run}([],L)&=[L],\\
+\operatorname{run}(c::W,L)&=\operatorname{run}(W,c::L)
+ &&\text{if $c$ is atomic},\\
+\operatorname{run}(c::W,L)&=
+ \mathop{+\!+}_{i=1}^{k}\operatorname{run}(\Delta_i+\!+W,L)
+ &&\text{if $c$ is compound}.
+\end{aligned}
+\]
+Here $+\!+$ is list concatenation and the outer concatenation preserves the
+rule-table order. The Boolean reference procedure returns true iff every
+$L\in\operatorname{run}(B,[])$ contains an opposite-sign atomic pair.
+
+A forest state is a finite list of pairs $(W,L)$. One \emph{progressing
+forest step} selects one pair with $W\ne[]$ and replaces it by $(W',c::L)$
+in the atomic case, or by all $(\Delta_i+\!+W',L)$ in the compound case,
+where $W=c::W'$. It never permits an idle step. A forest is terminal iff
+all its worklists are empty, and closed iff every terminal accumulator
+contains an opposite-sign pair.
+[L:\,\lean{Operational.run}, \lean{referenceCloses},
+\lean{ForestStep}, \lean{ForestTerminal}, \lean{ForestClosed}]
+\end{definition}
+
+\begin{theorem}[Verified reference and schedule-independent proof search]\label{thm:reference-search}
+For every finite signed branch $B$, the deterministic head-worklist
+procedure terminates and returns true exactly when $B$ is unsatisfiable,
+equivalently exactly when \lean{Closes} $B$. If it returns false, one of
+its terminal atomic leaves determines a canonical $\FOUR$-valuation
+satisfying both that leaf and $B$. More generally, place the active branch
+states in a finite forest and repeatedly select any nonterminal state,
+replacing it by all of its children. Every such progressing selection
+order terminates; all terminal outputs agree on closure and are closed
+exactly when $B$ is unsatisfiable.
+[L:\,\lean{refStep\_wellFounded},
+\lean{satBranch\_constraints\_iff\_run},
+\lean{referenceCloses\_iff\_closes},
+\lean{referenceCloses\_false\_countermodel},
+\lean{forestStep\_wellFounded},
+\lean{terminal\_reachable\_closed\_iff\_closes},
+\lean{terminal\_outputs\_agree}]
+\end{theorem}
+\begin{proof}
+A state consists of a list of formulas still to process and an atomic
+accumulator. The scheduler removes the head occurrence, moves an atom to
+the accumulator, and replaces a compound by the products of its signed
+tableau rule; both children of a branching rule are explored. The sum of
+the sizes of the unprocessed formula occurrences decreases strictly in
+every child, proving termination.
+
+For arbitrary active-branch selection, define the cost of a branch state
+as one plus the sum of the costs of all its immediate children, and sum
+these costs over the current forest. Replacing one selected state by all
+of its children decreases this global cost by exactly one. Hence the
+forest transition is well founded independently of the selection order;
+no fairness premise is needed because an allowed transition must make
+progress rather than stutter.
+
+Induction over this well-founded recursion shows that the current
+constraints are satisfiable iff at least one returned terminal leaf is
+satisfiable. Every returned leaf is atomic. An atomic leaf is
+unsatisfiable iff it contains an opposite-sign pair: in the open case, the
+valuation whose truth and falsity bits record the positive atomic signs
+satisfies every member. Hence all returned leaves close iff the input is
+unsatisfiable; tableau completeness identifies this condition with
+\lean{Closes}. On failure, the same canonical valuation of an open leaf,
+together with the recursion invariant, is the asserted countermodel.
+The corresponding one-step forest invariant is preserved along every
+finite progress trace. Thus every reachable terminal forest has the same
+closure verdict, and an open terminal member transports its canonical
+valuation back to a countermodel of the input.
 \end{proof}
 
 \begin{proposition}[Finite complexity]\label{prop:complexity}
@@ -412,10 +486,12 @@ coNP-complete by the Cook--Karp theory
 \end{proof}
 
 \begin{theorem}[Compactness; strong completeness]\label{thm:compactness}
-\textnormal{[L:\,\lean{compactness\_satisfiable4\_set},
-\lean{compactness\_consequence4\_set},
+\mbox{}\par\noindent
+\textnormal{\small [L:\,\lean{compactness\_satisfiable4\_set},
+\lean{compactness\_consequence4\_set},}\par\noindent
+\textnormal{\small
 \lean{compactness\_consequenceC\_set},
-\lean{derivesSet\_iff\_consequenceCSet}]}
+\lean{derivesSet\_iff\_consequenceCSet}]}\par\noindent
 (i) An arbitrary set $\Sigma$ of signed formulas is $\FOUR$-satisfiable iff
 every finite subset is. (ii) The same holds for continuous satisfiability.
 (iii) Reading $\Sigma\dershort S\varphi$ for infinite $\Sigma$ as ``some
@@ -480,6 +556,7 @@ Explosion, ex falso, and disjunctive syllogism fail.
 \end{corollary}
 
 \begin{proposition}[The material conditional does not detach]\label{prop:mp-fails}
+\mbox{}\par\noindent
 $\{\Tp p,\ \Tp(p\Rightarrow q)\}\not\models\Tp q$: same witness,
 $t(\lnot p\vee q)=\max(f(p),t(q))=\max(1,0)=1$ yet $t(q)=0$. Consequently
 $\vee$-elimination must be taken as a meta-rule (reasoning by cases), not
@@ -540,9 +617,11 @@ $V_M(\varphi\hmz\lnot\varphi)=(m,m)$ with $m=\min(t,f)$
 unmanifest ($\vN$), not explosive. [L:\,\lean{latent\_collapse}]
 \end{corollary}
 
-\section{The generative tier}\label{sec:generative}
+\section{An optional generative tier}\label{sec:generative}
 
-Nothing in \cref{sec:syntax,sec:semantics,sec:projection,sec:calculus,%
+This section is a mathematical interface, not an empirical claim about how
+support is generated in applications. Nothing in
+\cref{sec:syntax,sec:semantics,sec:projection,sec:calculus,%
 sec:metatheory,sec:profile} depends on how atoms acquire truth-objects; in
 the artifact this is a checkable property of the import graph (the module
 \lean{Generative} is imported by none of the core modules). This section
@@ -597,8 +676,18 @@ due to Arieli--Avron \cite{arieli1996reasoning} (see also
 \begin{proposition}[Position within the bilattice framework]\label{prop:bifilter}
 \textnormal{[paper]}
 (i) For every $\tau\in(0,1]$, $D_\tau=\{(t,f):t\ge\tau\}$ is a prime
-bifilter of $[0,1]\odot[0,1]$ (the five defining conditions hold
-componentwise on the truth channel), so
+bifilter of $[0,1]\odot[0,1]$. Indeed $D_\tau$ is nonempty and proper;
+writing $a_t$ for the truth coordinate,
+\[
+ a\wedge b\in D_\tau\ \Longleftrightarrow\
+ a\otimes b\in D_\tau\ \Longleftrightarrow\
+ \min(a_t,b_t)\ge\tau\ \Longleftrightarrow\
+ a,b\in D_\tau,
+\]
+which is the bifilter condition, while
+$a\vee b\in D_\tau\Longleftrightarrow
+\max(a_t,b_t)\ge\tau\Longleftrightarrow a\in D_\tau$ or
+$b\in D_\tau$, which is primeness. Thus
 $\langle[0,1]\odot[0,1],D_\tau\rangle$ is a logical bilattice; by the
 Arieli--Avron collapse theorem (every logical bilattice determines the same
 consequence as $\langle\FOUR,\{t,\top\}\rangle$ ---
@@ -650,7 +739,7 @@ infinite-valued paraconsistent logic with its metatheory in Isabelle
 \emph{completeness} for a consensus-bearing logic over $[0,1]^2$.
 
 To our knowledge --- search scope documented in the project's related-work
-audit; last sweep July 2026, covering post-2022 twist-product,
+audit; last sweep August 2026, covering post-2022 twist-product,
 bilattice-calculus, and proof-assistant literature --- no prior system
 combines a consensus connective over $[0,1]^2$ with four-signed consequence
 and a machine-checked completeness theorem.
@@ -668,20 +757,22 @@ the project has also Lean-verified completeness for the $\hmz$-De-Morgan
 extension of $\ndder$, and has closed the finite-domain quantified program:
 a function-free quantified extension over finite nonempty domains with crisp
 equality, an exact threshold projection, and a machine-checked semantic
-completeness theorem for a macro-free extensional tableau calculus (a
-companion manuscript is in preparation in the repository under
-\texttt{papers/npl-finite-fo/}). Open:
+completeness theorem for a macro-free extensional tableau calculus, documented
+in the companion manuscript included in this release. Open:
 the full infinite-domain quantified extension; the emergence layer of the source material
 remains outside the formal development by design.
 
 \appendix
 \section{The Lean artifact}\label{app:lean}
-\textbf{Availability.} The \texttt{Nullivance} library will be archived
-with a DOI at submission; until then it is available from the author on
-request. \textbf{Toolchain.} Lean 4 (\texttt{leanprover/lean4:v4.32.0-rc1})
-with mathlib pinned via the Lake manifest; build with
-\texttt{lake exe cache get \&\& lake build} (approx.\ 2000 jobs; the
-library itself compiles in under a minute on commodity hardware).
+\textbf{Availability.} The complete source artifact is supplied with this
+release and contains \texttt{CITATION.cff}, \texttt{LICENSE},
+\texttt{ARTIFACT.md}, the verification scripts, and both manuscripts. The
+identical tagged archive will be deposited in a durable public repository;
+the real DOI is inserted only after that deposit. \textbf{Toolchain.} Lean 4
+(\texttt{leanprover/lean4:v4.32.1}) and mathlib \texttt{v4.32.1} at commit
+\texttt{520045ab14e26149ee970e2e617ca04b09bde5d6}; build with
+\texttt{lake exe cache get \&\& lake build}, or run the repository-level
+\texttt{scripts/Verify-Release.ps1} gate.
 \textbf{Coverage policy.} The build is \texttt{sorry}-free. Every result
 marked [L] is verified as stated, with the following systematic
 correspondences: branches are lists (finite sets up to the verified
@@ -691,13 +782,16 @@ results are stated against \lean{Closes} directly; explicit finite tableau
 proof trees are equivalent to \lean{Closes}. Results marked [paper]
 --- \cref{cor:conservative} (FDE-conservativity half), \cref{prop:complexity},
 \cref{prop:bifilter} ---
-carry full proofs in this paper and are not formalized; the termination and
-fair-search notions appear only in the alternative proof remark of
-\cref{thm:decidable}. \textbf{Modules.} \texttt{Syntax}, \texttt{Semantics}
+carry full proofs in this paper and are not formalized. The verified
+operational claim covers the deterministic reference procedure and every
+progressing active-branch selection order of \cref{thm:reference-search}.
+It does not assert weak fairness for a different transition system that
+permits idle steps. \textbf{Modules.} \texttt{Syntax}, \texttt{Semantics}
 ($\FOUR$), \texttt{Continuous} (square, projection, bilattice orders),
 \texttt{ProofTheory} (\lean{Closes}, \lean{ND}, \lean{NDO}), \texttt{Tableau}
 (explicit proof trees), \texttt{Metatheory}
 (soundness, completeness, lifting, $\tau$-invariance, behavioural profile),
+\texttt{Operational} (terminating reference search and countermodels),
 \texttt{Decidability} (finite model checker and \lean{Decidable} instances),
 \texttt{Compactness} (Set/Finset API, compactness, strong completeness),
 \texttt{Classical} (Boolean recovery on the glut/gap-free fragment),

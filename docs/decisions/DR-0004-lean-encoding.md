@@ -35,9 +35,9 @@ without blocking on a multi-GB mathlib download the user has not yet approved.
 |---|---|
 | Lem 2.12, Thm 2.13, Cor 2.14 | ~~capped at `[PROVEN]`~~ → `[VERIFIED]` 2026-07-02 |
 | C1–C3 | → Lem 2.15–2.17 `[VERIFIED]` 2026-07-02 |
-| C4 (bilattice) | unblocked on the Lean side; still needs `/related-work` anchoring |
+| C4 (bilattice) | verified as Lemma 2.18 and anchored in the bilattice literature |
 
 ## Consequences
-**Resolved:** mathlib adopted (user approval 2026-07-02; Reservoir `leanprover-community/mathlib`,
+**Resolved:** mathlib adopted (Reservoir `leanprover-community/mathlib`,
 toolchain pinned by `lake update` to mathlib's). Alternative 3 (axiomatized linear order)
 remains a possible future *generalization* DR, no longer a blocker.
