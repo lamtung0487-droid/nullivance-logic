@@ -11,7 +11,7 @@ jobs:
   lean:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: Nullivance
@@ -28,7 +28,7 @@ jobs:
   papers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install LaTeX dependencies
         run: >-
           sudo apt-get update && sudo apt-get install -y
@@ -36,7 +36,7 @@ jobs:
       - name: Build both manuscripts
         shell: pwsh
         run: ./scripts/Build-Papers.ps1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: nullivance-manuscripts
           path: |
