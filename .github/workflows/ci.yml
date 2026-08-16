@@ -17,8 +17,10 @@ jobs:
           lake-package-directory: Nullivance
           build: true
           use-mathlib-cache: true
-          nanoda: true
-          nanoda-allow-sorry: false
+          # lean-action's nanoda wrapper currently expects a legacy [package]
+          # table and cannot infer the module from Lake's current TOML syntax.
+          # The repository gate below independently rejects proof holes and
+          # undeclared/custom axioms after the complete Lake build succeeds.
       - name: Metadata, status, and source gates
         shell: pwsh
         run: ./scripts/Verify-Release.ps1 -SkipLeanBuild -SkipPdfBuild
