@@ -1,11 +1,16 @@
 # Nullivance Logic (NPL)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21964600.svg)](https://doi.org/10.5281/zenodo.21964600)
+
 Nullivance is a research programme in mathematical logic with a Lean 4
 formalization. The repository contains a propositional two-channel logic, a
 finite-domain quantified extension, canonical mathematical documentation, and
 two reproducible manuscripts.
 
-Release: **0.7.0** (2026-08-16). Contact: `lamtung0481@gmail.com`.
+Release: **0.7.1** (2026-08-16). Contact: `lamtung0481@gmail.com`.
+
+Canonical repository: <https://github.com/lamtung0487-droid/nullivance-logic>.
+Archived release: <https://doi.org/10.5281/zenodo.21964600>.
 
 ## What is established
 

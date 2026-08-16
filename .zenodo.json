@@ -1,9 +1,9 @@
 {
   "title": "Nullivance Logic: formal development and reproducible manuscripts",
   "upload_type": "software",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "publication_date": "2026-08-16",
-  "description": "<p>Lean 4 formalization and reproducibility artifact for nullivance logic (NPL). The release includes the propositional two-channel semantics, exact threshold projection to FOUR, a four-signed tableau with verified soundness and completeness, terminating operational proof search with countermodels and progressing-schedule independence, and a finite-domain quantified layer with a verified complete macro-free extensional core tableau. It also retains checked counterexamples refuting two older head-sensitive replay-certificate conjectures and verifies a separate complete membership-selecting repair.</p><p>Release 0.7.0 is pinned to Lean 4.32.1 and mathlib v4.32.1 at commit <code>520045ab14e26149ee970e2e617ca04b09bde5d6</code>. See <code>ARTIFACT.md</code> and run <code>pwsh ./scripts/Verify-Release.ps1</code>.</p>",
+  "description": "<p>Lean 4 formalization and reproducibility artifact for nullivance logic (NPL). This version supersedes the preliminary Version 1 report with a proof-oriented development: propositional two-channel semantics, exact threshold projection to FOUR, a four-signed tableau with verified soundness and completeness, terminating operational proof search with countermodels and progressing-schedule independence, and a finite-domain quantified layer with a verified complete macro-free extensional core tableau. It also retains checked counterexamples refuting two older head-sensitive replay-certificate conjectures and verifies a separate complete membership-selecting repair.</p><p>Release 0.7.1 is pinned to Lean 4.32.1 and mathlib v4.32.1 at commit <code>520045ab14e26149ee970e2e617ca04b09bde5d6</code>. The deposit includes two manuscripts, the exact tagged source archive, and its SHA-256 sidecar. See <code>ARTIFACT.md</code> and run <code>pwsh ./scripts/Verify-Release.ps1</code>.</p>",
   "creators": [
     {
       "name": "Trinh, Tung Lam"
@@ -23,7 +23,14 @@
     "formal verification",
     "reproducible research"
   ],
-  "license": "CC-BY-4.0",
+  "license": "cc-by-4.0",
   "access_right": "open",
-  "notes": "The public DOI and repository URL are added only after an actual archival deposit. The source package is generated from the annotated release tag with scripts/New-ReleasePackage.ps1 and accompanied by a SHA-256 checksum."
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/lamtung0487-droid/nullivance-logic",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ],
+  "notes": "Repository: https://github.com/lamtung0487-droid/nullivance-logic. Version DOI: https://doi.org/10.5281/zenodo.21964600. The source package is generated from annotated tag v0.7.1 with scripts/New-ReleasePackage.ps1 and accompanied by a SHA-256 checksum."
 }

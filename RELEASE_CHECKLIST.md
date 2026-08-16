@@ -28,9 +28,10 @@ repository and identifier actions.
 
 ## Archival release
 
-- [ ] The approved release commit is tagged `v0.7.0`.
-- [ ] `scripts/New-ReleasePackage.ps1 -Version 0.7.0` succeeds.
+- [ ] The approved release commit is tagged `v0.7.1`.
+- [ ] `scripts/New-ReleasePackage.ps1 -Version 0.7.1` succeeds.
 - [ ] The generated ZIP SHA-256 is independently verified.
 - [ ] The exact tagged archive is deposited in a durable public repository.
-- [ ] The real DOI/URL is inserted into citation metadata and manuscripts.
+- [ ] DOI `10.5281/zenodo.21964600` and the canonical repository URL are present
+      in citation metadata and both manuscripts.
 - [ ] Final metadata-only changes are re-tagged and the deposited bytes rechecked.

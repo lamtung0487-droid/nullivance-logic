@@ -1,7 +1,7 @@
 # Nullivance Lean library
 
 This directory is the machine-checked component of Nullivance Logic release
-candidate 0.7.0.
+0.7.1.
 
 ```powershell
 lake exe cache get

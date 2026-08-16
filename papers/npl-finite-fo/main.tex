@@ -1,8 +1,9 @@
 % =========================================================================
-% NPL finite-domain quantified paper — release v0.7 (2026-08-16).
+% NPL finite-domain quantified paper — release v0.7.1 (2026-08-16).
 % Release normalization: stable Lean/mathlib pair, self-contained replay definition,
 % refreshed related work, synchronized artifact and reproducibility metadata.
-% v0.7: full flat replay compiler and universal membership-certificate bridge proved.
+% v0.7.1: citation corrections; public repository and archival DOI synchronization.
+% v0.7.0: full flat replay compiler and universal membership-certificate bridge proved.
 % v0.6: membership-selecting replay repair, soundness and regression boundary;
 % universal completeness of the new certificate recorded as conjectural (superseded).
 % v0.5: admissible replay-certificate bridge refuted by a nonempty fold cascade.
@@ -25,6 +26,12 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs,array}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{
+  pdftitle={Finite-Domain Quantified Nullivance Logic: A Machine-Checked Completeness Theorem for a Macro-Free Extensional Tableau},
+  pdfauthor={Trinh Tung Lam},
+  pdfsubject={A formally verified finite-domain quantified extension of nullivance logic},
+  pdfkeywords={nullivance logic, quantified logic, paraconsistent logic, tableaux, completeness, Lean 4}
+}
 \usepackage[capitalize]{cleveref}
 \usepackage{microtype}
 \newcommand{\lb}{\discretionary{}{}{}}
@@ -63,7 +70,7 @@
 \title{Finite-Domain Quantified Nullivance Logic:\\
 A Machine-Checked Completeness Theorem\\
 for a Macro-Free Extensional Tableau\thanks{%
-Release v0.7 (August 2026). Companion to \emph{Nullivance Propositional Logic:
+Release v0.7.1 (August 2026). Companion to \emph{Nullivance Propositional Logic:
 Threshold-Signed Consequence on the Unit Square with a Machine-Checked
 Completeness Theorem}. Results
 marked [L] are verified sorry-free in the Lean~4 artifact described in
@@ -71,7 +78,7 @@ Appendix~\ref{app:lean}. Related-work positioning is backed by a dated,
 source-by-source literature record supplied with the artifact; novelty claims
 are search-scoped.}}
 \author{Trinh Tung Lam\thanks{Contact: \texttt{lamtung0481@gmail.com}.}}
-\date{August 2026 --- release v0.7}
+\date{August 2026 --- release v0.7.1}
 
 \begin{document}
 \maketitle
@@ -828,8 +835,8 @@ calculus differs in format and scope: quantifiers range over a
 \emph{fixed finite nonempty domain} and are decomposed by $(n{+}1)$-ary
 instance rules rather than through value distributions over arbitrary
 domains; the closure conditions include crisp-equality clauses and
-ground-closure (extensional) clauses, neither of which appears in the
-cited calculi, whose languages omit equality; and the completeness proof
+ground-closure (extensional) clauses, neither of which is supplied by the
+generic per-formula calculi cited above; and the completeness proof
 is driven by the domain-weighted measure, which has no counterpart in the
 distribution-quantifier setting. Two delimitations are worth making
 explicit. Semantically, fixing the domain \emph{in the judgment} is a
@@ -848,7 +855,7 @@ precisely a branch that every sets-as-signs closure notion keyed to
 identical signed formulas leaves open.
 
 \emph{Quantified Belnap--Dunn logics.} First-order FDE and its tableaux
-are textbook material \cite{priest2008introduction}, on the classical
+are textbook material \cite[Ch.~22]{priest2008introduction}, on the classical
 foundations of \cite{belnap1977useful,dunn1976intuitive}. Recent work
 studies free quantification over four-valued and fuzzy bilattice-valued
 logics with dual-domain semantics for non-denoting terms
@@ -860,16 +867,16 @@ reading remain the NPL-specific propositional base, positioned against
 the bilattice literature in the companion paper.
 
 \emph{Machine-checked completeness.} Formalized metatheory exists for
-classical first-order proof systems, including a coinductive framework with a
-tableau instance for many-sorted classical logic with equality
+classical first-order proof systems, including an Isabelle/HOL coinductive
+framework instantiated for Gentzen and tableau variants of classical logic
 \cite{blanchette2017soundness}. TableauxRocq gives a recent Rocq verification
 of soundness and certificate checking for a classical first-order tableau
 \cite{rosain2026tableauxrocq}; it does not claim a many-valued completeness
 result. Formalized paraconsistent metatheory also predates this work
 \cite{villadsen2017formalizing}. Our updated literature pass (2026-08-16) found no
 machine-checked completeness theorem for a many-valued quantified tableau
-calculus; to our knowledge, the present development is the first, and we
-phrase this as a search-scoped claim rather than an absolute one.
+calculus. This supports only the search-scoped conclusion that, to our
+knowledge, the present development appears to be the first.
 
 \section{Open problems}\label{sec:open}
 
@@ -896,8 +903,11 @@ library, principally module \lean{Nullivance.FiniteFO}, and share the
 artifact of the companion paper. \textbf{Availability.} The complete source
 artifact is supplied with this release, including citation/license
 metadata, exact dependency locks, both manuscripts, and verification scripts.
-The identical tagged archive will be deposited in a durable public repository;
-the real DOI is inserted only after that deposit. \textbf{Toolchain.}
+The tagged source archive is available from
+\href{https://github.com/lamtung0487-droid/nullivance-logic/releases/tag/v0.7.1}{GitHub release v0.7.1}
+and archived under DOI
+\href{https://doi.org/10.5281/zenodo.21964600}{10.5281/zenodo.21964600}.
+\textbf{Toolchain.}
 Lean~4 (\texttt{leanprover/lean4:v4.32.1}) and mathlib \texttt{v4.32.1} at
 commit \texttt{520045ab14e26149ee970e2e617ca04b09bde5d6}; run
 \texttt{scripts/Verify-Release.ps1}. \textbf{Coverage policy.} The build is
@@ -927,7 +937,9 @@ Replay completeness: \lean{ReplayTrace.flat\_\lb closes\_\lb to\_\lb replay},
 \lean{admissible\_\lb ground\_\lb replay\_\lb bridge\_\lb mem\_\lb verified}.
 \end{leanrefs}
 
+{\footnotesize
 \bibliographystyle{plain}
 \bibliography{../../references/bibliography}
+}
 
 \end{document}

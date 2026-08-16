@@ -97,7 +97,7 @@ consensus connective, the threshold-sign layer, and the exact-projection archite
 The mathematical core of Lemma 2.12/Theorem 2.13 — thresholding commutes with min and
 max — is the standard **cutworthiness of α-cuts** in fuzzy set theory: the α-cut of a
 standard (min) intersection / (max) union is the intersection/union of the α-cuts
-([klir1995fuzzy], ch. 2; indeed min/max are the *only* cutworthy operations). NPL's
+([klir1995fuzzy], §§1.3--1.4). NPL's
 π_τ is an α-cut applied to both channels, plus the observation that the channel swap
 also commutes.
 
@@ -216,8 +216,10 @@ Comparison with our system:
 - Their signs: single values (Carnielli, Smullyan-style) or sets-as-signs
   (Haehnle). NPL's four threshold signs ARE sets-as-signs instances
   ({T,B},{F,N},{B,F},{T,N}) - already recorded in docs ch. 3.
-- Neither treats crisp equality closure or ground-closure (extensional) clauses;
-  equality is absent from their core calculi.
+- The generic per-formula calculi cited here do not supply NPL's crisp-equality
+  closure or its cross-assignment ground-closure (extensional) clauses. This is the
+  comparison required by the manuscript; it does not assert that equality cannot be
+  added to either general framework.
 - Neither is mechanized.
 
 **Verdict: the generic claim "a sound and complete tableau calculus for a
@@ -232,7 +234,7 @@ completeness engine, and the mechanization.
 ### 6.2 Quantified Belnap-Dunn/FDE
 
 Textbook tableaux for first-order FDE with completeness: Priest
-[priest2008introduction]. Recent work on quantified BD includes universally free
+[priest2008introduction], Ch. 22. Recent work on quantified BD includes universally free
 extensions (arXiv:2412.19767) and free quantification over four-valued and fuzzy
 bilattice-valued logics: Behounek-Dankova-Dvorak, IUKM 2023 [behounek2023free] -
 dual-domain free logic (non-denoting terms) over BD and a fuzzy bilattice variant.
@@ -246,8 +248,8 @@ bilattice), orthogonal axes; cite, no subsumption either way as far as checked.*
 
 Classical first-order: Ridge-Margetson (Isabelle, sequent calculus);
 Blanchette-Popescu-Traytel, JAR 58(1):149-179, 2017 [blanchette2017soundness] -
-coinductive framework with a formalized tableau instance for many-sorted classical
-FOL with equality; the From/Schlichtkrull/Villadsen teaching line
+an Isabelle/HOL coinductive framework instantiated for Gentzen and tableau variants
+of classical FOL; the From/Schlichtkrull/Villadsen teaching line
 [villadsen2017formalizing]; recent free-variable tableaux in Rocq
 (arXiv:2605.16952). Modal/hybrid/intuitionistic formalizations also exist.
 **None of the searches surfaced a machine-checked completeness theorem for a
@@ -274,8 +276,8 @@ subsumption and search-scoped novelty verdicts remain unchanged.
   LNCS 14375, pp. 15--26, DOI `10.1007/978-3-031-46775-2_2`, not merely a
   conference presentation. The project bibliography now records the published
   version and retains arXiv:2306.13079 as a cross-reference.
-- **TableauxRocq.** Rosain--Cailler, *TableauxRocq: Proving Soundness and
-  Certification of a Tableau Method in Rocq*, ITP 2026, LIPIcs 382, article 12,
+- **TableauxRocq.** Rosain--Cailler, *TableauxRocq: A Deep Embedding of
+  Free-Variable Tableaux in Rocq*, ITP 2026, LIPIcs 382, article 12,
   DOI `10.4230/LIPIcs.ITP.2026.12`, is a recent primary comparator. It verifies
   soundness and certificate checking for a classical first-order tableau. It
   does not treat a many-valued logic and does not establish the quantified

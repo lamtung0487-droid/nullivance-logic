@@ -1,4 +1,4 @@
-# Reproducibility artifact for Nullivance Logic 0.7.0
+# Reproducibility artifact for Nullivance Logic 0.7.1
 
 This artifact supports both manuscripts:
 
@@ -18,7 +18,7 @@ were distributed.
 - mathlib: tag `v4.32.1`, resolved to commit
   `520045ab14e26149ee970e2e617ca04b09bde5d6` in
   `Nullivance/lake-manifest.json`.
-- Library version: `0.7.0` in `Nullivance/lakefile.toml`.
+- Library version: `0.7.1` in `Nullivance/lakefile.toml`.
 - LaTeX: `pdflatex` and `bibtex`; package requirements are exercised by the
   checked build script rather than left implicit.
 - PDF timestamp epoch: `1786838400` (2026-08-16T00:00:00Z), set by
@@ -119,8 +119,8 @@ From the repository root or an extracted copy containing the archive and sidecar
 
 ```powershell
 & ./scripts/Verify-Archive.ps1 `
-  -ArchivePath ./dist/Nullivance-0.7.0.zip `
-  -ChecksumPath ./dist/Nullivance-0.7.0.zip.sha256
+  -ArchivePath ./dist/Nullivance-0.7.1.zip `
+  -ChecksumPath ./dist/Nullivance-0.7.1.zip.sha256
 ```
 
 This checks the archive bytes, filename binding, release prefix, required source
@@ -133,8 +133,8 @@ and PDF entries, and absence of development-only/build-output paths.
 - Novelty statements are search-scoped in `references/npl-positioning.md`.
 - Historical refutations and superseded approaches remain in the repository as
   part of the research record.
-- A DOI or public repository URL is not invented in this release. It is
-  added to `CITATION.cff` and both manuscripts only after a real archival deposit.
+- Canonical repository: <https://github.com/lamtung0487-droid/nullivance-logic>.
+- Version DOI: <https://doi.org/10.5281/zenodo.21964600>.
 
 ## License
 

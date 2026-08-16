@@ -1,6 +1,7 @@
 % =========================================================================
-% NPL core paper — release v0.7 (2026-08-16).
-% v0.7: stable Lean/mathlib release pair; reproducibility gates; artifact and
+% NPL core paper — release v0.7.1 (2026-08-16).
+% v0.7.1: citation corrections; public repository and archival DOI synchronization.
+% v0.7.0: stable Lean/mathlib release pair; reproducibility gates; artifact and
 % related-work refresh; finite-FO companion status synchronized.
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
 % =========================================================================
@@ -12,6 +13,12 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs,array}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{
+  pdftitle={Nullivance Propositional Logic: Threshold-Signed Consequence on the Unit Square with a Machine-Checked Completeness Theorem},
+  pdfauthor={Trinh Tung Lam},
+  pdfsubject={A formally verified propositional logic with threshold-signed consequence},
+  pdfkeywords={nullivance logic, paraconsistent logic, many-valued logic, completeness, Lean 4}
+}
 \usepackage[capitalize]{cleveref}
 \usepackage{microtype}
 % Allow long \texttt Lean identifiers to break at their (escaped) underscores.
@@ -50,12 +57,12 @@
 \title{Nullivance Propositional Logic:\\
 Threshold-Signed Consequence on the Unit Square\\
 with a Machine-Checked Completeness Theorem\thanks{%
-Release v0.7 (August 2026). Results marked [L] are verified in the Lean~4 artifact
+Release v0.7.1 (August 2026). Results marked [L] are verified in the Lean~4 artifact
 described in Appendix~\ref{app:lean}; results marked [paper] carry full proofs
 here and are not yet formalized. Complete verification and citation metadata are
 included with the source.}}
 \author{Trinh Tung Lam\thanks{Contact: \texttt{lamtung0481@gmail.com}.}}
-\date{August 2026 --- release v0.7}
+\date{August 2026 --- release v0.7.1}
 
 \begin{document}
 \maketitle
@@ -121,9 +128,10 @@ the propositional base of paraconsistent G\"odel logic
 \cite{ginsberg1988multivalued,fitting1991bilattices}; $\hmz$ is the
 bilattice consensus $\otimes$, which at the four-valued level carries
 complete calculi \cite{arieli1996reasoning}; the projection core is the
-cutworthiness of $\alpha$-cuts \cite{klir1995fuzzy}; signed tableaux for
-finitely-valued logics are classical \cite{haehnle1994automated,
-priest2008introduction}. Moreover --- a comparison we performed rather than
+cutworthiness of $\alpha$-cuts \cite[\S\S~1.3--1.4]{klir1995fuzzy}; sets-as-signs
+signed tableaux for finitely-valued logics are standard
+\cite{haehnle1994automated}, as are signed tableaux for FDE
+\cite[Ch.~8]{priest2008introduction}. Moreover --- a comparison we performed rather than
 conjectured --- the \emph{unsigned} fragment of our consequence relation is
 an instance of Arieli--Avron's logical-bilattice consequence
 (\cref{prop:bifilter}). The contributions are:
@@ -290,7 +298,7 @@ satisfies $S\varphi$. [L:\,\lean{exact\_projection}, \lean{sat\_projection}]
 Structural induction. The binary cases are the facts
 $\ind{\min(x,y)\ge\tau}=\min(\ind{x\ge\tau},\ind{y\ge\tau})$ and dually for
 $\max$ --- cutworthiness of the standard fuzzy operations
-\cite{klir1995fuzzy}; negation commutes with the two cuts because it swaps
+\cite[\S\S~1.3--1.4]{klir1995fuzzy}; negation commutes with the two cuts because it swaps
 coordinates. The content is the use: consequence reduces \emph{exactly} to
 $\FOUR$, with no approximation.
 \end{proof}
@@ -481,7 +489,8 @@ $\Tp(p_i\vee\lnot p_i)$ and $\Tm(p_i\wedge\lnot p_i)$. These force $p_i$
 to be $\vT$ or $\vF$; $\vB$ violates the second premise and $\vN$ violates
 the first. By classical-corner recovery, $\Gamma_\theta\models_{\FOUR}
 \Tp\theta^*$ iff $\theta$ is a Boolean tautology. Boolean tautology is
-coNP-complete by the Cook--Karp theory
+coNP-complete because Boolean satisfiability is NP-complete and tautology is
+its complement under negation; see
 \cite{cook1971complexity,karp1972reducibility}.
 \end{proof}
 
@@ -641,8 +650,9 @@ to any admissible $\Phi$; the canonical instance
 $\Phi_c(\Theta)=(\prod_k(1-2|\Theta_k-\tfrac12|))^{1/d}$ is verified
 admissible. A channel is \emph{quasivant} iff $\alpha=0$ with non-neutral
 $\Theta$: unmanifest yet structured --- the notion that motivated the
-system (structure at probability zero is invisible to entropy-based
-measures \cite{shannon1948mathematical}).
+system (the structure coordinate cannot be recovered from a measure, such as
+Shannon entropy, computed only from the effective scalar probabilities
+\cite{shannon1948mathematical}).
 [L:\,\lean{GenFrame}, \lean{GenState.init\_mem}, \lean{canonFrame},
 \lean{Channel.Quasivant}]
 \end{definition}
@@ -719,9 +729,9 @@ propositional base of \cite{bilkova2022paraconsistent} (twist product of
 $[0,1]$); their language has a G\"odel implication and no consensus, ours
 has consensus and no implication, and the consequence relations differ
 (signed vs.\ order-based). \textbf{Fuzzy sets.} The projection core is
-$\alpha$-cut cutworthiness \cite{klir1995fuzzy}. \textbf{Tableaux.}
+$\alpha$-cut cutworthiness \cite[\S\S~1.3--1.4]{klir1995fuzzy}. \textbf{Tableaux.}
 Sets-as-signs tableaux are standard \cite{haehnle1994automated}; FDE has
-textbook signed tableaux \cite{priest2008introduction}. The closest tableau
+textbook signed tableaux \cite[Ch.~8]{priest2008introduction}. The closest tableau
 precedent for our setting is the \emph{constraint tableaux} of
 \cite{bilkova2021constraint} for two-dimensional \L{}ukasiewicz and
 G\"odel logics over the same twist product of $[0,1]$: there, branches
@@ -767,8 +777,11 @@ remains outside the formal development by design.
 \textbf{Availability.} The complete source artifact is supplied with this
 release and contains \texttt{CITATION.cff}, \texttt{LICENSE},
 \texttt{ARTIFACT.md}, the verification scripts, and both manuscripts. The
-identical tagged archive will be deposited in a durable public repository;
-the real DOI is inserted only after that deposit. \textbf{Toolchain.} Lean 4
+tagged source archive is available from
+\href{https://github.com/lamtung0487-droid/nullivance-logic/releases/tag/v0.7.1}{GitHub release v0.7.1}
+and archived under DOI
+\href{https://doi.org/10.5281/zenodo.21964600}{10.5281/zenodo.21964600}.
+\textbf{Toolchain.} Lean 4
 (\texttt{leanprover/lean4:v4.32.1}) and mathlib \texttt{v4.32.1} at commit
 \texttt{520045ab14e26149ee970e2e617ca04b09bde5d6}; build with
 \texttt{lake exe cache get \&\& lake build}, or run the repository-level
@@ -799,7 +812,9 @@ permits idle steps. \textbf{Modules.} \texttt{Syntax}, \texttt{Semantics}
 verified completeness theorem — companion manuscript),
 \texttt{Generative} (\cref{sec:generative}; imported by no core module).
 
+{\footnotesize
 \bibliographystyle{plain}
 \bibliography{../../references/bibliography}
+}
 
 \end{document}

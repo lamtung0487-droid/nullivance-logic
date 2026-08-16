@@ -34,18 +34,31 @@ foreach ($relative in $required) {
 
 $zenodo = Get-Content -LiteralPath (Join-Path $projectRoot '.zenodo.json') -Raw |
   ConvertFrom-Json
-Assert-True ($zenodo.version -eq '0.7.0') '.zenodo.json must declare version 0.7.0.'
+Assert-True ($zenodo.version -eq '0.7.1') '.zenodo.json must declare version 0.7.1.'
+Assert-True ($zenodo.license -eq 'cc-by-4.0') '.zenodo.json license is inconsistent.'
+$repositoryUrl = 'https://github.com/lamtung0487-droid/nullivance-logic'
+$versionDoi = '10.5281/zenodo.21964600'
+$repositoryRelation = $zenodo.related_identifiers |
+  Where-Object { $_.identifier -eq $repositoryUrl -and $_.relation -eq 'isSupplementTo' }
+Assert-True ($null -ne $repositoryRelation) '.zenodo.json lacks the canonical repository relation.'
+Assert-True ($zenodo.notes -match [regex]::Escape($versionDoi)) '.zenodo.json lacks the version DOI.'
 
 $cff = Get-Content -LiteralPath (Join-Path $projectRoot 'CITATION.cff') -Raw -Encoding utf8
 Assert-True ($cff -match '(?m)^cff-version: 1\.2\.0$') 'CITATION.cff must use CFF 1.2.0.'
-Assert-True ($cff -match '(?m)^version: 0\.7\.0$') 'CITATION.cff version is not 0.7.0.'
+Assert-True ($cff -match '(?m)^version: 0\.7\.1$') 'CITATION.cff version is not 0.7.1.'
 Assert-True ($cff -match '(?m)^license: CC-BY-4\.0$') 'CITATION.cff license is inconsistent.'
 Assert-True ($cff -match '(?m)^    email: lamtung0481@gmail\.com$') 'CITATION.cff contact email is inconsistent.'
+Assert-True ($cff -match [regex]::Escape($repositoryUrl)) 'CITATION.cff lacks the canonical repository URL.'
+Assert-True ($cff -match [regex]::Escape($versionDoi)) 'CITATION.cff lacks the version DOI.'
 
 foreach ($manuscript in @('papers/npl-core/main.tex', 'papers/npl-finite-fo/main.tex')) {
   $manuscriptText = Get-Content -LiteralPath (Join-Path $projectRoot $manuscript) -Raw -Encoding utf8
   Assert-True ($manuscriptText -match 'lamtung0481@gmail\.com') `
     "$manuscript contact email is inconsistent."
+  Assert-True ($manuscriptText -match [regex]::Escape($repositoryUrl)) `
+    "$manuscript lacks the canonical repository URL."
+  Assert-True ($manuscriptText -match [regex]::Escape($versionDoi)) `
+    "$manuscript lacks the version DOI."
 }
 
 $toolchain = (Get-Content -LiteralPath (Join-Path $leanRoot 'lean-toolchain') -Raw).Trim()
@@ -53,7 +66,7 @@ Assert-True ($toolchain -eq 'leanprover/lean4:v4.32.1') "Unexpected Lean toolcha
 Assert-True ($toolchain -notmatch '(?i)(rc|alpha|beta|nightly)') 'Release toolchain is not stable.'
 
 $lakefile = Get-Content -LiteralPath (Join-Path $leanRoot 'lakefile.toml') -Raw
-Assert-True ($lakefile -match '(?m)^version = "0\.7\.0"$') 'Lake package version is inconsistent.'
+Assert-True ($lakefile -match '(?m)^version = "0\.7\.1"$') 'Lake package version is inconsistent.'
 Assert-True ($lakefile -match '(?m)^rev = "v4\.32\.1"$') 'mathlib tag is not pinned in lakefile.toml.'
 
 $manifest = Get-Content -LiteralPath (Join-Path $leanRoot 'lake-manifest.json') -Raw |

@@ -1,7 +1,7 @@
 param(
   [Parameter(Mandatory)] [string]$ArchivePath,
   [Parameter(Mandatory)] [string]$ChecksumPath,
-  [string]$Version = '0.7.0'
+  [string]$Version = '0.7.1'
 )
 
 $ErrorActionPreference = 'Stop'

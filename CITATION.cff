@@ -8,9 +8,14 @@ authors:
   - family-names: Trinh
     given-names: Tung Lam
     email: lamtung0481@gmail.com
-version: 0.7.0
+version: 0.7.1
 date-released: 2026-08-16
 license: CC-BY-4.0
+repository-code: "https://github.com/lamtung0487-droid/nullivance-logic"
+url: "https://doi.org/10.5281/zenodo.21964600"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21964600"
 keywords:
   - nullivance logic
   - paraconsistent logic
