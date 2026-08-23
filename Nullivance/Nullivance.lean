@@ -24,4 +24,5 @@ import Nullivance.QuantifiedEqualityROBDD
 import Nullivance.QuantifiedEqualityDecision
 import Nullivance.QuantifiedEqualityComplexity
 import Nullivance.QuantifiedEqualityHashMemo
+import Nullivance.QuantifiedEqualityHashCost
 import Nullivance.Generative

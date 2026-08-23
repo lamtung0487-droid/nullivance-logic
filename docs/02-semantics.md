@@ -2322,6 +2322,58 @@ over 40 distinct states. A separate rank-one/two/three regression records
 > bounds. ·
 > *Depends on:* Def 2.111; Thm 2.112, 2.115–2.116.
 
+**Theorem 2.118 (Verified source-level `HashMap` operation cost).** `[VERIFIED]`
+The exact state and request results above are refined to a source-level operation model
+for the version actually pinned by the artifact, Lean 4.32.1. The implementation is a
+separate-chaining hash table. The instrumented bucket probe follows `AssocList.get?`
+entry by entry; Lean proves that it returns exactly the production lookup value and
+that its comparison count never exceeds the selected bucket length. A primary lookup
+or insertion is charged one hash and one bucket access. If an insertion grows the
+physical bucket array, the model separately charges one rehash per entry in the
+post-insertion table. Thus resize work is not hidden inside an assumed constant-time
+operation.
+
+The costed recursive traversal replays the complete Boolean-child and quantified-orbit
+control flow while retaining the unmodified production result as its result field.
+Lean proves end-to-end erasure back to `runQuantifiedEqualityOrbitHashed` and the
+following accounting. Let `L` be lookups, `I` insertions, `Hp` primary hashes, `B`
+bucket accesses, `Hr` resize hashes, `C` key comparisons, and let `Er` and `Ec` be the
+recorded deterministic rehash and comparison envelopes. At the empty canonical root,
+
+`L = requests = hits+misses`, `I = misses = HashMap.size`,
+
+`Hp = B = L+I`, `Hr ≤ Er`, `C ≤ Ec`, and
+
+`total hashes = Hp+Hr ≤ requests+misses+Er`.
+
+No probabilistic collision hypothesis is used. In particular, this theorem does not
+assert average `O(1)` lookup time, wall-clock time, allocation cost, cache behavior, or
+compiler/runtime constants. Those quantities lie outside the stated model and must be
+benchmarked separately.
+
+For `atLeastThree`, the native regression records
+`(hits,misses,lookups,inserts,primary hashes,resize hashes,total hashes,`
+`bucket accesses,key comparisons,states)`
+`= (2,40,42,40,82,38,120,82,34,40)`. The 38 resize hashes come from the
+observed table-growth events; the two cache hits explain `42 = 40+2`, while the exact
+state theorem explains `40 insertions = 40 stored keys`.
+
+> *Lean:* `InfiniteFO.HashCost.probeAssocList`,
+> `InfiniteFO.HashCost.probeAssocList_value_eq_get?`,
+> `InfiniteFO.HashCost.probeAssocList_comparisons_le_entries`,
+> `InfiniteFO.HashCost.OperationCost.Valid`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitsHashed_result`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitsHashed_cost_valid`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashedCosted_result`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_verified_cost_model`,
+> `InfiniteFO.hashedCost_atLeastThree_regression` — sorry-free. ·
+> *Axiom audit (structural theorems):* `[propext, Classical.choice, Quot.sound]`.
+> The numerical regression additionally uses Lean's generated `native_decide` bridge
+> and is not a premise of the structural accounting theorem. ·
+> *Version scope:* Lean 4.32.1 `Std.HashMap`; re-audit is required if the toolchain or
+> library representation changes. ·
+> *Depends on:* Thm 2.115–2.117.
+
 ---
 
 ## Open items (chapter 2)
