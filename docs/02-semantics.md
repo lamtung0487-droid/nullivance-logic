@@ -2265,6 +2265,63 @@ Thus the concrete run lies below both independently verified closed envelopes.
 > *Axiom audit:* `[propext, Classical.choice, Quot.sound]`. ·
 > *Depends on:* Def 2.111; Thm 2.112, 2.115.
 
+**Theorem 2.117 (Exact depth-sensitive Bell weight and memo-pruning accounting).** `[VERIFIED]`
+For a residual formula `phi` reached with `u` represented equality classes, define the
+depth-sensitive weight `W(phi,u)` structurally. An atom, equality, or rejected `oplus`
+request has weight one. Negation adds one to its body's weight; conjunction and
+disjunction add one to the two child weights. A quantifier has the exact recurrence
+
+`W(Qx.body,u) = 1 + u·W(body,u) + W(body,u+1)`,
+
+because it explores one body request for each old equality class and one for a genuinely
+fresh class. If at least `qr(phi)` fresh representatives remain, Lean proves the exact
+identity `R(phi,used,available,env) = W(phi,|used|)`. Thus `W` is not an asymptotic
+estimate: it is precisely the cache-free request count, with every syntax occurrence
+charged at the orbit multiplicity of its actual binder depth. It also satisfies the
+formal refinement relation
+
+`W(phi,u) ≤ |phi|·L(qr(phi),u)`.
+
+At the canonical closed root let `A = hits+misses` be the requests actually executed,
+`U = HashMap.size` the unique states, and `P = W(phi,0)-A` the count-level pruning gap
+between the cache-free and memoized traversals. The exact state theorem and the new weight theorem
+give
+
+`U = misses`, `A = U + hits`, and `W(phi,0) = A + P`,
+
+together with the complete verified envelope
+
+`U ≤ A ≤ W(phi,0) ≤ |phi|·Bell(qr(phi)) ≤ |phi|·qr(phi)!`.
+
+This distinguishes two effects that a single hit count conflates: the repeated state
+itself is an executed request, while `P` counts how many fewer requests the memoized run
+executes than the exact cache-free recurrence. This is a count theorem, not yet a
+machine-time cost model. For `atLeastThree`, native
+evaluation gives
+`(U,hits,misses,A,P,W,syntax×Bell,syntax×factorial)`
+`= (40,2,40,42,2,44,55,66)`. Hence the depth-sensitive theorem improves the old closed
+Bell envelope from 55 to 44 before memoization, and the memoized run executes 42 calls
+over 40 distinct states. A separate rank-one/two/three regression records
+`(actual,pruned,weight) = (2,0,2), (6,0,6), (42,2,44)`.
+
+> *Lean:* `InfiniteFO.EqualityOrbitMemoStats.requests`,
+> `InfiniteFO.equalityOrbitWeightedRequestBound`,
+> `InfiniteFO.equalityOrbitRequestBound_eq_weighted`,
+> `InfiniteFO.equalityOrbitWeightedRequestBound_le_syntax_mul_leafCount`,
+> `InfiniteFO.quantifiedEqualityUniqueStateCutoff_eq_weighted_of_capacity`,
+> `InfiniteFO.quantifiedEqualityUniqueStateCutoff_rank_eq_weighted`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_requests_le_weighted`,
+> `InfiniteFO.quantifiedEqualityPrunedRequestCount`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_weighted_accounting`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_depth_sensitive_envelope`,
+> `InfiniteFO.hashedMemo_atLeastThree_weighted_accounting`,
+> `InfiniteFO.hashedMemo_weighted_rank_growth_regressions` — sorry-free. ·
+> *Axiom audit (structural theorems):* `[propext, Classical.choice, Quot.sound]`.
+> The two executable regression equalities additionally use Lean's generated
+> `native_decide` bridge; they are cross-checks, not dependencies of the structural
+> bounds. ·
+> *Depends on:* Def 2.111; Thm 2.112, 2.115–2.116.
+
 ---
 
 ## Open items (chapter 2)
