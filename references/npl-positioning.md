@@ -54,9 +54,14 @@ Gentzen- and Hilbert-style calculi**. Hence:
   verified against pages 30, 43, and 86 of the thesis PDF:
   * bifilter (his Prop 3.3.9(i)): F nonempty with `a∧b ∈ F ⟺ a⊗b ∈ F ⟺ (a ∈ F and b ∈ F)`;
     bifilters are upward closed w.r.t. both lattice orders (p. 43), hence contain ⊤;
-  * logical bilattice (Def 2.1.3): ⟨B, F⟩ with F a prime bifilter;
-  * collapse theorem (Thm 2.1.4, citing [arieli1996reasoning] Thm 2.17): every logical
-    bilattice determines the same consequence as ⟨FOUR, {t,⊤}⟩, language {∧,∨,⊗,⊕,¬}.
+  * Arieli–Avron Def 2.13: bifilter/prime-bifilter clauses; Prop 2.15: upward closure;
+    Def 2.16: logical bilattice;
+  * Arieli–Avron Thm 2.17: the unique designation-preserving homomorphism (presented
+    explicitly as an epimorphism in Rivieccio Lem 2.1.5); Arieli–Avron Thm 3.4 gives
+    the consequence-collapse statement;
+  * Rivieccio Def 2.1.3 and Thm 2.1.4: the single-conclusion matrix formulation — every
+    logical bilattice determines the same consequence as ⟨FOUR, {t,⊤}⟩ on the full
+    language {∧,∨,⊗,⊕,¬}.
   **Verdict:** D_τ = {(t,f) : t ≥ τ} is a prime bifilter of [0,1]⊙[0,1] (all five
   iff-conditions checked componentwise on the truth channel), so NPL's **unsigned**
   consequence is **Subsumed** — it is the {∧,∨,⊗,¬}-fragment of LB (consistent with
@@ -66,6 +71,16 @@ Gentzen- and Hilbert-style calculi**. Hence:
   Also relevant: Prop 4.27 (τ-invariance) shows the all-τ quantification collapses to
   any fixed τ, so "threshold-quantified" must be presented as well-definedness, not
   strength.
+
+  **Local formal reconstruction (2026-08-17):** `BilatticeCollapse.lean` now proves
+  the fragment collapse independently of the cited theorem. It derives the canonical
+  map `x ↦ (D(x),D(¬x))`, proves preservation of all four NPL connectives, proves
+  formula-evaluation preservation, establishes surjectivity from the four embedded
+  corners at every τ ∈ (0,1], and proves equality of the induced unsigned NPL and FOUR
+  consequence relations. `BilatticePosition.lean` also derives upward closure from the
+  prime-bifilter equations and proves the two negative-sign predicates are not prime
+  bifilters. The Arieli–Avron/Rivieccio sources therefore serve as terminology and
+  historical identification, not as an unformalized proof step for Proposition 4.28.
 
 C4 is now Lemma 2.18 `[VERIFIED]`; its statement uses the established bilattice
 terminology and the exact componentwise order laws.

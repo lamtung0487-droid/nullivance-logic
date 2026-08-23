@@ -75,9 +75,17 @@ fresh hosted environment.
 | `Compactness` | Set/Finset APIs, compactness, and strong completeness |
 | `Classical` | Boolean recovery on the glut/gap-free consensus-free fragment |
 | `FiniteFO` | Finite-domain syntax/semantics, tableaux, replay study, completeness |
+| `InfiniteFO` | Arbitrary-domain semantics, boundary counterexamples, threshold-local projection, mixed equality fragments, and a sound explainable reduced-product analyzer with canonical reduction, verified transfers, and checked completeness limits |
+| `RelationalFO` | Paired truth/falsity abstract domain, recursive transfers, exact-complement reduction, polarity-normalized complement exposure, strictly stronger certification, and checked De Morgan/distributivity completeness boundaries |
+| `BooleanROBDD` | Canonical ordered equality atoms, reduced and shared Boolean decision diagrams, verified evaluation/canonicity/completeness, relational constant certification, and checked equality-theory boundary |
+| `EqualityTheoryROBDD` | Persistent union--find equality closure, exact disequality consistency, ROBDD(T) soundness/completeness, theory-aware relational certification, and verified transitivity repair |
+| `QuantifiedEqualityROBDD` | Binder-aware syntax and substitution, covered-scope instantiation, union--find witness splitting, exact finite-domain evaluation, a persistent cardinality/capacity abstraction, quantifier-rank cutoff for closed pure equality, and executable reduction of infinite-domain evaluation to the finite kernel |
+| `QuantifiedEqualityDecision` | Capture-free finite representative expansion, quantified ROBDD compilation, pairwise-distinct capacity constraints in the equality theory state, exact ROBDD(T) target certification, and a total sound-and-complete decision procedure for closed pure equality on infinite domains |
+| `QuantifiedEqualityComplexity` | Exact Bell/Touchard-style equality-orbit leaf/node recurrences, global factorial bounds, binder-aware cache keys, a checked naive-key counterexample, a fully recursive memoized expansion with simultaneous correctness/invariant proof, and native hit/miss/state instrumentation |
+| `QuantifiedEqualityHashMemo` | Lawful structural-hash memo table, extensional simulation of the list reference table, end-to-end correctness on infinite closed equality, exact `HashMap.size = misses` accounting, and proved syntax×Bell×factorial state envelopes with native regressions |
 | `Generative` | Optional generative interface, isolated from the logical core |
 
-`Nullivance/Nullivance.lean` imports all thirteen modules and is the default Lake
+`Nullivance/Nullivance.lean` imports the full module set and is the default Lake
 target.
 
 ## Evidence correspondence
@@ -94,6 +102,7 @@ inventory is `docs/CLAIM_LEDGER.md`. Headline anchors include:
 | Reference-search correctness and countermodels | `referenceCloses_iff_Closes`, `referenceCloses_false_countermodel` |
 | Progressing scheduler independence | `all_terminal_reachable_agree` and its corollaries |
 | Finite-FO core soundness/completeness | `QClosesExtCore.unsat`, `QClosesExtCore.complete_of_unsat` |
+| Infinite-domain projection boundary and repair | `existential_projection_counterexample`, `compact_continuousAtom_with_equality_projection_counterexample`, `exact_projection_of_thresholdRegular`, `compact_atomContinuous_exact_projection`, `predicateFree_exact_projection`, `compact_binderIndependentEquality_exact_projection`, `compact_polaritySafeEquality_exact_projection`, `compact_regularityCertified_exact_projection`, `compact_witnessCertified_exact_projection`, `compact_productCertified_exact_projection`, `productAnalysisReport_consistent` |
 | Fixed-signature finite-FO completeness | `qDerivesExtCore_iff_qconsequence4Sig` |
 | Constrained grounding bridge | `groundBranch_closes_to_core` |
 | Universal repaired replay bridge | `admissible_ground_replay_bridge_mem_verified` |

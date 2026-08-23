@@ -476,13 +476,20 @@ valuation back to a countermodel of the input.
 \end{proof}
 
 \begin{proposition}[Finite complexity]\label{prop:complexity}
-\textnormal{[paper]}
+\textnormal{[paper headline; L certificate and reduction cores]}
 Finite signed FOUR consequence is coNP-complete.
 \end{proposition}
 \begin{proof}
 Non-consequence has a polynomial certificate: assign two bits to each atom
 occurring in $\Sigma\cup\{S\varphi\}$, evaluate bottom-up, and check that
-all premises hold while $S\varphi$ fails. For hardness, reduce Boolean
+all premises hold while $S\varphi$ fails. The exact $2|A|$ bit-index cardinality,
+certificate equivalence, and linear unit-cost syntax-tree checker are machine checked.
+\par\noindent
+\textnormal{\small
+[L:\,\lean{finite\_countercertificate\_exact},
+\lean{finite\_countercertificate\_bits}]}
+\par\noindent
+For hardness, reduce Boolean
 tautology. Given a Boolean formula $\theta$, read it as an $\hmz$-free NPL
 formula $\theta^*$ and add, for every variable $p_i$, the premises
 $\Tp(p_i\vee\lnot p_i)$ and $\Tm(p_i\wedge\lnot p_i)$. These force $p_i$
@@ -492,6 +499,14 @@ the first. By classical-corner recovery, $\Gamma_\theta\models_{\FOUR}
 coNP-complete because Boolean satisfiability is NP-complete and tautology is
 its complement under negation; see
 \cite{cook1971complexity,karp1972reducibility}.
+The semantic reduction equivalence, including the forcing branch, and the explicit
+linear output-size bound $|R(\theta)|\le 11|\theta|+1$ are machine checked.
+\par\noindent
+\textnormal{\small
+[L:\,\lean{Boolean\_reduction\_correct}].}
+\par\noindent
+\textnormal{\small
+[L:\,\lean{Boolean\_reduction\_linear\_size}].}
 \end{proof}
 
 \begin{theorem}[Compactness; strong completeness]\label{thm:compactness}
@@ -551,10 +566,19 @@ $\Sigma\cup\{\bar S\varphi\}$ is, so $\Sigma\not\models S\varphi$.
 Unsigned NPL consequence is the all-$\Tp$ fragment of signed consequence
 (definitional), and on $\hmz$-free formulas it coincides with Belnap--Dunn
 FDE consequence: identical value space, operations, and designated set
-define the same matrix consequence \textnormal{[paper]}. Nontriviality:
-$\emptyset\not\dershort\Tp p$, by the constant-$\vN$ countermodel
-[L:\,\lean{consistency\_witness}]; note every formula evaluates to $\vN$
-under the constant-$\vN$ valuation, so NPL has no theorems --- like FDE.
+define the same matrix consequence
+[L:\,\lean{FDE.consequence\_iff\_npl};
+L:\,\lean{FDE.consequence\_iff\_npl\_derives}].
+Here FDE syntax and evaluation are defined independently; the embedding is exactly
+onto the $\hmz$-free formulas and commutes with evaluation
+[L:\,\lean{FDE.Formula.exists\_embed\_iff\_oplusFree};
+L:\,\lean{FDE.eval\_embed}].
+
+\smallskip
+The constant-$\vN$ valuation also witnesses nontriviality.  Every formula
+evaluates to $\vN$ under it, so NPL has no theorems --- like FDE.  In
+particular, $\emptyset\not\dershort\Tp p$.
+[L:\,\lean{consistency\_witness}]
 \end{corollary}
 
 \begin{corollary}[Paraconsistency]\label{cor:nonexplosion}
@@ -698,10 +722,15 @@ which is the bifilter condition, while
 $a\vee b\in D_\tau\Longleftrightarrow
 \max(a_t,b_t)\ge\tau\Longleftrightarrow a\in D_\tau$ or
 $b\in D_\tau$, which is primeness. Thus
-$\langle[0,1]\odot[0,1],D_\tau\rangle$ is a logical bilattice; by the
-Arieli--Avron collapse theorem (every logical bilattice determines the same
-consequence as $\langle\FOUR,\{t,\top\}\rangle$ ---
-\cite[Thm.~2.17]{arieli1996reasoning}, as presented in
+$\langle[0,1]\odot[0,1],D_\tau\rangle$ is a logical bilattice. Locally, the
+canonical map $x\mapsto(\mathbf1_{D_\tau}(x),
+\mathbf1_{D_\tau}(\lnot x))$ is proved to be a surjective,
+designation-preserving homomorphism to $\FOUR$, and therefore induces exactly
+$\FOUR$ consequence. The Arieli--Avron map and consequence theorems identify
+this verified construction with their general result (every logical bilattice
+determines the same consequence as
+$\langle\FOUR,\{t,\top\}\rangle$ ---
+\cite[Thms.~2.17, 3.4]{arieli1996reasoning}, with the single-conclusion form in
 \cite[Thm.~2.1.4]{rivieccio2010algebraic}), the \emph{unsigned} NPL
 consequence is exactly the $\{\wedge,\vee,\otimes,\lnot\}$-fragment of
 their logic $\mathrm{LB}$ --- subsumed, and consistent with our independent
@@ -716,6 +745,19 @@ $\Tp\psi\iff\Tm p$ in all valuations, since the constant-$\vB$ valuation is
 a fixpoint of every connective --- every formula is designated there, while
 $\Tm p$ fails. [L:\,\lean{signs\_not\_internalizable}, via
 \lean{eval\_const\_B}]
+\par\noindent
+\textnormal{\small NPL-internal bifilter calculation:
+[L:\,\lean{Dtau\_prime}].}
+\par\noindent
+\textnormal{\small Locally reconstructed consequence collapse:}
+\par\noindent
+\textnormal{\small
+[L:\,\lean{LB\_fragment\_collapse}, \lean{unsigned\_NPL\_eq\_FOUR}].}
+\par\noindent
+\textnormal{\small Negative-sign order counterexamples:}
+\par\noindent
+\textnormal{\small
+[L:\,\lean{Tneg\_not\_prime}, \lean{Fneg\_not\_prime}].}
 \end{proposition}
 
 \textbf{Logic programming.} Fitting \cite{fitting1991bilattices}
@@ -792,22 +834,29 @@ correspondences: branches are lists (finite sets up to the verified
 monotonicity lemma); ``some tableau closes'' is the inductive predicate
 \lean{Closes} (two closure, sixteen rule constructors); the calculus-level
 results are stated against \lean{Closes} directly; explicit finite tableau
-proof trees are equivalent to \lean{Closes}. Results marked [paper]
---- \cref{cor:conservative} (FDE-conservativity half), \cref{prop:complexity},
-\cref{prop:bifilter} ---
-carry full proofs in this paper and are not formalized. The verified
+proof trees are equivalent to \lean{Closes}. Results marked [paper] ---
+\cref{prop:complexity} --- carry a full proof in this paper but retain a
+paper-level complexity-class wrapper. The verified
 operational claim covers the deterministic reference procedure and every
 progressing active-branch selection order of \cref{thm:reference-search}.
 It does not assert weak fairness for a different transition system that
 permits idle steps. \textbf{Modules.} \texttt{Syntax}, \texttt{Semantics}
 ($\FOUR$), \texttt{Continuous} (square, projection, bilattice orders),
 \texttt{ProofTheory} (\lean{Closes}, \lean{ND}, \lean{NDO}), \texttt{Tableau}
-(explicit proof trees), \texttt{Metatheory}
+(explicit proof trees), \texttt{TableauBounds} (subformula preservation and the
+$4|\operatorname{Sub}(B_0)|$ branch bound), \texttt{Metatheory}
 (soundness, completeness, lifting, $\tau$-invariance, behavioural profile),
+\texttt{BilatticePosition} (prime-bifilter criterion and negative-sign
+order counterexamples), \texttt{BilatticeCollapse} (canonical epimorphism,
+evaluation homomorphism, surjectivity, and unsigned consequence collapse),
+\texttt{FDE} (independent fragment syntax, exact $\hmz$-free embedding, and
+signed/unsigned consequence conservativity),
 \texttt{Operational} (terminating reference search and countermodels),
 \texttt{Decidability} (finite model checker and \lean{Decidable} instances),
 \texttt{Compactness} (Set/Finset API, compactness, strong completeness),
 \texttt{Classical} (Boolean recovery on the glut/gap-free fragment),
+\texttt{Complexity} (exact finite certificates, instrumented linear checker,
+and linear-size Boolean reduction),
 \texttt{FiniteFO} (the complete finite-domain quantified layer, including its
 verified completeness theorem — companion manuscript),
 \texttt{Generative} (\cref{sec:generative}; imported by no core module).

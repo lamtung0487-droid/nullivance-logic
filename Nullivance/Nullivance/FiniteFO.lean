@@ -41,7 +41,7 @@ inductive QFormula where
   | oplus : QFormula → QFormula → QFormula
   | all : Var → QFormula → QFormula
   | ex : Var → QFormula → QFormula
-deriving DecidableEq, Repr
+deriving DecidableEq, Hashable, Repr
 
 /-- Arity well-formedness for the raw quantified syntax relative to a fixed signature. -/
 def QFormula.WellFormed (sig : QSignature) : QFormula → Prop

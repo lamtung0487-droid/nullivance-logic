@@ -45,12 +45,13 @@ conjunctive), and the F⁺-rule is conjunctive as well (min on the falsity chann
 > [arieli1996reasoning]. What is NPL-specific is this particular threshold-signed system
 > and its verified completeness for consequence over all τ — `references/npl-positioning.md` §5.
 
-**Definition 3.4 (Saturation — Hintikka branch).** `[PROVEN]`
+**Definition 3.4 (Saturation — Hintikka branch).** `[VERIFIED]`
 An open branch B is *saturated* iff for every compound signed formula in B:
 - if its rule is non-branching, both resulting signed formulas are in B;
 - if its rule is branching, at least one of the two alternatives is in B.
 
-> *Depends on:* Def 3.3
+> *Lean:* `Nullivance.Metatheory.Saturated` (sixteen named fields, one per
+> sign × connective row) — sorry-free · *Depends on:* Def 3.3
 
 **Definition 3.5 (Tableau; derivability).** `[VERIFIED]`
 A *tableau* for a finite branch B₀ is a finite binary tree of branches with root B₀, each

@@ -83,7 +83,7 @@ unsatisfiable; in particular so is the root B₀. ∎
 
 ## 4.B Termination
 
-**Lemma 4.6 (Subformula property).** `[PROVEN]`
+**Lemma 4.6 (Subformula property).** `[VERIFIED]`
 Every signed formula occurring in a tableau for B₀ is `Sψ` with ψ a subformula of some
 formula occurring in B₀.
 
@@ -93,9 +93,11 @@ table"; spelled out per R6.) *Base:* members of B₀ qualify (ψ is a subformula
 subformulas of χ; by IH χ is a subformula of some formula of B₀, and subformulahood is
 transitive. ∎
 
-> Source: D2 Lem 6.1. · *Depends on:* Def 3.3, 3.5.
+> Source: D2 Lem 6.1. · *Lean:* `Metatheory.TableauStep`, `TableauReach`,
+> `tableau_subformula_property` (all 22 possible parent-to-child edges, including
+> both children of every branching rule) — sorry-free · *Depends on:* Def 3.3, 3.5.
 
-**Lemma 4.7 (Branch finiteness).** `[PROVEN]`
+**Lemma 4.7 (Branch finiteness).** `[VERIFIED]`
 Treating a branch as a *set* of signed formulas, at most `4 · |Sub(B₀)|` signed formulas
 can ever occur on any branch of a tableau for B₀, where Sub(B₀) is the (finite) set of
 subformulas of formulas in B₀.
@@ -105,7 +107,9 @@ are four signs (Def 2.4); Sub(B₀) is finite because B₀ is finite and each fo
 finitely many subformulas (structural induction on Def 1.2: an atom has one subformula;
 each connective adds one to the union of the subformulas of its arguments). ∎
 
-> Source: D2 Lem 6.2. · *Depends on:* Def 1.2, Lem 4.6.
+> Source: D2 Lem 6.2. · *Lean:* `Metatheory.Formula.subformulas`,
+> `branchSubformulas`, `signedSubformulaUniverse`,
+> `reachable_branch_card_bound` — sorry-free · *Depends on:* Def 1.2, Lem 4.6.
 
 **Theorem 4.8 (Reference-search termination).** `[VERIFIED]`
 The transition relation `→_ref` of Definition 3.78 is well founded. Consequently,
@@ -138,7 +142,7 @@ For an open saturated branch B, define `v_B(p) = (x_B(p), y_B(p)) ∈ FOUR` by:
 > Source: D2 §7.1. · *Lean:* `Metatheory.canonicalVal` ·
 > *Depends on:* Def 2.7, 3.4.
 
-**Lemma 4.10 (Atomic lemma).** `[PROVEN]`
+**Lemma 4.10 (Atomic lemma).** `[VERIFIED]`
 For every atom p: if `T⁺p ∈ B` the truth bit of `v_B(p)` is 1; if `T⁻p ∈ B` it is 0;
 if `F⁺p ∈ B` the falsity bit is 1; if `F⁻p ∈ B` it is 0.
 
@@ -147,9 +151,10 @@ were 1 then `T⁺p ∈ B` (Def 4.9), so B would contain a sign and its opposite 
 (Def 3.2) — contradicting openness. The `F⁻` case is the same argument on the falsity
 bit. ∎
 
-> Source: D2 Lem 7.1. · *Depends on:* Def 3.2, 4.9.
+> Source: D2 Lem 7.1. · *Lean:* `Metatheory.canonicalVal_atomic` — sorry-free ·
+> *Depends on:* Def 3.2, 4.9.
 
-**Theorem 4.11 (Truth Lemma).** `[PROVEN]`
+**Theorem 4.11 (Truth Lemma).** `[VERIFIED]`
 Let B be open and saturated. Then for every formula φ and every sign S:
 if `Sφ ∈ B` then `v_B ⊨ Sφ`.
 
@@ -175,14 +180,17 @@ T⁻/F⁺ the non-branching ones.
 *φ⊕ψ.* Both channels min (Lemma 4.4): T⁺ and F⁺ are non-branching (both members in B by
 saturation, both bits 1); T⁻ and F⁻ are branching (some member in B, some bit 0). ∎
 
-> Source: D2 Thm 8.1. · *Depends on:* Def 1.2, 2.3, 3.3, 3.4, Lem 4.1–4.4, 4.10.
+> Source: D2 Thm 8.1. · *Lean:* `Metatheory.canonicalVal_truth` (structural
+> induction over formulas, simultaneous in all four signs) — sorry-free ·
+> *Depends on:* Def 1.2, 2.3, 3.3, 3.4, Lem 4.1–4.4, 4.10.
 
-**Corollary 4.12 (Open saturated branches are satisfiable).** `[PROVEN]`
+**Corollary 4.12 (Open saturated branches are satisfiable).** `[VERIFIED]`
 Every open saturated branch is satisfiable in FOUR: `v_B` satisfies every member.
 
 *Proof.* Theorem 4.11 applied to each member of B. ∎
 
-> Source: D2 Cor 8.2. · *Depends on:* Thm 4.11.
+> Source: D2 Cor 8.2. · *Lean:* `Metatheory.open_saturated_canonical_sat` —
+> sorry-free · *Depends on:* Thm 4.11.
 
 **Theorem 4.13 (FOUR branch-completeness).** `[VERIFIED]`
 For a finite branch B₀, B₀ is unsatisfiable in FOUR **iff** `Closes B₀`.
@@ -299,18 +307,26 @@ does not accumulate unilateral falsity.
 
 ## 4.F Audit follow-ups (2026-07-03)
 
-**Corollary 4.20 (FDE conservativity on {¬,∧,∨}).** `[PROVEN]`
+**Corollary 4.20 (FDE conservativity on {¬,∧,∨}).** `[VERIFIED]`
 For ⊕-free formulas, NPL's FOUR consequence coincides with Belnap–Dunn FDE consequence.
 
-*Proof.* By C5 (ch. 2 queue, `[PROVEN]`) the {¬,∧,∨} tables of FOUR are the Belnap–Dunn
-tables under the corner encoding, and the designated sets coincide ({T,B} ↔ {t,b}).
-Two matrix semantics with the same value space, the same operations on the shared
-language, and the same designated set define the same consequence relation on that
-language (consequence is defined from exactly these data — Def 2.6 restricted to FOUR).
-Combined with Theorem 4.16, continuous NPL is therefore a conservative extension of FDE
-on the ⊕-free fragment. Discharges D1 Thm 5 (INTAKE §E). ∎
+*Proof.* Define the FDE language independently, with only atoms, ¬, ∧ and ∨, and give it
+its own FOUR evaluation and designated-value consequence.  The structural embedding
+`Formula.embed` into NPL commutes with evaluation (`eval_embed`).  It is exactly onto the
+⊕-free NPL formulas: `exists_embed_iff_oplusFree`, with executable partial inverse
+`Formula.decode`.  Memberwise satisfaction is preserved for arbitrary four-signed
+branches (`npl_satBranch_embed`), hence all four signed consequence relations coincide
+(`signedConsequence_iff_npl`).  Specializing to the designated sign T⁺ yields
+`consequence_iff_npl`; composing this with Theorem 4.14 yields the proof-theoretic form
+`consequence_iff_npl_derives`.  Thus this is a formally checked conservative embedding,
+not merely an entry-by-entry table comparison.  Combined with Theorem 4.16, continuous
+NPL is a conservative extension of FDE on the ⊕-free fragment. ∎
 
-> *Depends on:* C5, Def 2.6, Thm 4.16. · *Related work:* [belnap1977useful; dunn1976intuitive]; the identification is `references/npl-positioning.md` §1.
+> *Lean:* `FDE.Formula.embed`, `decode`, `exists_embed_iff_oplusFree`, `eval_embed`,
+> `signedConsequence_iff_npl`, `consequence_iff_npl`, `consequence_iff_npl_derives` —
+> sorry-free. · *Depends on:* C5, Def 2.6, Thms 4.14 and 4.16. · *Related work:*
+> [belnap1977useful; dunn1976intuitive]; the identification is
+> `references/npl-positioning.md` §1.
 
 **Proposition 4.21 (Nontriviality — consistency evidence).** `[VERIFIED]`
 The empty premise set does not derive `T⁺p`: `∅ ⊬_A T⁺p` for atomic p. Together with
@@ -462,12 +478,13 @@ therefore carries a pointer to this proposition.
 
 > *Lean:* `Metatheory.ConsequenceCAt`, `consequenceCAt_iff_consequence4`, `consequenceCAt_iff_consequenceC` (via `proj_iota`, `SatC_iota_at`) — sorry-free. · *Depends on:* Def 2.6, Thm 2.13, Cor 2.14, Thm 4.15.
 
-**Proposition 4.28 (Position within the Arieli–Avron framework).** `[PROVEN]`
+**Proposition 4.28 (Position within the Arieli–Avron framework).** `[VERIFIED]`
 (i) For every τ ∈ (0,1], the designated set `D_τ = {(t,f) : t ≥ τ}` is a **prime
 bifilter** of the product bilattice [0,1]⊙[0,1]; hence ⟨[0,1]⊙[0,1], D_τ⟩ is a
-*logical bilattice* in the sense of Arieli–Avron, and by their collapse theorem
-(every logical bilattice determines the same consequence as ⟨FOUR, {t,⊤}⟩, on the
-language {∧,∨,⊗,⊕,¬}) the **unsigned** NPL consequence is exactly the
+*logical bilattice* in the sense of Arieli–Avron. The canonical map
+`x ↦ (x ∈ D_τ, ¬x ∈ D_τ)` is a surjective, designation-preserving homomorphism to
+FOUR; consequently the **unsigned** NPL consequence is exactly FOUR consequence and,
+by the Arieli–Avron identification on {∧,∨,⊗,⊕,¬}, exactly the
 {∧,∨,⊗,¬}-fragment of their logic LB. The unsigned fragment of NPL is subsumed.
 (ii) The satisfaction sets of the **negative** signs are not bifilters: the T⁻-set
 `{(t,f) : t < τ}` contains (0,0) but not (1,1), so it is not upward closed in ≤_k,
@@ -475,19 +492,49 @@ while every bifilter is upward closed in both orders. Hence the four-signed
 consequence relation is not a logical-bilattice (single designated prime bifilter)
 matrix consequence — sign-by-sign, the negative signs step outside the framework.
 
-*Proof.* (i) `D_τ` is nonempty ((1,1) ∈); `a∧b ∈ D_τ ⟺ min(t₁,t₂) ≥ τ ⟺ both ∈ D_τ`,
-and identically for ⊗ = (min,min) (same truth-channel); primality:
-`a∨b ∈ D_τ ⟺ max ≥ τ ⟺ some ∈ D_τ`, identically for the gullibility join (max,max).
-These are exactly the bifilter/primality conditions (verified against the definitions
-as quoted in Rivieccio's presentation of [arieli1996reasoning]: bifilter =
-nonempty, `a∧b ∈ F ⟺ a⊗b ∈ F ⟺ a,b ∈ F`; prime = the ∨/⊕ disjunction conditions;
-collapse = his Thm 2.1.4, citing [arieli1996reasoning] Thm 2.17). Fragment
-restriction preserves coincidence of consequence relations. Consistency check: this
-agrees with the independently proven Thm 4.16 + Cor 4.17 route.
-(ii) (0,0) ≤_k (1,1); membership fails upward. Bifilters are upward closed in both
-orders (loc. cit.), and nonempty ⇒ ⊤ ∈ F. ∎
+*Proof.* (i) `D_τ` is nonempty ((1,1) ∈) and proper ((0,0) ∉). Moreover,
+`a∧b ∈ D_τ ⟺ min(t₁,t₂) ≥ τ ⟺ both ∈ D_τ`, and identically for knowledge meet
+`⊗ = (min,min)`; primality follows from
+`a∨b ∈ D_τ ⟺ max(t₁,t₂) ≥ τ ⟺ some ∈ D_τ`, identically for knowledge join
+`⊕ = (max,max)`. These are exactly Arieli–Avron Definition 2.13's bifilter and
+primality clauses. The NPL-internal calculation is formalized independently by
+`BilatticePosition.PrimeBifilterCriterion` and
+`designatedAt_primeBifilterCriterion`; `knowledgeJoin2` and its three order laws
+record the deliberately absent knowledge join without adding it to NPL syntax.
 
-> Source verification: `references/npl-positioning.md` §2. · *Depends on:* Def 2.6, Lem 2.18, Prop 4.27; [arieli1996reasoning; rivieccio2010algebraic]. · *Lean:* not planned — the statement quantifies over another framework's definitions; the NPL-internal halves are covered by Prop 4.27 and Cor 4.17.
+The collapse is also reconstructed locally rather than imported as a black box.
+`BilatticeCollapse.FragmentMatrix` isolates the De Morgan laws and the three
+prime-bifilter membership equations actually needed. Its canonical two-bit map is
+proved to preserve negation, truth meet/join and knowledge meet; structural induction
+then proves evaluation preservation. Surjectivity gives both directions of consequence
+preservation. `continuousMatrix` instantiates these hypotheses on the bundled unit
+square, and `cornerLift` proves surjectivity for every admissible τ. Finally,
+`continuousMatrixConsequence_iff_npl` and `fourConsequence_iff_npl` identify the two
+abstract relations with the project's canonical `ConsequenceCAt` and `Consequence4`.
+
+For literature identification, Arieli–Avron Definition 2.13 supplies the bifilter
+clauses, Proposition 2.15 the general upward-closure statement, Definition 2.16 the
+term “logical bilattice”, Theorem 2.17 its FOUR homomorphism, and Theorem 3.4 the
+corresponding consequence theorem. Rivieccio Theorem 2.1.4 gives the single-conclusion
+matrix formulation. These citations now identify the independently verified theorem
+with LB; they are no longer a proof dependency for the NPL-to-FOUR collapse itself.
+(ii) (0,0) ≤_k (1,1); membership fails upward. Lean verifies this counterexample for
+both negative channels and, independently of Proposition 2.15, derives upward closure
+in both orders from `PrimeBifilterCriterion`. Hence `TnegAt` and `FnegAt` are formally
+proved not to satisfy the prime-bifilter criterion. They are also proved definitionally
+equal to the T⁻ and F⁻ clauses of `SatC`. ∎
+
+> Source verification: `references/npl-positioning.md` §2. · *Depends on:* Def 2.6,
+> Lem 2.18, Prop 4.27; [arieli1996reasoning; rivieccio2010algebraic]. · *Lean:*
+> `BilatticePosition.knowledgeJoin2`, `PrimeBifilterCriterion`,
+> `designatedAt_primeBifilterCriterion`, `designatedAt_upwardClosed_t/k`,
+> `PrimeBifilterCriterion.upwardClosed_t/k`,
+> `tnegAt_not_primeBifilterCriterion`, `fnegAt_not_primeBifilterCriterion`,
+> `BilatticeCollapse.consequence_collapse`, `continuous_collapse_surjective`,
+> `continuous_consequence_collapse`, `continuousMatrixConsequence_iff_npl`,
+> `fourConsequence_iff_npl`, `unsigned_npl_collapse` — all sorry-free. `[VERIFIED]`;
+> the cited literature is used only to identify this locally proved construction with
+> the established name and logic LB.
 
 **Proposition 4.29 (The negative signs are not internalizable).** `[VERIFIED]`
 There is no formula ψ such that `T⁺ψ ⟺ T⁻p` holds in every FOUR valuation: the
@@ -528,12 +575,14 @@ states a *restricted* recovery theorem rather than full collapse to classical lo
 
 > *Lean:* `Metatheory.classicalCorner`, `Metatheory.evalBool`, `Metatheory.classical_double_projection`, `Metatheory.eval_classical_eq_evalBool`, `Metatheory.consequence4OnClassical_iff_bool` — sorry-free, `lake build` 2026-07-05. · *Depends on:* Def 1.2, 2.7, Prop 4.22.
 
-**Proposition 4.31 (Certificate upper bound for finite non-consequence).** `[PROVEN]`
+**Proposition 4.31 (Certificate upper bound for finite non-consequence).** `[VERIFIED]`
 For finite Γ and signed conclusion Sφ, failure of `Γ ⊨₄ Sφ` has a certificate of size
 `2|A|` bits, where A is the set of atoms occurring in `Γ ∪ {Sφ}`. The certificate is an
 assignment of one truth bit and one falsity bit to each atom in A; it is checked by one
-bottom-up evaluation of the formulas. Hence finite FOUR consequence is in coNP under the
-standard bit-size encoding of formulas.
+bottom-up evaluation of the formulas. In the explicit unit-cost syntax-tree model, the
+instrumented checker performs exactly one evaluation step per formula constructor plus
+one Boolean-combination step per premise and one final step; this cost is the formal
+`querySize` and is linear in that representation.
 
 *Proof.* By Lemma 4.23, satisfaction of every member of `Γ ∪ {Sφ}` depends only on the
 values of atoms in A. A FOUR value is exactly two Boolean coordinates, so an assignment
@@ -548,7 +597,17 @@ using only one bit per atom fails in the presence of negative signs and negation
 can inspect both truth and falsity channels. The certificate result improves the
 complexity statement, not the worst-case semantic state count.
 
-> *Depends on:* Def 2.7, Def 2.4, Lem 4.23, Thm 4.24. · *Lean:* not yet formalized as an algorithmic complexity theorem; the finite checker behind Thm 4.24 is `Metatheory.consequence4Bool`.
+> *Depends on:* Def 2.7, Def 2.4, Lem 4.23, Thm 4.24. · *Lean:*
+> `Complexity.CertificateBits`, `certificateBits_index_card` (exactly `2|A|` Boolean
+> coordinates), `Certificate.toBits/ofBits`, `not_consequence4_iff_certificate`,
+> `verifiesNonconsequence_iff`, `certificateBitLength_le_twice_querySize`, and the
+> instrumented implementation `evalWithWork`, `branchWithWork`, `verifierWithWork` with
+> exact value/cost theorems — all sorry-free. `[VERIFIED]` for the explicit cost model.
+
+As a standard complexity-theory corollary, Proposition 4.31 supplies the usual NP
+certificate for non-consequence, hence coNP membership for consequence under ordinary
+reasonable binary encodings. The external class name is not itself represented by a
+mathlib complexity-class API; it is used in Theorem 4.32 at paper level.
 
 **Theorem 4.32 (Exact finite complexity).** `[PROVEN]`
 Finite FOUR consequence for the signed language is coNP-complete.
@@ -573,7 +632,14 @@ coNP-hard. Together with Prop 4.31, it is coNP-complete. ∎
 load-bearing, not cosmetic. The reduction also avoids using ⊕, so hardness already holds
 inside the {¬,∧,∨} fragment plus signs.
 
-> *Depends on:* Prop 4.30, 4.31. · *References:* [cook1971complexity; karp1972reducibility]. · *Lean:* not formalized as an algorithmic complexity theorem.
+> *Depends on:* Prop 4.30, 4.31. · *References:* [cook1971complexity;
+> karp1972reducibility]. · *Lean:* `Metatheory.classicalityConstraints`,
+> `classicality_pair_iff`, `satBranch_classicalityConstraints_iff`, and
+> `boolean_tautology_iff_forced_consequence` verify the complete semantic reduction
+> core. `Complexity.forcedQuery_size_le` additionally proves the explicit linear bound
+> `|forcedQuery(φ)| ≤ 11|φ|+1`. The source problem's coNP-completeness and the external
+> complexity-class wrapper are not represented by a Lean complexity API; therefore the
+> exact coNP-completeness headline remains `[PROVEN]`, not `[VERIFIED]`.
 
 **Theorem 4.33 (Progress-scheduler termination and order-independent completeness).** `[VERIFIED]`
 Let `B` be a finite branch and let `F₀ = [⟨B,[]⟩]`. Then:

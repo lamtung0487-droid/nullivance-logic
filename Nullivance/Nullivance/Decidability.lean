@@ -169,6 +169,37 @@ theorem consequence4Bool_correct (Gamma : Branch) (sphi : SignedFormula) :
         cases h : satBranchB w Gamma <;> simp [h] at hprem ⊢
       simp [hpremFalse]
 
+/-- Proposition 4.31, semantic certificate core: finite non-consequence is equivalent
+to a countervaluation in the finite search space generated from exactly the query
+atoms.  Each choice made by `valuationsOn` is one FOUR value, hence two Boolean bits. -/
+theorem not_consequence4_iff_finite_certificate (Gamma : Branch) (sphi : SignedFormula) :
+    ¬ Consequence4 Gamma sphi ↔
+      ∃ w ∈ valuationsOn (queryAtoms Gamma sphi),
+        satBranch w Gamma ∧ sat4 w sphi = false := by
+  classical
+  constructor
+  · intro hnot
+    simp only [Consequence4] at hnot
+    push Not at hnot
+    obtain ⟨v, hvGamma, hvFail⟩ := hnot
+    obtain ⟨w, hwmem, hagree⟩ := valuationsOn_complete (queryAtoms Gamma sphi) v
+    refine ⟨w, hwmem, ?_, ?_⟩
+    · intro spsi hspsi
+      have heq : sat4 w spsi = sat4 v spsi :=
+        sat4_eq_of_agree w v spsi
+          (fun n hocc => hagree n (mem_queryAtoms_premise (sphi := sphi) hspsi hocc))
+      rw [heq]
+      exact hvGamma spsi hspsi
+    · have heq : sat4 w sphi = sat4 v sphi :=
+        sat4_eq_of_agree w v sphi
+          (fun n hocc => hagree n (mem_queryAtoms_conclusion (Gamma := Gamma) hocc))
+      rw [heq]
+      cases hval : sat4 v sphi <;> simp_all
+  · rintro ⟨w, _hwmem, hwGamma, hwFail⟩ hcon
+    have := hcon w hwGamma
+    rw [hwFail] at this
+    simp at this
+
 instance decidableConsequence4 (Gamma : Branch) (sphi : SignedFormula) :
     Decidable (Consequence4 Gamma sphi) :=
   decidable_of_iff (consequence4Bool Gamma sphi = true)

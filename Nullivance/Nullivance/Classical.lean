@@ -1,5 +1,5 @@
 /- Classical recovery for the glut/gap-free, ⊕-free fragment. -/
-import Nullivance.Metatheory
+import Nullivance.Decidability
 
 namespace Nullivance.Metatheory
 
@@ -124,5 +124,73 @@ theorem consequence4OnClassical_iff_bool (Γ : List Formula) (φ : Formula)
       intro ψ hmem
       exact (sat4_Tpos_classical_iff_evalBool v hv ψ (hΓ ψ hmem)).mp (hsat ψ hmem)
     exact (sat4_Tpos_classical_iff_evalBool v hv φ hφ).mpr hout
+
+/- The semantic core of the coNP-hardness reduction in Theorem 4.32. -/
+
+/-- The two signed premises that force atom `n` to take a classical FOUR value. -/
+def classicalityConstraints : List Nat → Branch
+  | [] => []
+  | n :: ns =>
+      (Sign.Tpos, Formula.disj (.atom n) (.neg (.atom n))) ::
+      (Sign.Tneg, Formula.conj (.atom n) (.neg (.atom n))) ::
+      classicalityConstraints ns
+
+theorem classicality_pair_iff (v : Nat → V4) (n : Nat) :
+    sat4 v (Sign.Tpos, Formula.disj (.atom n) (.neg (.atom n))) = true ∧
+      sat4 v (Sign.Tneg, Formula.conj (.atom n) (.neg (.atom n))) = true ↔
+        IsClassical (v n) := by
+  cases hx : v n with
+  | mk t f =>
+      cases t <;> cases f <;>
+        simp [sat4, eval, V4.sat, V4.neg, V4.conj, V4.disj,
+          IsClassical, V4.T, V4.F, hx]
+
+/-- The generated finite branch forces exactly the listed atoms to be classical. -/
+theorem satBranch_classicalityConstraints_iff (v : Nat → V4) (A : List Nat) :
+    satBranch v (classicalityConstraints A) ↔
+      ∀ n ∈ A, IsClassical (v n) := by
+  induction A with
+  | nil => simp [classicalityConstraints, satBranch]
+  | cons n ns ih =>
+      rw [classicalityConstraints, satBranch_cons, satBranch_cons, ih]
+      rw [← and_assoc, classicality_pair_iff]
+      simp
+
+/-- Theorem 4.32, reduction core: Boolean tautology of an `⊕`-free formula is
+equivalent to its signed FOUR consequence after adding the finite classicality-forcing
+premises for precisely its occurring atoms. -/
+theorem boolean_tautology_iff_forced_consequence (φ : Formula) (hφ : OplusFree φ) :
+    (∀ b : Nat → Bool, evalBool b φ = true) ↔
+      Consequence4 (classicalityConstraints (atoms φ)) (Sign.Tpos, φ) := by
+  constructor
+  · intro htaut v hvConstraints
+    have hAtoms : ∀ n ∈ atoms φ, IsClassical (v n) :=
+      (satBranch_classicalityConstraints_iff v (atoms φ)).mp hvConstraints
+    let vc : Nat → V4 := fun n => if n ∈ atoms φ then v n else V4.F
+    have hvc : ∀ n, IsClassical (vc n) := by
+      intro n
+      by_cases hn : n ∈ atoms φ
+      · simpa [vc, hn] using hAtoms n hn
+      · simp [vc, hn, IsClassical, V4.F]
+    have hsatc : sat4 vc (Sign.Tpos, φ) = true :=
+      (sat4_Tpos_classical_iff_evalBool vc hvc φ hφ).mpr
+        (htaut (fun n => (vc n).t))
+    have heq : sat4 vc (Sign.Tpos, φ) = sat4 v (Sign.Tpos, φ) :=
+      sat4_eq_of_agree vc v (Sign.Tpos, φ) (by
+        intro n hocc
+        simp [vc, occurs_mem_atoms hocc])
+    rw [← heq]
+    exact hsatc
+  · intro hcon b
+    let v : Nat → V4 := fun n => classicalCorner (b n)
+    have hv : ∀ n, IsClassical (v n) := by
+      intro n
+      exact classicalCorner_isClassical (b n)
+    have hbranch : satBranch v (classicalityConstraints (atoms φ)) :=
+      (satBranch_classicalityConstraints_iff v (atoms φ)).mpr
+        (fun n _ => hv n)
+    have hout := hcon v hbranch
+    have houtBool := (sat4_Tpos_classical_iff_evalBool v hv φ hφ).mp hout
+    simpa [v, classicalCorner_t] using houtBool
 
 end Nullivance.Metatheory

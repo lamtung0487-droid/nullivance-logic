@@ -2,6 +2,8 @@
    Lem 4.1-4.4 = local soundness; Thm 4.5 = Closes.unsat; Thm 4.13 (Lean route) =
    closes_of_unsat; Thm 4.14 = derives_iff_consequence4; Thm 4.15 core = SatC_iota /
    sat_projection; Thm 4.16 (headline) = derives_iff_consequenceC;
+   Def 3.4 = Saturated; Lem 4.10 = canonicalVal_atomic;
+   Thm 4.11 = canonicalVal_truth; Cor 4.12 = open_saturated_canonical_sat;
    Cor 4.17 = derivesU_iff_consequenceC; Cor 4.18 = non_explosion; Cor 4.19 = oplus_conj_*.
    A theorem here backs a [VERIFIED] label only when sorry-free. -/
 import Mathlib.Tactic.Tauto
@@ -235,6 +237,172 @@ branch. -/
 def canonicalVal (B : Branch) : Nat → V4 := fun m =>
   ⟨decide ((Sign.Tpos, Formula.atom m) ∈ B),
    decide ((Sign.Fpos, Formula.atom m) ∈ B)⟩
+
+/-- Def 3.4: a Hintikka-saturated branch contains the decomposition products
+prescribed by every tableau rule.  Branching rows require at least one product;
+non-branching rows require all products. -/
+structure Saturated (B : Branch) : Prop where
+  negTpos : ∀ {φ}, (Sign.Tpos, Formula.neg φ) ∈ B → (Sign.Fpos, φ) ∈ B
+  negTneg : ∀ {φ}, (Sign.Tneg, Formula.neg φ) ∈ B → (Sign.Fneg, φ) ∈ B
+  negFpos : ∀ {φ}, (Sign.Fpos, Formula.neg φ) ∈ B → (Sign.Tpos, φ) ∈ B
+  negFneg : ∀ {φ}, (Sign.Fneg, Formula.neg φ) ∈ B → (Sign.Tneg, φ) ∈ B
+  conjTpos : ∀ {φ ψ}, (Sign.Tpos, Formula.conj φ ψ) ∈ B →
+    (Sign.Tpos, φ) ∈ B ∧ (Sign.Tpos, ψ) ∈ B
+  conjTneg : ∀ {φ ψ}, (Sign.Tneg, Formula.conj φ ψ) ∈ B →
+    (Sign.Tneg, φ) ∈ B ∨ (Sign.Tneg, ψ) ∈ B
+  conjFpos : ∀ {φ ψ}, (Sign.Fpos, Formula.conj φ ψ) ∈ B →
+    (Sign.Fpos, φ) ∈ B ∨ (Sign.Fpos, ψ) ∈ B
+  conjFneg : ∀ {φ ψ}, (Sign.Fneg, Formula.conj φ ψ) ∈ B →
+    (Sign.Fneg, φ) ∈ B ∧ (Sign.Fneg, ψ) ∈ B
+  disjTpos : ∀ {φ ψ}, (Sign.Tpos, Formula.disj φ ψ) ∈ B →
+    (Sign.Tpos, φ) ∈ B ∨ (Sign.Tpos, ψ) ∈ B
+  disjTneg : ∀ {φ ψ}, (Sign.Tneg, Formula.disj φ ψ) ∈ B →
+    (Sign.Tneg, φ) ∈ B ∧ (Sign.Tneg, ψ) ∈ B
+  disjFpos : ∀ {φ ψ}, (Sign.Fpos, Formula.disj φ ψ) ∈ B →
+    (Sign.Fpos, φ) ∈ B ∧ (Sign.Fpos, ψ) ∈ B
+  disjFneg : ∀ {φ ψ}, (Sign.Fneg, Formula.disj φ ψ) ∈ B →
+    (Sign.Fneg, φ) ∈ B ∨ (Sign.Fneg, ψ) ∈ B
+  oplusTpos : ∀ {φ ψ}, (Sign.Tpos, Formula.oplus φ ψ) ∈ B →
+    (Sign.Tpos, φ) ∈ B ∧ (Sign.Tpos, ψ) ∈ B
+  oplusTneg : ∀ {φ ψ}, (Sign.Tneg, Formula.oplus φ ψ) ∈ B →
+    (Sign.Tneg, φ) ∈ B ∨ (Sign.Tneg, ψ) ∈ B
+  oplusFpos : ∀ {φ ψ}, (Sign.Fpos, Formula.oplus φ ψ) ∈ B →
+    (Sign.Fpos, φ) ∈ B ∧ (Sign.Fpos, ψ) ∈ B
+  oplusFneg : ∀ {φ ψ}, (Sign.Fneg, Formula.oplus φ ψ) ∈ B →
+    (Sign.Fneg, φ) ∈ B ∨ (Sign.Fneg, ψ) ∈ B
+
+/-- Lemma 4.10: every signed atom on an open branch is satisfied by the
+canonical valuation read from the positive atomic signs. -/
+theorem canonicalVal_atomic {B : Branch} (hopen : ¬ BranchClosed B)
+    {S : Sign} {m : Nat} (hmem : (S, Formula.atom m) ∈ B) :
+    sat4 (canonicalVal B) (S, Formula.atom m) = true := by
+  cases S with
+  | Tpos => simp [sat4, eval, V4.sat, canonicalVal, hmem]
+  | Tneg =>
+      have hnot : (Sign.Tpos, Formula.atom m) ∉ B := by
+        intro hpos
+        exact hopen (.closeT hpos hmem)
+      simp [sat4, eval, V4.sat, canonicalVal, hnot]
+  | Fpos => simp [sat4, eval, V4.sat, canonicalVal, hmem]
+  | Fneg =>
+      have hnot : (Sign.Fpos, Formula.atom m) ∉ B := by
+        intro hpos
+        exact hopen (.closeF hpos hmem)
+      simp [sat4, eval, V4.sat, canonicalVal, hnot]
+
+/-- Theorem 4.11: the canonical valuation satisfies every member of an open,
+Hintikka-saturated branch. -/
+theorem canonicalVal_truth {B : Branch} (hopen : ¬ BranchClosed B)
+    (hsat : Saturated B) : ∀ {S : Sign} {φ : Formula},
+      (S, φ) ∈ B → sat4 (canonicalVal B) (S, φ) = true := by
+  intro S φ
+  induction φ generalizing S with
+  | atom m => exact canonicalVal_atomic hopen
+  | neg φ ih =>
+      intro hmem
+      cases S with
+      | Tpos => simpa [sat4, eval, V4.sat, V4.neg] using ih (hsat.negTpos hmem)
+      | Tneg => simpa [sat4, eval, V4.sat, V4.neg] using ih (hsat.negTneg hmem)
+      | Fpos => simpa [sat4, eval, V4.sat, V4.neg] using ih (hsat.negFpos hmem)
+      | Fneg => simpa [sat4, eval, V4.sat, V4.neg] using ih (hsat.negFneg hmem)
+  | conj φ ψ ihφ ihψ =>
+      intro hmem
+      cases S with
+      | Tpos =>
+          rcases hsat.conjTpos hmem with ⟨hφ, hψ⟩
+          have eφ := ihφ hφ
+          have eψ := ihψ hψ
+          simpa [sat4, eval, V4.sat, V4.conj, eφ, eψ] using And.intro eφ eψ
+      | Tneg =>
+          rcases hsat.conjTneg hmem with hφ | hψ
+          · have eφ := ihφ hφ
+            simp [sat4, eval, V4.sat, V4.conj] at eφ ⊢
+            simp [eφ]
+          · have eψ := ihψ hψ
+            simp [sat4, eval, V4.sat, V4.conj] at eψ ⊢
+            simp [eψ]
+      | Fpos =>
+          rcases hsat.conjFpos hmem with hφ | hψ
+          · have eφ := ihφ hφ
+            simp [sat4, eval, V4.sat, V4.conj] at eφ ⊢
+            simp [eφ]
+          · have eψ := ihψ hψ
+            simp [sat4, eval, V4.sat, V4.conj] at eψ ⊢
+            simp [eψ]
+      | Fneg =>
+          rcases hsat.conjFneg hmem with ⟨hφ, hψ⟩
+          have eφ := ihφ hφ
+          have eψ := ihψ hψ
+          simp [sat4, eval, V4.sat, V4.conj] at eφ eψ ⊢
+          simp [eφ, eψ]
+  | disj φ ψ ihφ ihψ =>
+      intro hmem
+      cases S with
+      | Tpos =>
+          rcases hsat.disjTpos hmem with hφ | hψ
+          · have eφ := ihφ hφ
+            simp [sat4, eval, V4.sat, V4.disj] at eφ ⊢
+            simp [eφ]
+          · have eψ := ihψ hψ
+            simp [sat4, eval, V4.sat, V4.disj] at eψ ⊢
+            simp [eψ]
+      | Tneg =>
+          rcases hsat.disjTneg hmem with ⟨hφ, hψ⟩
+          have eφ := ihφ hφ
+          have eψ := ihψ hψ
+          simp [sat4, eval, V4.sat, V4.disj] at eφ eψ ⊢
+          simp [eφ, eψ]
+      | Fpos =>
+          rcases hsat.disjFpos hmem with ⟨hφ, hψ⟩
+          have eφ := ihφ hφ
+          have eψ := ihψ hψ
+          simp [sat4, eval, V4.sat, V4.disj] at eφ eψ ⊢
+          simp [eφ, eψ]
+      | Fneg =>
+          rcases hsat.disjFneg hmem with hφ | hψ
+          · have eφ := ihφ hφ
+            simp [sat4, eval, V4.sat, V4.disj] at eφ ⊢
+            simp [eφ]
+          · have eψ := ihψ hψ
+            simp [sat4, eval, V4.sat, V4.disj] at eψ ⊢
+            simp [eψ]
+  | oplus φ ψ ihφ ihψ =>
+      intro hmem
+      cases S with
+      | Tpos =>
+          rcases hsat.oplusTpos hmem with ⟨hφ, hψ⟩
+          have eφ := ihφ hφ
+          have eψ := ihψ hψ
+          simp [sat4, eval, V4.sat, V4.oplus] at eφ eψ ⊢
+          simp [eφ, eψ]
+      | Tneg =>
+          rcases hsat.oplusTneg hmem with hφ | hψ
+          · have eφ := ihφ hφ
+            simp [sat4, eval, V4.sat, V4.oplus] at eφ ⊢
+            simp [eφ]
+          · have eψ := ihψ hψ
+            simp [sat4, eval, V4.sat, V4.oplus] at eψ ⊢
+            simp [eψ]
+      | Fpos =>
+          rcases hsat.oplusFpos hmem with ⟨hφ, hψ⟩
+          have eφ := ihφ hφ
+          have eψ := ihψ hψ
+          simp [sat4, eval, V4.sat, V4.oplus] at eφ eψ ⊢
+          simp [eφ, eψ]
+      | Fneg =>
+          rcases hsat.oplusFneg hmem with hφ | hψ
+          · have eφ := ihφ hφ
+            simp [sat4, eval, V4.sat, V4.oplus] at eφ ⊢
+            simp [eφ]
+          · have eψ := ihψ hψ
+            simp [sat4, eval, V4.sat, V4.oplus] at eψ ⊢
+            simp [eψ]
+
+/-- Corollary 4.12: every open saturated branch has a canonical FOUR model. -/
+theorem open_saturated_canonical_sat {B : Branch} (hopen : ¬ BranchClosed B)
+    (hsat : Saturated B) : satBranch (canonicalVal B) B := by
+  intro sφ hmem
+  exact canonicalVal_truth hopen hsat hmem
 
 /-- Literal stage (Def 4.9 + Lem 4.10): an unsatisfiable branch of atomic signed
 formulas contains a complementary pair, hence closes. -/
