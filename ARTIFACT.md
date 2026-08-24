@@ -83,7 +83,7 @@ fresh hosted environment.
 | `QuantifiedEqualityDecision` | Capture-free finite representative expansion, quantified ROBDD compilation, pairwise-distinct capacity constraints in the equality theory state, exact ROBDD(T) target certification, and a total sound-and-complete decision procedure for closed pure equality on infinite domains |
 | `QuantifiedEqualityComplexity` | Exact Bell/Touchard-style equality-orbit leaf/node recurrences, global factorial bounds, binder-aware cache keys, a checked naive-key counterexample, a fully recursive memoized expansion with simultaneous correctness/invariant proof, and native hit/miss/state instrumentation |
 | `QuantifiedEqualityHashMemo` | Lawful structural-hash memo table, extensional simulation of the list reference table, end-to-end correctness on infinite closed equality, exact `HashMap.size = misses` accounting, and proved syntax×Bell×factorial state envelopes with native regressions |
-| `QuantifiedEqualityHashCost` | Pinned Lean 4.32.1 source-level cost instrumentation for hash calls, resize rehashing, bucket accesses, and key comparisons; end-to-end erasure/equivalence, deterministic cost envelopes, and native operation-count regression |
+| `QuantifiedEqualityHashCost` | Pinned Lean 4.32.1 source-level cost instrumentation for hash calls, resize rehashing, bucket accesses, and key comparisons; end-to-end erasure/equivalence; proved collision-independent `rehash ≤ U²`, `comparisons ≤ (A+U)U ≤ 2W²`, and `hashes ≤ W²+2W` envelopes; native operation-count regressions |
 | `Generative` | Optional generative interface, isolated from the logical core |
 
 `Nullivance/Nullivance.lean` imports the full module set and is the default Lake

@@ -2374,6 +2374,63 @@ state theorem explains `40 insertions = 40 stored keys`.
 > library representation changes. ·
 > *Depends on:* Thm 2.115–2.117.
 
+**Theorem 2.119 (Closed collision-independent hash-cost bounds).** `[VERIFIED]`
+The per-operation envelopes of Theorem 2.118 admit closed bounds. First, Lean
+opens the pinned hash table's well-formedness invariant and proves that the selected
+bucket is, up to permutation and an appended remainder, a sublist of the complete
+table model. Consequently even the worst possible collision pattern gives
+
+`selected bucket length ≤ HashMap.size`.
+
+A separate budget relation is then propagated simultaneously through recursive
+formula calls and quantified branch lists. Table sizes are monotone along the
+sequential traversal; every lookup is charged at most the final table size, and every
+miss charges one insertion/possible resize at most the final table size. This proof
+covers cached returns, both Boolean children, every old-or-fresh orbit branch, and the
+parent insertion after all descendants.
+
+At the empty root let `U = HashMap.size = misses` and `A = requests`. The resulting
+closed, collision-independent bounds are
+
+`resize hashes ≤ U²`,
+
+`key comparisons ≤ (A+U)U`, and
+
+`total hashes ≤ A+U+U²`.
+
+The request term in the comparison bound cannot in general be deleted: a cache hit
+does not create a new state but still hashes its key and scans its selected chain.
+Using Theorem 2.117's exact cache-free depth weight `W`, where `U ≤ A ≤ W`, Lean
+derives the fully structural rank-root bounds
+
+`resize hashes ≤ W²`, `key comparisons ≤ 2W²`, and
+`total hashes ≤ W²+2W`.
+
+No uniform-hashing or independence assumption occurs anywhere in these proofs. The
+bounds deliberately cover the adversarial case in which all relevant keys collide;
+they are safety envelopes, not predictions of typical runtime. On `atLeastThree`, the
+native measured/bound pairs are
+`((resize,U²),(comparisons,(A+U)U),(total hashes,W²+2W))`
+`= ((38,1600),(34,3280),(120,2024))`. The looseness is expected and explicitly
+quantifies the difference between observed hashing and an adversarial guarantee.
+
+> *Lean:* `InfiniteFO.HashCost.hashedMemoBucket_entryCount_le_size`,
+> `InfiniteFO.HashCost.OperationCost.BudgetBound`,
+> `InfiniteFO.HashCost.lookupCost_budget`,
+> `InfiniteFO.HashCost.insertMissCost_budget`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitsHashed_cost_budget`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitBranchesHashed_cost_budget`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_closed_state_cost_bounds`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_weighted_cost_bounds`,
+> `InfiniteFO.hashedCost_atLeastThree_closed_bound_regression` — sorry-free. ·
+> *Axiom audit (structural theorems):* `[propext, Classical.choice, Quot.sound]`.
+> The numerical regression additionally uses Lean's generated `native_decide` bridge
+> and is not used by either bound. ·
+> *Version scope:* the bucket-sublist lemma follows Lean 4.32.1's internal
+> separate-chaining representation; the recursive arithmetic layer is
+> representation-independent once that local lemma is supplied. ·
+> *Depends on:* Thm 2.116–2.118.
+
 ---
 
 ## Open items (chapter 2)
