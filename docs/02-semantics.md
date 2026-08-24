@@ -2431,6 +2431,75 @@ quantifies the difference between observed hashing and an adversarial guarantee.
 > representation-independent once that local lemma is supplied. ·
 > *Depends on:* Thm 2.116–2.118.
 
+**Theorem 2.120 (Amortized linear rehash bound from bucket doubling).** `[VERIFIED]`
+The quadratic resize envelope in Theorem 2.119 is safe but deliberately coarse:
+it charges every miss as though it rehashed the final table.  For the pinned Lean
+4.32.1 implementation, the source definition is stronger.  `Raw₀.expand` allocates
+an array of exactly twice the old bucket length.  Its private recursive loop only
+moves entries into that fixed target.  The formal proof exposes the imported private
+loop equation by a kernel-checked alias, proves that `reinsertAux` and its complete
+fold preserve the target length, and concludes
+
+`bucketCount (Raw₀.expand old) = 2 × bucketCount old`.
+
+The proof then establishes three insertion invariants.  Starting from requested
+capacity eight, Lean 4.32.1 allocates exactly 16 physical buckets.  Every insertion
+preserves a spare-bucket invariant, preserves a minimum of three buckets, and
+preserves the root capacity envelope
+
+`bucketCount ≤ 16 + 3 × HashMap.size`.
+
+When expansion occurs, its rehash charge is no greater than the old bucket count,
+which is exactly the increase in physical buckets.  The resulting potential relation
+
+`rehash hashes + initial bucketCount ≤ final bucketCount`
+
+composes by cancellation at every intermediate table.  It is propagated
+simultaneously through recursive formula calls, sequential Boolean children,
+old/fresh quantified branches, cache hits, and parent insertions.  At the empty root,
+with `R` resize hashes, final bucket count `B`, and `U = HashMap.size`, Lean proves
+
+`R + 16 ≤ B ≤ 16 + 3U`, hence `R ≤ 3U`.
+
+Combining this with the exact primary-hash identity gives the strengthened closed
+bounds
+
+`resize hashes ≤ 3U`,
+
+`key comparisons ≤ (A+U)U`, and
+
+`total hashes ≤ A+4U`.
+
+For the structural depth weight `W`, where `U ≤ A ≤ W`, the corresponding bounds are
+
+`resize hashes ≤ 3W`, `key comparisons ≤ 2W²`, and `total hashes ≤ 5W`.
+
+This is a deterministic amortized theorem, not a uniform-hashing or average-`O(1)`
+claim.  Hash collisions may still make the comparison term quadratic; only the
+resize hashing term becomes linear.  On `atLeastThree`, the new measured/bound pairs
+are `((38,120),(34,3280),(120,220))`.  The bucket-potential audit is
+`(R+16,B,16+3U)=(54,64,136)`.
+
+> *Lean:* `InfiniteFO.HashCost.rawExpand_bucketCount_eq_double`,
+> `InfiniteFO.HashCost.insert_missing_bucketCount_cases`,
+> `InfiniteFO.HashCost.insertMissCost_rehashTransition`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitsHashed_amortized`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitBranchesHashed_amortized`,
+> `InfiniteFO.expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_rehashTransition`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_bucketCountLinearBound`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_amortized_state_cost_bounds`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_weighted_amortized_cost_bounds`,
+> `InfiniteFO.hashedCost_atLeastThree_bucket_potential_regression` — sorry-free. ·
+> `InfiniteFO.hashedCost_atLeastThree_amortized_bound_regression` — sorry-free. ·
+> *Axiom audit (structural theorems):* `[propext, Classical.choice, Quot.sound]`;
+> the low-level doubling lemma itself needs only `[propext, Quot.sound]`.
+> The numerical regression additionally uses Lean's generated `native_decide` bridge
+> and is not a premise of the structural bound. ·
+> *Version scope:* the doubling and 75%-load-trigger lemmas are pinned to Lean 4.32.1;
+> changing the toolchain requires a fresh source audit. ·
+> *Depends on:* Thm 2.115–2.119.
+
 ---
 
 ## Open items (chapter 2)

@@ -90,6 +90,306 @@ def hashedMemoBucket (table : HashedEqualityOrbitMemoTable)
 def hashedMemoBucketCount (table : HashedEqualityOrbitMemoTable) : Nat :=
   table.inner.inner.buckets.size
 
+/- Lean 4.32.1 keeps the recursion equation used to prove `Raw₀.expand`
+private.  This command creates a kernel-checked public alias of that imported
+theorem.  It copies neither an axiom nor an implementation: the declaration's
+proof term, universe parameters, and type are reused verbatim. -/
+open Lean Elab Command in
+run_cmd do
+  let env ← getEnv
+  let some expandValue := (env.find? ``Std.DHashMap.Internal.Raw₀.expand).bind
+      (ConstantInfo.value? (allowOpaque := true))
+    | throwError "Lean 4.32.1 Raw₀.expand definition is unavailable"
+  let mut goName := Name.anonymous
+  for name in expandValue.getUsedConstants do
+    if let .str _ "go" := name then goName := name
+  let mut goEqName := Name.anonymous
+  for (candidate, candidateInfo) in env.constants.toList do
+    if let .str _ "go_eq" := candidate then
+      if candidateInfo.type.getUsedConstants.any (fun used => used == goName) then
+        goEqName := candidate
+  let some (.thmInfo goEqInfo) := env.find? goEqName
+    | throwError "Lean 4.32.1 private Raw₀.expand.go_eq theorem is unavailable"
+  let publicName := Name.str
+    (Name.str (Name.str (Name.str Name.anonymous "Nullivance") "InfiniteFO") "HashCost")
+    "rawExpandGoEquationPinned"
+  liftCoreM <| addDecl (.thmDecl { goEqInfo with name := publicName })
+  let some emptyValue :=
+      (env.find? ``Std.DHashMap.Internal.Raw₀.emptyWithCapacity).bind
+        (ConstantInfo.value? (allowOpaque := true))
+    | throwError "Lean 4.32.1 Raw₀.emptyWithCapacity definition is unavailable"
+  let mut capacityName := Name.anonymous
+  for name in emptyValue.getUsedConstants do
+    if let .str _ "numBucketsForCapacity" := name then capacityName := name
+  let some (.defnInfo capacityInfo) := env.find? capacityName
+    | throwError "Lean 4.32.1 private numBucketsForCapacity definition is unavailable"
+  let capacityPublic := Name.str
+    (Name.str (Name.str (Name.str Name.anonymous "Nullivance") "InfiniteFO") "HashCost")
+    "numBucketsForCapacityPinned"
+  liftCoreM do
+    addDecl (.defnDecl { capacityInfo with name := capacityPublic })
+    enableRealizationsForConst capacityPublic
+  let some nextPowerValue := (env.find? ``Nat.nextPowerOfTwo).bind
+      (ConstantInfo.value? (allowOpaque := true))
+    | throwError "Nat.nextPowerOfTwo definition is unavailable"
+  let mut nextPowerGoName := Name.anonymous
+  for name in nextPowerValue.getUsedConstants do
+    if let .str _ "go" := name then nextPowerGoName := name
+  let mut nextPowerEqName := Name.anonymous
+  for (candidate, candidateInfo) in env.constants.toList do
+    if let .str _ "eq_def" := candidate then
+      if candidateInfo.type.getUsedConstants.any
+          (fun used => used == nextPowerGoName) then
+        nextPowerEqName := candidate
+  let some (.thmInfo nextPowerEqInfo) := env.find? nextPowerEqName
+    | throwError "private Nat.nextPowerOfTwo.go equation is unavailable"
+  let nextPowerEqPublic := Name.str
+    (Name.str (Name.str (Name.str Name.anonymous "Nullivance") "InfiniteFO") "HashCost")
+    "nextPowerOfTwoGoEquationPinned"
+  liftCoreM <| addDecl (.thmDecl { nextPowerEqInfo with name := nextPowerEqPublic })
+
+/-- One low-level reinsertion changes a bucket's contents but not the physical
+bucket-array length. -/
+theorem reinsertAux_bucketCount
+    {α : Type} {β : α → Type} [Hashable α]
+    (target : { d : Array (AssocList α β) // 0 < d.size })
+    (a : α) (b : β a) :
+    (Raw₀.reinsertAux hash target a b).1.size = target.1.size := by
+  simp [Raw₀.reinsertAux]
+
+theorem foldl_reinsertAux_bucketCount
+    {α : Type} {β : α → Type} [Hashable α]
+    (entries : List ((a : α) × β a))
+    (target : { d : Array (AssocList α β) // 0 < d.size }) :
+    (entries.foldl (fun acc p => Raw₀.reinsertAux hash acc p.1 p.2) target).1.size =
+      target.1.size := by
+  induction entries generalizing target with
+  | nil => rfl
+  | cons entry rest ih =>
+      simp only [List.foldl_cons]
+      rw [ih, reinsertAux_bucketCount]
+
+/-- Source-level doubling theorem for the pinned Lean 4.32.1 implementation:
+`Raw₀.expand` allocates exactly twice as many physical buckets. -/
+theorem rawExpand_bucketCount_eq_double
+    {α : Type} {β : α → Type} [BEq α] [Hashable α] [PartialEquivBEq α]
+    (data : { d : Array (AssocList α β) // 0 < d.size }) :
+    (Raw₀.expand data).1.size = data.1.size * 2 := by
+  rcases data with ⟨source, hsource⟩
+  simp only [Raw₀.expand]
+  rw [rawExpandGoEquationPinned]
+  rw [foldl_reinsertAux_bucketCount]
+  simp
+
+theorem loadFactorBound_implies_spare
+    {size buckets : Nat}
+    (hload : size * 4 / 3 ≤ buckets) (hbuckets : 3 ≤ buckets) :
+    size + 1 ≤ buckets := by
+  have hlt : size * 4 < (buckets + 1) * 3 := by
+    exact (Nat.div_lt_iff_lt_mul (by omega)).mp
+      (lt_of_le_of_lt hload (by omega))
+  omega
+
+/-- At a missing-key insertion the physical bucket count is unchanged or
+doubled; there is no third case. -/
+theorem insert_missing_bucketCount_cases
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (habsent : table.get? key = none) :
+    hashedMemoBucketCount (table.insert key value) = hashedMemoBucketCount table ∨
+      hashedMemoBucketCount (table.insert key value) =
+        2 * hashedMemoBucketCount table := by
+  have hcontains : table.inner.contains key = false := by
+    rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+    change (table.get? key).isSome = false
+    rw [habsent]
+    rfl
+  simp only [hashedMemoBucketCount, Std.HashMap.insert, Std.DHashMap.insert]
+  simp only [Raw₀.insert]
+  simp only [Std.DHashMap.contains, Raw₀.contains] at hcontains
+  rw [hcontains]
+  simp only [Bool.false_eq_true, ↓reduceIte]
+  rw [Raw₀.expandIfNecessary]
+  split
+  · left
+    simp
+  · right
+    rw [rawExpand_bucketCount_eq_double]
+    simp [Nat.mul_comm]
+
+/-- Capacity invariant sufficient for amortized resizing: at least one
+physical bucket is spare. -/
+def HasSpareBucket (table : HashedEqualityOrbitMemoTable) : Prop :=
+  table.size < hashedMemoBucketCount table
+
+def HasMinimumBuckets (table : HashedEqualityOrbitMemoTable) : Prop :=
+  3 ≤ hashedMemoBucketCount table
+
+theorem insert_missing_preserves_spare
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (habsent : table.get? key = none)
+    (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+    HasSpareBucket (table.insert key value) := by
+  have hcontains : table.inner.contains key = false := by
+    rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+    change (table.get? key).isSome = false
+    rw [habsent]
+    rfl
+  have hnotmem : key ∉ table := by
+    change table.inner.contains key ≠ true
+    rw [hcontains]
+    decide
+  rw [HasSpareBucket, Std.HashMap.size_insert, if_neg hnotmem]
+  simp only [hashedMemoBucketCount, Std.HashMap.insert, Std.DHashMap.insert]
+  simp only [Raw₀.insert]
+  simp only [Std.DHashMap.contains, Raw₀.contains] at hcontains
+  rw [hcontains]
+  simp only [Bool.false_eq_true, ↓reduceIte]
+  rw [Raw₀.expandIfNecessary]
+  split
+  · rename_i hthreshold
+    simp only [Array.size_uset] at hthreshold
+    change (table.inner.inner.size + 1) * 4 / 3 ≤
+      table.inner.inner.buckets.size at hthreshold
+    have hstrict := loadFactorBound_implies_spare hthreshold hfloor
+    simp only [Array.size_uset, Std.HashMap.size, Std.DHashMap.size]
+    change table.inner.inner.size + 1 < table.inner.inner.buckets.size
+    omega
+  · rw [rawExpand_bucketCount_eq_double]
+    simp only [Array.size_uset, Std.HashMap.size, Std.DHashMap.size]
+    change table.inner.inner.size < table.inner.inner.buckets.size at hspare
+    change 3 ≤ table.inner.inner.buckets.size at hfloor
+    change table.inner.inner.size + 1 < table.inner.inner.buckets.size * 2
+    omega
+
+theorem insert_missing_preserves_minimumBuckets
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (habsent : table.get? key = none) (hfloor : HasMinimumBuckets table) :
+    HasMinimumBuckets (table.insert key value) := by
+  rcases insert_missing_bucketCount_cases table key value habsent with hsame | hdouble
+  · rw [HasMinimumBuckets, hsame]
+    exact hfloor
+  · rw [HasMinimumBuckets, hdouble]
+    rw [HasMinimumBuckets] at hfloor
+    omega
+
+theorem insert_present_bucketCount_eq
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value cached : EqBoolFormula)
+    (hpresent : table.get? key = some cached) :
+    hashedMemoBucketCount (table.insert key value) = hashedMemoBucketCount table := by
+  have hcontains : table.inner.contains key = true := by
+    rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+    change (table.get? key).isSome = true
+    rw [hpresent]
+    rfl
+  simp only [hashedMemoBucketCount, Std.HashMap.insert, Std.DHashMap.insert]
+  simp only [Raw₀.insert]
+  simp only [Std.DHashMap.contains, Raw₀.contains] at hcontains
+  rw [hcontains]
+  simp
+
+theorem insert_preserves_spare
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+    HasSpareBucket (table.insert key value) := by
+  cases hpresent : table.get? key with
+  | none => exact insert_missing_preserves_spare table key value hpresent hspare hfloor
+  | some cached =>
+      have hcontains : table.inner.contains key = true := by
+        rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+        change (table.get? key).isSome = true
+        rw [hpresent]
+        rfl
+      have hmem : key ∈ table := by exact hcontains
+      rw [HasSpareBucket, Std.HashMap.size_insert, if_pos hmem,
+        insert_present_bucketCount_eq table key value cached hpresent]
+      exact hspare
+
+theorem insert_preserves_minimumBuckets
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (hfloor : HasMinimumBuckets table) :
+    HasMinimumBuckets (table.insert key value) := by
+  cases hpresent : table.get? key with
+  | none =>
+      exact insert_missing_preserves_minimumBuckets table key value hpresent hfloor
+  | some cached =>
+      rw [HasMinimumBuckets,
+        insert_present_bucketCount_eq table key value cached hpresent]
+      exact hfloor
+
+/-- Root-capacity envelope for maps originating at capacity eight.  The
+constant 16 is the actual initial bucket count in Lean 4.32.1. -/
+def BucketCountLinearBound (table : HashedEqualityOrbitMemoTable) : Prop :=
+  hashedMemoBucketCount table ≤ 16 + 3 * table.size
+
+theorem insert_missing_preserves_bucketCountLinearBound
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (habsent : table.get? key = none)
+    (hbound : BucketCountLinearBound table) :
+    BucketCountLinearBound (table.insert key value) := by
+  have hcontains : table.inner.contains key = false := by
+    rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+    change (table.get? key).isSome = false
+    rw [habsent]
+    rfl
+  have hnotmem : key ∉ table := by
+    change table.inner.contains key ≠ true
+    rw [hcontains]
+    decide
+  rw [BucketCountLinearBound, Std.HashMap.size_insert, if_neg hnotmem]
+  simp only [hashedMemoBucketCount, Std.HashMap.insert, Std.DHashMap.insert]
+  simp only [Raw₀.insert]
+  simp only [Std.DHashMap.contains, Raw₀.contains] at hcontains
+  rw [hcontains]
+  simp only [Bool.false_eq_true, ↓reduceIte]
+  rw [Raw₀.expandIfNecessary]
+  split
+  · simp only [Array.size_uset, Std.HashMap.size, Std.DHashMap.size]
+    rw [BucketCountLinearBound] at hbound
+    change table.inner.inner.buckets.size ≤
+      16 + 3 * table.inner.inner.size at hbound
+    change table.inner.inner.buckets.size ≤
+      16 + 3 * (table.inner.inner.size + 1)
+    omega
+  · rename_i hthreshold
+    simp only [Array.size_uset] at hthreshold
+    change ¬(table.inner.inner.size + 1) * 4 / 3 ≤
+      table.inner.inner.buckets.size at hthreshold
+    have htrigger : table.inner.inner.buckets.size <
+        (table.inner.inner.size + 1) * 4 / 3 := Nat.lt_of_not_ge hthreshold
+    have hmul := (Nat.lt_div_iff_mul_lt (by omega)).mp htrigger
+    rw [rawExpand_bucketCount_eq_double]
+    simp only [Array.size_uset, Std.HashMap.size, Std.DHashMap.size]
+    change table.inner.inner.buckets.size * 2 ≤
+      16 + 3 * (table.inner.inner.size + 1)
+    omega
+
+theorem insert_preserves_bucketCountLinearBound
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (hbound : BucketCountLinearBound table) :
+    BucketCountLinearBound (table.insert key value) := by
+  cases hpresent : table.get? key with
+  | none =>
+      exact insert_missing_preserves_bucketCountLinearBound
+        table key value hpresent hbound
+  | some cached =>
+      have hcontains : table.inner.contains key = true := by
+        rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+        change (table.get? key).isSome = true
+        rw [hpresent]
+        rfl
+      have hmem : key ∈ table := by exact hcontains
+      rw [BucketCountLinearBound, Std.HashMap.size_insert, if_pos hmem,
+        insert_present_bucketCount_eq table key value cached hpresent]
+      exact hbound
+
 /-- A selected chain is a sublist of the table model, so even a maximally bad
 collision cannot make a bucket longer than the number of stored keys. -/
 theorem hashedMemoBucket_entryCount_le_size
@@ -260,6 +560,79 @@ def insertMissCost (table : HashedEqualityOrbitMemoTable)
     keyComparisons := probe.comparisons
     comparisonEnvelope := assocEntryCount (hashedMemoBucket table key) }
 
+/-- A resizing transition is paid for by physical bucket growth.  Sequential
+transitions compose by cancellation of their shared intermediate bucket count. -/
+def OperationCost.RehashTransition (cost : OperationCost)
+    (initial final : HashedEqualityOrbitMemoTable) : Prop :=
+  cost.rehashHashes + hashedMemoBucketCount initial ≤ hashedMemoBucketCount final
+
+theorem OperationCost.RehashTransition.zero
+    (table : HashedEqualityOrbitMemoTable) :
+    ({} : OperationCost).RehashTransition table table := by
+  simp [OperationCost.RehashTransition]
+
+theorem OperationCost.RehashTransition.add
+    {left right : OperationCost}
+    {initial middle final : HashedEqualityOrbitMemoTable}
+    (hleft : left.RehashTransition initial middle)
+    (hright : right.RehashTransition middle final) :
+    (left.add right).RehashTransition initial final := by
+  simp only [OperationCost.RehashTransition, OperationCost.add] at *
+  omega
+
+theorem OperationCost.RehashTransition.withStats
+    {cost : OperationCost} {initial final : HashedEqualityOrbitMemoTable}
+    (hcost : cost.RehashTransition initial final)
+    (stats : EqualityOrbitMemoStats) :
+    (cost.withStats stats).RehashTransition initial final := by
+  exact hcost
+
+theorem lookupCost_rehashTransition
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) :
+    (lookupCost table key).RehashTransition table table := by
+  simp [OperationCost.RehashTransition, lookupCost]
+
+/-- Local amortized insertion theorem.  It is intentionally valid even when
+the key is already present: replacement then has zero resizing charge. -/
+theorem insertMissCost_rehashTransition
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+    (insertMissCost table key value).RehashTransition table
+      (table.insert key value) := by
+  cases hpresent : table.get? key with
+  | some cached =>
+      have hsame := insert_present_bucketCount_eq table key value cached hpresent
+      simp [OperationCost.RehashTransition, insertMissCost, hsame]
+  | none =>
+      have hcontains : table.inner.contains key = false := by
+        rw [Std.DHashMap.Const.contains_eq_isSome_get?]
+        change (table.get? key).isSome = false
+        rw [hpresent]
+        rfl
+      have hnotmem : key ∉ table := by
+        change table.inner.contains key ≠ true
+        rw [hcontains]
+        decide
+      have hsize : (table.insert key value).size = table.size + 1 := by
+        rw [Std.HashMap.size_insert, if_neg hnotmem]
+      rcases insert_missing_bucketCount_cases table key value hpresent with
+        hsame | hdouble
+      · simp [OperationCost.RehashTransition, insertMissCost, hsame]
+      · have hpositive : 0 < hashedMemoBucketCount table := by
+          rw [HasMinimumBuckets] at hfloor
+          omega
+        have hgrowth : hashedMemoBucketCount table <
+            hashedMemoBucketCount (table.insert key value) := by
+          rw [hdouble]
+          omega
+        simp only [OperationCost.RehashTransition, insertMissCost,
+          hgrowth, ↓reduceIte]
+        rw [hdouble, hsize]
+        rw [HasSpareBucket] at hspare
+        omega
+
 theorem lookupCost_valid (table : HashedEqualityOrbitMemoTable)
     (key : RecursiveEqualityOrbitMemoKey) : (lookupCost table key).Valid := by
   constructor
@@ -427,6 +800,49 @@ theorem expandQuantifiedEqualityOrbitBranchesHashed_table_size_mono
     body queries table
   omega
 
+def HashCost.OperationCost.AmortizedExecution (cost : OperationCost)
+    (initial final : HashedEqualityOrbitMemoTable) : Prop :=
+  cost.RehashTransition initial final ∧
+    HasSpareBucket final ∧ HasMinimumBuckets final
+
+theorem HashCost.OperationCost.AmortizedExecution.zero
+    (table : HashedEqualityOrbitMemoTable)
+    (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+    ({} : OperationCost).AmortizedExecution table table := by
+  exact ⟨OperationCost.RehashTransition.zero table, hspare, hfloor⟩
+
+theorem HashCost.OperationCost.AmortizedExecution.add
+    {left right : OperationCost}
+    {initial middle final : HashedEqualityOrbitMemoTable}
+    (hleft : left.AmortizedExecution initial middle)
+    (hright : right.AmortizedExecution middle final) :
+    (left.add right).AmortizedExecution initial final := by
+  exact ⟨hleft.1.add hright.1, hright.2⟩
+
+theorem HashCost.OperationCost.AmortizedExecution.withStats
+    {cost : OperationCost} {initial final : HashedEqualityOrbitMemoTable}
+    (hcost : cost.AmortizedExecution initial final)
+    (stats : EqualityOrbitMemoStats) :
+    (cost.withStats stats).AmortizedExecution initial final := by
+  exact ⟨hcost.1.withStats stats, hcost.2⟩
+
+theorem lookupCost_amortizedExecution
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey)
+    (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+    (lookupCost table key).AmortizedExecution table table := by
+  exact ⟨lookupCost_rehashTransition table key, hspare, hfloor⟩
+
+theorem insertMissCost_amortizedExecution
+    (table : HashedEqualityOrbitMemoTable)
+    (key : RecursiveEqualityOrbitMemoKey) (value : EqBoolFormula)
+    (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+    (insertMissCost table key value).AmortizedExecution table
+      (table.insert key value) := by
+  exact ⟨insertMissCost_rehashTransition table key value hspare hfloor,
+    insert_preserves_spare table key value hspare hfloor,
+    insert_preserves_minimumBuckets table key value hfloor⟩
+
 mutual
   theorem costedExpandQuantifiedEqualityOrbitsHashed_cost_valid
       (phi : QFormula) (used available : List Var) (env : QuantifierEnv)
@@ -542,6 +958,342 @@ mutual
         have htail := costedExpandQuantifiedEqualityOrbitBranchesHashed_cost_valid
           body rest headResult.result.table
         exact (hhead.add htail).withStats _
+  termination_by (sizeOf body, queries.length + 1)
+end
+
+mutual
+  /-- The amortized resizing invariant is threaded through every recursive
+  orbit call and every binder-generated sibling branch. -/
+  theorem costedExpandQuantifiedEqualityOrbitsHashed_amortized
+      (phi : QFormula) (used available : List Var) (env : QuantifierEnv)
+      (table : HashedEqualityOrbitMemoTable)
+      (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+      let traced := costedExpandQuantifiedEqualityOrbitsHashed
+        phi used available env table
+      traced.cost.AmortizedExecution table traced.result.table := by
+    rw [costedExpandQuantifiedEqualityOrbitsHashed.eq_def]
+    dsimp only
+    apply OperationCost.AmortizedExecution.withStats
+    split
+    next cached hlookup =>
+      rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+      dsimp only
+      rw [hlookup]
+      simpa using
+        lookupCost_amortizedExecution table
+          (recursiveEqualityOrbitMemoKey phi used available env) hspare hfloor
+    next hlookup =>
+      cases phi with
+      | pred P xs =>
+          let key := recursiveEqualityOrbitMemoKey (.pred P xs) used available env
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hzero := OperationCost.AmortizedExecution.zero table hspare hfloor
+          have hinsert := insertMissCost_amortizedExecution table key .bot hspare hfloor
+          rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+          dsimp only
+          rw [hlookup]
+          simpa [key] using
+            hlookupCost.add (hzero.add hinsert)
+      | eq x y =>
+          let key := recursiveEqualityOrbitMemoKey (.eq x y) used available env
+          let value := if env x = env y then EqBoolFormula.top
+            else EqBoolFormula.atom (normalizeEqAtom (env x) (env y))
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hzero := OperationCost.AmortizedExecution.zero table hspare hfloor
+          have hinsert := insertMissCost_amortizedExecution table key value hspare hfloor
+          rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+          dsimp only
+          rw [hlookup]
+          simpa [key, value] using
+            hlookupCost.add (hzero.add hinsert)
+      | neg body =>
+          let key := recursiveEqualityOrbitMemoKey (.neg body) used available env
+          let child := costedExpandQuantifiedEqualityOrbitsHashed
+            body used available env table
+          let value := EqBoolFormula.neg child.result.formula
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hchild := costedExpandQuantifiedEqualityOrbitsHashed_amortized
+            body used available env table hspare hfloor
+          have hinsert := insertMissCost_amortizedExecution child.result.table key value
+            hchild.2.1 hchild.2.2
+          rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+          dsimp only
+          rw [hlookup]
+          simpa [key, child, value] using hlookupCost.add (hchild.add hinsert)
+      | conj left right =>
+          let key := recursiveEqualityOrbitMemoKey (.conj left right)
+            used available env
+          let leftResult := costedExpandQuantifiedEqualityOrbitsHashed
+            left used available env table
+          let rightResult := costedExpandQuantifiedEqualityOrbitsHashed
+            right used available env leftResult.result.table
+          let value := EqBoolFormula.conj
+            leftResult.result.formula rightResult.result.formula
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hleft := costedExpandQuantifiedEqualityOrbitsHashed_amortized
+            left used available env table hspare hfloor
+          have hright := costedExpandQuantifiedEqualityOrbitsHashed_amortized
+            right used available env leftResult.result.table hleft.2.1 hleft.2.2
+          have hinsert := insertMissCost_amortizedExecution rightResult.result.table
+            key value hright.2.1 hright.2.2
+          rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+          dsimp only
+          rw [hlookup]
+          simpa [key, leftResult, rightResult, value] using
+            hlookupCost.add ((hleft.add hright).add hinsert)
+      | disj left right =>
+          let key := recursiveEqualityOrbitMemoKey (.disj left right)
+            used available env
+          let leftResult := costedExpandQuantifiedEqualityOrbitsHashed
+            left used available env table
+          let rightResult := costedExpandQuantifiedEqualityOrbitsHashed
+            right used available env leftResult.result.table
+          let value := EqBoolFormula.disj
+            leftResult.result.formula rightResult.result.formula
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hleft := costedExpandQuantifiedEqualityOrbitsHashed_amortized
+            left used available env table hspare hfloor
+          have hright := costedExpandQuantifiedEqualityOrbitsHashed_amortized
+            right used available env leftResult.result.table hleft.2.1 hleft.2.2
+          have hinsert := insertMissCost_amortizedExecution rightResult.result.table
+            key value hright.2.1 hright.2.2
+          rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+          dsimp only
+          rw [hlookup]
+          simpa [key, leftResult, rightResult, value] using
+            hlookupCost.add ((hleft.add hright).add hinsert)
+      | oplus left right =>
+          let key := recursiveEqualityOrbitMemoKey (.oplus left right)
+            used available env
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hzero := OperationCost.AmortizedExecution.zero table hspare hfloor
+          have hinsert := insertMissCost_amortizedExecution table key .bot hspare hfloor
+          rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+          dsimp only
+          rw [hlookup]
+          simpa [key] using
+            hlookupCost.add (hzero.add hinsert)
+      | all x body =>
+          let key := recursiveEqualityOrbitMemoKey (.all x body) used available env
+          let oldQueries : List RecursiveEqualityOrbitBranchQuery :=
+            used.map fun representative =>
+              { used := used, available := available,
+                env := env.update x representative }
+          let freshQueries := match available with
+            | [] => []
+            | representative :: rest =>
+                let query : RecursiveEqualityOrbitBranchQuery :=
+                  { used := used ++ [representative]
+                    available := rest
+                    env := env.update x representative }
+                [query]
+          let branches := costedExpandQuantifiedEqualityOrbitBranchesHashed
+            body (oldQueries ++ freshQueries) table
+          let branchProduction := expandQuantifiedEqualityOrbitBranchesHashed
+            body (oldQueries ++ freshQueries) table
+          let value := EqBoolFormula.conjList branchProduction.formulas
+          have hproduction :
+              expandQuantifiedEqualityOrbitsHashed (.all x body)
+                used available env table =
+                ⟨value, branchProduction.table.insert key value,
+                  branchProduction.stats.add EqualityOrbitMemoStats.miss⟩ := by
+            rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+            dsimp only
+            rw [hlookup]
+            rfl
+          rw [hproduction]
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hbranches :=
+            costedExpandQuantifiedEqualityOrbitBranchesHashed_amortized
+              body (oldQueries ++ freshQueries) table hspare hfloor
+          have hinsert := insertMissCost_amortizedExecution branches.result.table
+            key value hbranches.2.1 hbranches.2.2
+          simpa [key, oldQueries, freshQueries, branches, branchProduction,
+            value] using
+            hlookupCost.add (hbranches.add hinsert)
+      | ex x body =>
+          let key := recursiveEqualityOrbitMemoKey (.ex x body) used available env
+          let oldQueries : List RecursiveEqualityOrbitBranchQuery :=
+            used.map fun representative =>
+              { used := used, available := available,
+                env := env.update x representative }
+          let freshQueries := match available with
+            | [] => []
+            | representative :: rest =>
+                let query : RecursiveEqualityOrbitBranchQuery :=
+                  { used := used ++ [representative]
+                    available := rest
+                    env := env.update x representative }
+                [query]
+          let branches := costedExpandQuantifiedEqualityOrbitBranchesHashed
+            body (oldQueries ++ freshQueries) table
+          let branchProduction := expandQuantifiedEqualityOrbitBranchesHashed
+            body (oldQueries ++ freshQueries) table
+          let value := EqBoolFormula.disjList branchProduction.formulas
+          have hproduction :
+              expandQuantifiedEqualityOrbitsHashed (.ex x body)
+                used available env table =
+                ⟨value, branchProduction.table.insert key value,
+                  branchProduction.stats.add EqualityOrbitMemoStats.miss⟩ := by
+            rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+            dsimp only
+            rw [hlookup]
+            rfl
+          rw [hproduction]
+          have hlookupCost := lookupCost_amortizedExecution table key hspare hfloor
+          have hbranches :=
+            costedExpandQuantifiedEqualityOrbitBranchesHashed_amortized
+              body (oldQueries ++ freshQueries) table hspare hfloor
+          have hinsert := insertMissCost_amortizedExecution branches.result.table
+            key value hbranches.2.1 hbranches.2.2
+          simpa [key, oldQueries, freshQueries, branches, branchProduction,
+            value] using
+            hlookupCost.add (hbranches.add hinsert)
+  termination_by (sizeOf phi, 0)
+
+  theorem costedExpandQuantifiedEqualityOrbitBranchesHashed_amortized
+      (body : QFormula) (queries : List RecursiveEqualityOrbitBranchQuery)
+      (table : HashedEqualityOrbitMemoTable)
+      (hspare : HasSpareBucket table) (hfloor : HasMinimumBuckets table) :
+      let traced := costedExpandQuantifiedEqualityOrbitBranchesHashed
+        body queries table
+      traced.cost.AmortizedExecution table traced.result.table := by
+    cases queries with
+    | nil =>
+        rw [costedExpandQuantifiedEqualityOrbitBranchesHashed.eq_def]
+        rw [expandQuantifiedEqualityOrbitBranchesHashed.eq_def]
+        exact (OperationCost.AmortizedExecution.zero table hspare hfloor).withStats _
+    | cons query rest =>
+        rw [costedExpandQuantifiedEqualityOrbitBranchesHashed.eq_def]
+        rw [expandQuantifiedEqualityOrbitBranchesHashed.eq_def]
+        let headResult := costedExpandQuantifiedEqualityOrbitsHashed body
+          query.used query.available query.env table
+        let tailResult := costedExpandQuantifiedEqualityOrbitBranchesHashed
+          body rest headResult.result.table
+        have hhead := costedExpandQuantifiedEqualityOrbitsHashed_amortized body
+          query.used query.available query.env table hspare hfloor
+        have htail := costedExpandQuantifiedEqualityOrbitBranchesHashed_amortized
+          body rest headResult.result.table hhead.2.1 hhead.2.2
+        simpa [headResult, tailResult] using (hhead.add htail).withStats _
+  termination_by (sizeOf body, queries.length + 1)
+end
+
+mutual
+  theorem expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+      (phi : QFormula) (used available : List Var) (env : QuantifierEnv)
+      (table : HashedEqualityOrbitMemoTable)
+      (hbound : BucketCountLinearBound table) :
+      BucketCountLinearBound
+        (expandQuantifiedEqualityOrbitsHashed phi used available env table).table := by
+    rw [expandQuantifiedEqualityOrbitsHashed.eq_def]
+    dsimp only
+    split
+    next cached hlookup => exact hbound
+    next hlookup =>
+      cases phi with
+      | pred P xs =>
+          exact insert_preserves_bucketCountLinearBound table _ .bot hbound
+      | eq x y =>
+          exact insert_preserves_bucketCountLinearBound table _
+            (if env x = env y then .top else .atom (normalizeEqAtom (env x) (env y)))
+            hbound
+      | neg body =>
+          let child := expandQuantifiedEqualityOrbitsHashed
+            body used available env table
+          have hchild :=
+            expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+              body used available env table hbound
+          exact insert_preserves_bucketCountLinearBound child.table _
+            (.neg child.formula) hchild
+      | conj left right =>
+          let leftResult := expandQuantifiedEqualityOrbitsHashed
+            left used available env table
+          let rightResult := expandQuantifiedEqualityOrbitsHashed
+            right used available env leftResult.table
+          have hleft :=
+            expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+              left used available env table hbound
+          have hright :=
+            expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+              right used available env leftResult.table hleft
+          exact insert_preserves_bucketCountLinearBound rightResult.table _
+            (.conj leftResult.formula rightResult.formula) hright
+      | disj left right =>
+          let leftResult := expandQuantifiedEqualityOrbitsHashed
+            left used available env table
+          let rightResult := expandQuantifiedEqualityOrbitsHashed
+            right used available env leftResult.table
+          have hleft :=
+            expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+              left used available env table hbound
+          have hright :=
+            expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+              right used available env leftResult.table hleft
+          exact insert_preserves_bucketCountLinearBound rightResult.table _
+            (.disj leftResult.formula rightResult.formula) hright
+      | oplus left right =>
+          exact insert_preserves_bucketCountLinearBound table _ .bot hbound
+      | all x body =>
+          let oldQueries : List RecursiveEqualityOrbitBranchQuery :=
+            used.map fun representative =>
+              { used := used, available := available,
+                env := env.update x representative }
+          let freshQueries := match available with
+            | [] => []
+            | representative :: rest =>
+                let query : RecursiveEqualityOrbitBranchQuery :=
+                  { used := used ++ [representative]
+                    available := rest
+                    env := env.update x representative }
+                [query]
+          let branches := expandQuantifiedEqualityOrbitBranchesHashed
+            body (oldQueries ++ freshQueries) table
+          have hbranches :=
+            expandQuantifiedEqualityOrbitBranchesHashed_preserves_bucketCountLinearBound
+              body (oldQueries ++ freshQueries) table hbound
+          exact insert_preserves_bucketCountLinearBound branches.table _
+            (EqBoolFormula.conjList branches.formulas) hbranches
+      | ex x body =>
+          let oldQueries : List RecursiveEqualityOrbitBranchQuery :=
+            used.map fun representative =>
+              { used := used, available := available,
+                env := env.update x representative }
+          let freshQueries := match available with
+            | [] => []
+            | representative :: rest =>
+                let query : RecursiveEqualityOrbitBranchQuery :=
+                  { used := used ++ [representative]
+                    available := rest
+                    env := env.update x representative }
+                [query]
+          let branches := expandQuantifiedEqualityOrbitBranchesHashed
+            body (oldQueries ++ freshQueries) table
+          have hbranches :=
+            expandQuantifiedEqualityOrbitBranchesHashed_preserves_bucketCountLinearBound
+              body (oldQueries ++ freshQueries) table hbound
+          exact insert_preserves_bucketCountLinearBound branches.table _
+            (EqBoolFormula.disjList branches.formulas) hbranches
+  termination_by (sizeOf phi, 0)
+
+  theorem expandQuantifiedEqualityOrbitBranchesHashed_preserves_bucketCountLinearBound
+      (body : QFormula) (queries : List RecursiveEqualityOrbitBranchQuery)
+      (table : HashedEqualityOrbitMemoTable)
+      (hbound : BucketCountLinearBound table) :
+      BucketCountLinearBound
+        (expandQuantifiedEqualityOrbitBranchesHashed body queries table).table := by
+    cases queries with
+    | nil =>
+        rw [expandQuantifiedEqualityOrbitBranchesHashed.eq_def]
+        exact hbound
+    | cons query rest =>
+        rw [expandQuantifiedEqualityOrbitBranchesHashed.eq_def]
+        let headResult := expandQuantifiedEqualityOrbitsHashed body
+          query.used query.available query.env table
+        have hhead :=
+          expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+            body query.used query.available query.env table hbound
+        exact expandQuantifiedEqualityOrbitBranchesHashed_preserves_bucketCountLinearBound
+          body rest headResult.table hhead
   termination_by (sizeOf body, queries.length + 1)
 end
 
@@ -1018,10 +1770,72 @@ theorem runQuantifiedEqualityOrbitHashed_verified_cost_model
       traced.cost.lookups + traced.cost.inserts + traced.cost.rehashEnvelope at htotal
     omega
 
-/-- Closed collision-independent bounds at the empty root.  If `U` is the
-number of unique states and `A` the number of requests, resize hashing is at
-most `U²`, while worst-case separate-chain comparison work is at most
-`(A + U)U`.  The request term is necessary because cache hits still probe. -/
+/-- Lean 4.32.1 turns requested capacity eight into sixteen physical buckets. -/
+theorem emptyHashedEqualityOrbitMemoTable_bucketCount :
+    hashedMemoBucketCount emptyHashedEqualityOrbitMemoTable = 16 := by
+  unfold hashedMemoBucketCount emptyHashedEqualityOrbitMemoTable
+    Std.HashMap.emptyWithCapacity Std.DHashMap.emptyWithCapacity
+    Std.DHashMap.Raw.emptyWithCapacity
+    Std.DHashMap.Internal.Raw₀.emptyWithCapacity
+  simp only [Array.size_replicate]
+  change (HashCost.numBucketsForCapacityPinned 8).nextPowerOfTwo = 16
+  unfold HashCost.numBucketsForCapacityPinned
+  unfold Nat.nextPowerOfTwo
+  rw [HashCost.nextPowerOfTwoGoEquationPinned]
+  rw [if_pos (by decide : 1 < 10)]
+  rw [HashCost.nextPowerOfTwoGoEquationPinned]
+  rw [if_pos (by decide : 2 < 10)]
+  rw [HashCost.nextPowerOfTwoGoEquationPinned]
+  rw [if_pos (by decide : 4 < 10)]
+  rw [HashCost.nextPowerOfTwoGoEquationPinned]
+  rw [if_pos (by decide : 8 < 10)]
+  rw [HashCost.nextPowerOfTwoGoEquationPinned]
+  rw [if_neg (by decide : ¬16 < 10)]
+
+theorem emptyHashedEqualityOrbitMemoTable_hasSpareBucket :
+    HasSpareBucket emptyHashedEqualityOrbitMemoTable := by
+  rw [HasSpareBucket, emptyHashedEqualityOrbitMemoTable_bucketCount]
+  simp [emptyHashedEqualityOrbitMemoTable]
+
+theorem emptyHashedEqualityOrbitMemoTable_hasMinimumBuckets :
+    HasMinimumBuckets emptyHashedEqualityOrbitMemoTable := by
+  rw [HasMinimumBuckets, emptyHashedEqualityOrbitMemoTable_bucketCount]
+  omega
+
+theorem emptyHashedEqualityOrbitMemoTable_bucketCountLinearBound :
+    BucketCountLinearBound emptyHashedEqualityOrbitMemoTable := by
+  rw [BucketCountLinearBound, emptyHashedEqualityOrbitMemoTable_bucketCount]
+  simp [emptyHashedEqualityOrbitMemoTable]
+
+/-- Root transition theorem: all resize hashes plus the sixteen initial
+buckets fit inside the final physical bucket count. -/
+theorem runQuantifiedEqualityOrbitHashed_rehashTransition
+    (k : Nat) (phi : QFormula) :
+    let traced := runQuantifiedEqualityOrbitHashedCosted k phi
+    let result := runQuantifiedEqualityOrbitHashed k phi
+    traced.cost.rehashHashes + 16 ≤ hashedMemoBucketCount result.table := by
+  have hrun := costedExpandQuantifiedEqualityOrbitsHashed_amortized phi []
+    (cutoffRepresentatives k) id emptyHashedEqualityOrbitMemoTable
+    emptyHashedEqualityOrbitMemoTable_hasSpareBucket
+    emptyHashedEqualityOrbitMemoTable_hasMinimumBuckets
+  have htransition := hrun.1
+  simpa [OperationCost.RehashTransition,
+    runQuantifiedEqualityOrbitHashedCosted,
+    runQuantifiedEqualityOrbitHashed,
+    emptyHashedEqualityOrbitMemoTable_bucketCount] using htransition
+
+theorem runQuantifiedEqualityOrbitHashed_bucketCountLinearBound
+    (k : Nat) (phi : QFormula) :
+    let result := runQuantifiedEqualityOrbitHashed k phi
+    hashedMemoBucketCount result.table ≤ 16 + 3 * result.table.size := by
+  have hbound :=
+    expandQuantifiedEqualityOrbitsHashed_preserves_bucketCountLinearBound
+      phi [] (cutoffRepresentatives k) id emptyHashedEqualityOrbitMemoTable
+      emptyHashedEqualityOrbitMemoTable_bucketCountLinearBound
+  simpa [BucketCountLinearBound, runQuantifiedEqualityOrbitHashed] using hbound
+
+/-- Coarse collision-independent envelope retained as the representation-
+agnostic baseline: it charges every miss the final table size. -/
 theorem runQuantifiedEqualityOrbitHashed_closed_state_cost_bounds
     (k : Nat) (phi : QFormula) :
     let traced := runQuantifiedEqualityOrbitHashedCosted k phi
@@ -1072,9 +1886,6 @@ theorem runQuantifiedEqualityOrbitHashed_closed_state_cost_bounds
           result.table.size * result.table.size :=
         Nat.add_le_add_left hrehashEnvelope _
 
-/-- Fully structural rank-root corollary.  With `W` the exact cache-free
-depth-sensitive Bell weight, all resizing is bounded by `W²`, all key
-comparisons by `2W²`, and all hashes by `W² + 2W`. -/
 theorem runQuantifiedEqualityOrbitHashed_weighted_cost_bounds
     (phi : QFormula) :
     let k := QFormula.quantifierRank phi
@@ -1126,6 +1937,115 @@ theorem runQuantifiedEqualityOrbitHashed_weighted_cost_bounds
         Nat.add_le_add (Nat.add_le_add hrequests hstates) hquadratic
       _ = weight * weight + 2 * weight := by ring
 
+/-- Closed collision-independent bounds at the empty root.  If `U` is the
+number of unique states and `A` the number of requests, doubling gives the
+amortized resize bound `3U`, while worst-case separate-chain comparison work
+is at most `(A + U)U`.  The request term is necessary because cache hits still
+probe. -/
+theorem runQuantifiedEqualityOrbitHashed_amortized_state_cost_bounds
+    (k : Nat) (phi : QFormula) :
+    let traced := runQuantifiedEqualityOrbitHashedCosted k phi
+    let result := runQuantifiedEqualityOrbitHashed k phi
+    traced.cost.rehashHashes ≤ 3 * result.table.size ∧
+      traced.cost.keyComparisons ≤
+        (result.stats.requests + result.table.size) * result.table.size ∧
+      traced.cost.totalHashes ≤
+        result.stats.requests + 4 * result.table.size := by
+  let traced := runQuantifiedEqualityOrbitHashedCosted k phi
+  let result := runQuantifiedEqualityOrbitHashed k phi
+  have hbudget := costedExpandQuantifiedEqualityOrbitsHashed_cost_budget phi []
+    (cutoffRepresentatives k) id emptyHashedEqualityOrbitMemoTable
+  have hbudget' : traced.cost.BudgetBound result.stats.requests
+      result.stats.misses result.table.size := by
+    simpa [traced, result, runQuantifiedEqualityOrbitHashedCosted,
+      runQuantifiedEqualityOrbitHashed] using hbudget
+  rcases hbudget' with ⟨hrehashEnvelope, hcomparisonEnvelope⟩
+  have hvalid := costedExpandQuantifiedEqualityOrbitsHashed_cost_valid phi []
+    (cutoffRepresentatives k) id emptyHashedEqualityOrbitMemoTable
+  change traced.cost.Valid at hvalid
+  rcases hvalid with ⟨hcomparison, hrehash, hprimary, hbuckets⟩
+  have hsize := runQuantifiedEqualityOrbitHashed_unique_states_eq_misses k phi
+  change result.table.size = result.stats.misses at hsize
+  have hlookups : traced.cost.lookups = result.stats.requests := by
+    simp [traced, result, runQuantifiedEqualityOrbitHashedCosted,
+      runQuantifiedEqualityOrbitHashed]
+  have hinserts : traced.cost.inserts = result.stats.misses := by
+    simp [traced, result, runQuantifiedEqualityOrbitHashedCosted,
+      runQuantifiedEqualityOrbitHashed]
+  rw [← hsize] at hrehashEnvelope hcomparisonEnvelope hinserts
+  have htransition := runQuantifiedEqualityOrbitHashed_rehashTransition k phi
+  change traced.cost.rehashHashes + 16 ≤
+    hashedMemoBucketCount result.table at htransition
+  have hbucketBound := runQuantifiedEqualityOrbitHashed_bucketCountLinearBound k phi
+  change hashedMemoBucketCount result.table ≤
+    16 + 3 * result.table.size at hbucketBound
+  have hrehashLinear : traced.cost.rehashHashes ≤ 3 * result.table.size := by
+    omega
+  constructor
+  · exact hrehashLinear
+  constructor
+  · exact hcomparison.trans hcomparisonEnvelope
+  · change traced.cost.primaryHashes + traced.cost.rehashHashes ≤
+      result.stats.requests + 4 * result.table.size
+    calc
+      traced.cost.primaryHashes + traced.cost.rehashHashes =
+          result.stats.requests + result.table.size +
+            traced.cost.rehashHashes := by rw [hprimary, hlookups, hinserts]
+      _ ≤ result.stats.requests + result.table.size +
+          3 * result.table.size := Nat.add_le_add_left hrehashLinear _
+      _ = result.stats.requests + 4 * result.table.size := by ring
+
+/-- Fully structural rank-root corollary.  With `W` the exact cache-free
+depth-sensitive Bell weight, all resizing is bounded by `3W`, all key
+comparisons by `2W²`, and all hashes by `5W`. -/
+theorem runQuantifiedEqualityOrbitHashed_weighted_amortized_cost_bounds
+    (phi : QFormula) :
+    let k := QFormula.quantifierRank phi
+    let weight := equalityOrbitWeightedRequestBound phi 0
+    let traced := runQuantifiedEqualityOrbitHashedCosted k phi
+    traced.cost.rehashHashes ≤ 3 * weight ∧
+      traced.cost.keyComparisons ≤ 2 * (weight * weight) ∧
+      traced.cost.totalHashes ≤ 5 * weight := by
+  let k := QFormula.quantifierRank phi
+  let weight := equalityOrbitWeightedRequestBound phi 0
+  let traced := runQuantifiedEqualityOrbitHashedCosted k phi
+  let result := runQuantifiedEqualityOrbitHashed k phi
+  have hclosed := runQuantifiedEqualityOrbitHashed_amortized_state_cost_bounds k phi
+  change traced.cost.rehashHashes ≤ 3 * result.table.size ∧
+    traced.cost.keyComparisons ≤
+      (result.stats.requests + result.table.size) * result.table.size ∧
+    traced.cost.totalHashes ≤ result.stats.requests + 4 * result.table.size at hclosed
+  rcases hclosed with ⟨hrehash, hcompare, htotal⟩
+  have hrequests := runQuantifiedEqualityOrbitHashed_requests_le_weighted phi
+  change result.stats.requests ≤ weight at hrequests
+  have hstates : result.table.size ≤ weight := by
+    have hsize := runQuantifiedEqualityOrbitHashed_unique_states_eq_misses k phi
+    change result.table.size = result.stats.misses at hsize
+    have hmisses : result.stats.misses ≤ result.stats.requests := by
+      simp [EqualityOrbitMemoStats.requests]
+    omega
+  have hcomparisonProduct :
+      (result.stats.requests + result.table.size) * result.table.size ≤
+        (weight + weight) * weight :=
+    Nat.mul_le_mul (Nat.add_le_add hrequests hstates) hstates
+  change traced.cost.rehashHashes ≤ 3 * weight ∧
+    traced.cost.keyComparisons ≤ 2 * (weight * weight) ∧
+    traced.cost.totalHashes ≤ 5 * weight
+  constructor
+  · exact hrehash.trans (Nat.mul_le_mul_left 3 hstates)
+  constructor
+  · calc
+      traced.cost.keyComparisons ≤
+          (result.stats.requests + result.table.size) * result.table.size := hcompare
+      _ ≤ (weight + weight) * weight := hcomparisonProduct
+      _ = 2 * (weight * weight) := by ring
+  · calc
+      traced.cost.totalHashes ≤
+          result.stats.requests + 4 * result.table.size := htotal
+      _ ≤ weight + 4 * weight :=
+        Nat.add_le_add hrequests (Nat.mul_le_mul_left 4 hstates)
+      _ = 5 * weight := by ring
+
 /-- Native audit for the first benchmark exhibiting genuine memo sharing.
 The tuple records `(hits, misses, lookups, inserts, primary hashes, resize
 hashes, total hashes, bucket accesses, key comparisons, final states)`. -/
@@ -1159,6 +2079,31 @@ theorem hashedCost_atLeastThree_closed_bound_regression :
         (result.stats.requests + result.table.size) * result.table.size),
       (traced.cost.totalHashes, weight * weight + 2 * weight)) =
       ((38, 1600), (34, 3280), (120, 2024)) := by
+  native_decide
+
+/-- Concrete separation between measured work and the stronger amortized
+bounds.  The pairs are respectively `(resize hashes, 3U)`,
+`(key comparisons, (A+U)U)`, and `(total hashes, 5W)`. -/
+theorem hashedCost_atLeastThree_amortized_bound_regression :
+    let phi := atLeastThreeSentence
+    let k := QFormula.quantifierRank phi
+    let traced := runQuantifiedEqualityOrbitHashedCosted k phi
+    let result := traced.result
+    let weight := equalityOrbitWeightedRequestBound phi 0
+    ((traced.cost.rehashHashes, 3 * result.table.size),
+      (traced.cost.keyComparisons,
+        (result.stats.requests + result.table.size) * result.table.size),
+      (traced.cost.totalHashes, 5 * weight)) =
+      ((38, 120), (34, 3280), (120, 220)) := by
+  native_decide
+
+/-- Concrete bucket-potential audit: resize hashes plus the sixteen starting
+buckets, actual final buckets, and the proved `16 + 3U` capacity envelope. -/
+theorem hashedCost_atLeastThree_bucket_potential_regression :
+    let traced := runQuantifiedEqualityOrbitHashedCosted 3 atLeastThreeSentence
+    (traced.cost.rehashHashes + 16,
+      hashedMemoBucketCount traced.result.table,
+      16 + 3 * traced.result.table.size) = (54, 64, 136) := by
   native_decide
 
 end
