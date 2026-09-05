@@ -431,6 +431,9 @@ structure OperationCost where
   bucketAccesses : Nat := 0
   keyComparisons : Nat := 0
   comparisonEnvelope : Nat := 0
+  /-- Maximum length of a bucket actually probed by lookup or insertion.
+  This is a maximum over the execution, not the final table's maximum. -/
+  peakBucketEntries : Nat := 0
 deriving DecidableEq, Repr
 
 def OperationCost.add (left right : OperationCost) : OperationCost where
@@ -442,6 +445,7 @@ def OperationCost.add (left right : OperationCost) : OperationCost where
   bucketAccesses := left.bucketAccesses + right.bucketAccesses
   keyComparisons := left.keyComparisons + right.keyComparisons
   comparisonEnvelope := left.comparisonEnvelope + right.comparisonEnvelope
+  peakBucketEntries := max left.peakBucketEntries right.peakBucketEntries
 
 def OperationCost.totalHashes (cost : OperationCost) : Nat :=
   cost.primaryHashes + cost.rehashHashes
@@ -540,7 +544,8 @@ def lookupCost (table : HashedEqualityOrbitMemoTable)
     primaryHashes := 1
     bucketAccesses := 1
     keyComparisons := probe.comparisons
-    comparisonEnvelope := assocEntryCount (hashedMemoBucket table key) }
+    comparisonEnvelope := assocEntryCount (hashedMemoBucket table key)
+    peakBucketEntries := assocEntryCount (hashedMemoBucket table key) }
 
 /-- Cost of an insertion known to be for a missing key.  The orbit engine's
 parent-key freshness theorem supplies that precondition at every insertion.
@@ -558,7 +563,8 @@ def insertMissCost (table : HashedEqualityOrbitMemoTable)
     rehashEnvelope := inserted.size
     bucketAccesses := 1
     keyComparisons := probe.comparisons
-    comparisonEnvelope := assocEntryCount (hashedMemoBucket table key) }
+    comparisonEnvelope := assocEntryCount (hashedMemoBucket table key)
+    peakBucketEntries := assocEntryCount (hashedMemoBucket table key) }
 
 /-- A resizing transition is paid for by physical bucket growth.  Sequential
 transitions compose by cancellation of their shared intermediate bucket count. -/

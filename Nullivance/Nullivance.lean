@@ -25,4 +25,6 @@ import Nullivance.QuantifiedEqualityDecision
 import Nullivance.QuantifiedEqualityComplexity
 import Nullivance.QuantifiedEqualityHashMemo
 import Nullivance.QuantifiedEqualityHashCost
+import Nullivance.QuantifiedEqualityCollisionCost
+import Nullivance.QuantifiedEqualityDomainDecision
 import Nullivance.Generative

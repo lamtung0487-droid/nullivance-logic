@@ -85,9 +85,24 @@ fresh hosted environment.
 | `QuantifiedEqualityHashMemo` | Lawful structural-hash memo table, extensional simulation of the list reference table, end-to-end correctness on infinite closed equality, exact `HashMap.size = misses` accounting, and proved syntax×Bell×factorial state envelopes with native regressions |
 | `QuantifiedEqualityHashCost` | Pinned Lean 4.32.1 source-level cost instrumentation for hash calls, resize rehashing, bucket accesses, and key comparisons; end-to-end erasure/equivalence; coarse collision-independent `rehash ≤ U²` envelope plus a kernel-checked doubling refinement `rehash ≤ 3U ≤ 3W`, `comparisons ≤ (A+U)U ≤ 2W²`, and `hashes ≤ A+4U ≤ 5W`; native operation-count and bucket-potential regressions |
 | `Generative` | Optional generative interface, isolated from the logical core |
+| `QuantifiedEqualityCollisionCost` | Maximum probed chain instrumentation; deterministic `L ≤ U`, `comparisons ≤ (A+U)L`, and counted source operations `≤ 2A+5U+(A+U)L`; rank-weight refinement `≤ 7W+2WL`; checked distinct-hash bucket collision and cost regressions |
+| `QuantifiedEqualityDomainDecision` | Carrier-bijection back-and-forth proof; exact finite-cardinality decision including small carriers; safe finite parameter `min (card D - 1) rank`; combined semantics/cost certificates on finite and infinite closed equality; 40 direct finite-evaluator comparisons and singleton boundary regression |
 
 `Nullivance/Nullivance.lean` imports the full module set and is the default Lake
 target.
+
+The collision/finite-domain research audit is reproducible from `Nullivance/`:
+
+```powershell
+lake env lean ResearchValidation.lean
+```
+
+It prints the structural theorem axiom dependencies, cost measurements, a
+40-case finite evaluator comparison, and the singleton/hash-index boundary
+examples. The structural theorems use only standard logical axioms; native
+regression evaluation is additional evidence, not a premise of those theorems.
+The cost counts apply to orbit expansion only and exclude key internals,
+array allocation/copying, and ROBDD compilation/evaluation.
 
 ## Evidence correspondence
 

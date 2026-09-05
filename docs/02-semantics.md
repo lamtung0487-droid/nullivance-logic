@@ -2502,5 +2502,148 @@ are `((38,120),(34,3280),(120,220))`.  The bucket-potential audit is
 
 ---
 
+**Theorem 2.121 (Collision-sensitive cost of hashed orbit expansion).** `[VERIFIED]`
+For a run from the empty memo table, let `A` be requests, `U` the final number
+of keys, and `L` the maximum physical bucket length observed immediately before
+a lookup or insertion. The cost record now carries `peakBucketEntries`: a local
+probe records its selected chain length, sequential composition takes the maximum,
+and the final statistics wrapper preserves this field. Thus `L` is an execution
+maximum over probed chains, not a maximum reconstructed from the final table.
+
+The mutually recursive formula/branch proofs establish
+
+`comparisonEnvelope ≤ (requests + misses) × L` and `L ≤ final table size`.
+
+For sequential composition, each child's peak is at most their maximum, so
+multiplication monotonicity and distributivity combine the two envelopes.
+Table-size monotonicity supplies the second invariant. Both invariants propagate
+through cache hits, Boolean children, binder-generated old/fresh witnesses,
+sequential sibling branches, and parent insertions. Combining them with
+Theorems 2.115, 2.118 and 2.120 gives
+
+`keyComparisons ≤ (A+U)L`,
+
+`hashComparisonWork ≤ A+4U+(A+U)L`,
+
+`countedWork ≤ 2A+5U+(A+U)L`.
+
+Here `hashComparisonWork` is exactly hash calls plus whole-key comparisons;
+`countedWork` additionally counts the model's primary bucket accesses.
+It does **not** include allocation, resizing-array scans/writes, work inside
+hashes or key equality, key construction, ROBDD compilation/evaluation, or
+wall-clock time. At the rank root, with the previous depth-sensitive weight
+`W`, the consequences are `L ≤ W`, `comparisons ≤ 2WL`, and
+`countedWork ≤ 7W+2WL`. The unconditional state-only bound follows from
+`L ≤ U`; a certified `L ≤ 1` yields `comparisons ≤ A+U`.
+
+A missing-key scan visits exactly the whole selected chain, showing why the
+collision parameter matters. Injectivity of full UInt64 hashes is **insufficient**
+to conclude `L ≤ 1`: memo keys for `eq 1 1` and `eq 4 4` have different hashes
+but share bucket 11 in the initial 16-bucket table. The checked table contains
+two keys and a lookup of the older key performs two comparisons.
+No random-hash or constant-chain-length premise is assumed.
+
+The `atLeastThree` audit gives `(A,U,L,C)=(42,40,2,34)`, with comparison
+bound 164 (the earlier state-only bound is 3280), counted work 236, and
+counted-work bound 448. These are measurements of the instrumented source model.
+
+> *Lean:* `InfiniteFO.HashCost.OperationCost.CollisionBound`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitsHashed_collision_bound`,
+> `InfiniteFO.costedExpandQuantifiedEqualityOrbitBranchesHashed_collision_bound`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_collision_bounds`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_weighted_collision_bounds`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashed_comparisons_of_peak_le_one`,
+> `InfiniteFO.HashCost.probeAssocList_comparisons_eq_entries_of_missing`,
+> `InfiniteFO.hashedCost_distinct_hashes_same_bucket_regression`,
+> `InfiniteFO.hashedCost_collision_rank_growth_regression` — sorry-free. ·
+> *Axiom audit:* structural results use only standard logical axioms
+> `[propext, Classical.choice, Quot.sound]` (or a subset).
+> Numerical regressions use a generated `native_decide` bridge and are not
+> premises of structural bounds. · *DR:* DR-0022. · *Depends on:* Thm 2.115–2.120.
+
+**Theorem 2.122 (Exact finite cardinality and a unified finite cutoff).** `[VERIFIED]`
+Let `phi` be a closed formula in `QuantifiedEqualityFragment`, let `q` be
+its quantifier rank, and let `D` be a nonempty finite carrier of cardinality
+`n`. The fragment admits equality, negation, conjunction, disjunction and
+both quantifiers; it excludes predicate atoms and consensus. For any model
+`M : QModel D` and assignment `rho`, the hashed decision engine at
+`k=n−1` returns exactly the Boolean whose embedding as `T/F` equals
+`qeval M rho phi`. This holds even when `n < q`.
+
+A carrier bijection preserves the assignment equality partition on an active
+scope. At each binder, map a witness forward by the bijection and backward by
+its inverse. Induction on the remaining depth proves `CapacityEquiv k` for
+every `k`, without a fresh-capacity lower bound. Closedness supplies the
+empty initial scope. Apply `qeval_eq_of_capacity` and the finite-carrier
+ROBDD correctness theorem to the bijection
+`D ≃ ULift (Fin (k+1))`. This proves the exact-cardinality branch.
+
+For larger domains, the existing rank-capacity theorem applies. Combining the
+two arguments proves that the smaller parameter
+
+`finiteEqualityParameter D phi = min (n−1) q`
+
+is sound. It allocates exactly `min n (q+1)` representative names. This is a
+safe cutoff, not a claim that `q+1` is the smallest possible carrier.
+An infinite nonempty carrier continues to use `k=q`.
+
+The ten-formula regression corpus covers cardinality thresholds, both binder
+orders, shadowing, nested witnesses and repeated subformulas. All 40 pairs of
+a corpus formula and a carrier size 1–4 agree with direct finite evaluation
+`qevalEqFinite`, which does not use orbit reduction, memoization or ROBDDs.
+A separate boundary check returns `(true,false,true)` for the singleton-domain
+sentence evaluated by exact-size hashing, rank-cutoff hashing, and direct
+singleton evaluation, respectively. Using the infinite cutoff on a small
+finite carrier without the capacity premise would therefore be unsound.
+
+> *Lean:* `InfiniteFO.sameEqualityType_of_equiv`,
+> `InfiniteFO.capacityEquiv_of_equiv`,
+> `InfiniteFO.closed_equality_invariant_of_equiv`,
+> `InfiniteFO.decideQuantifiedEqualityHashed_finite_card_correct`,
+> `InfiniteFO.decideQuantifiedEqualityHashed_finite_correct`,
+> `InfiniteFO.decideQuantifiedEqualityHashed_capacity_correct`,
+> `InfiniteFO.finiteEqualityParameter`,
+> `InfiniteFO.finiteEqualityParameter_representative_count`,
+> `InfiniteFO.decideQuantifiedEqualityHashed_finite_cutoff_correct`,
+> `InfiniteFO.domainDecisionRegressionCorpus_admitted`,
+> `InfiniteFO.hashedDomain_small_finite_matrix_regression`,
+> `InfiniteFO.hashedDomain_singleton_boundary_regression` — sorry-free. ·
+> *Axiom audit:* `capacityEquiv_of_equiv` uses `[propext, Quot.sound]`;
+> the general semantic results use `[propext, Classical.choice, Quot.sound]`.
+> Native regressions are not proof premises. · *DR:* DR-0022. ·
+> *Depends on:* Def 2.102, Thm 2.101, 2.103, 2.106–2.107, 2.109–2.110, 2.115.
+
+**Theorem 2.123 (Semantic and cost certificates on finite and infinite carriers).** `[VERIFIED]`
+Under the fragment and closedness hypotheses of Theorem 2.122, one instrumented
+hashed run supplies both its decision bit and the bounds of Theorem 2.121.
+For a finite nonempty carrier use `k=min (n−1) q`; for an infinite nonempty
+carrier use `k=q`. Compile the Boolean formula returned by this very run to
+an ROBDD and evaluate it at the canonical equality valuation. Lean proves
+simultaneously that
+
+`qeval M rho phi = if returnedBit then T else F`,
+
+`L ≤ U`, `keyComparisons ≤ (A+U)L`, and
+
+`countedWork ≤ 2A+5U+(A+U)L`.
+
+The proof rewrites the instrumented result to the production result, uses the
+finite/infinite semantic theorem, and combines it with the root collision bound.
+Only orbit-expansion hash-table costs are certified; compilation/evaluation of
+the returned ROBDD is outside these counters. The equality-only fragment is
+two-valued inside FOUR, so this theorem neither decides arbitrary predicate
+formulas on infinite carriers nor establishes unrestricted continuous-threshold
+projection. The earlier projection counterexamples and their hypotheses remain
+in force.
+
+> *Lean:* `InfiniteFO.CostedHashedEqualityOrbitMemoResult.decision`,
+> `InfiniteFO.runQuantifiedEqualityOrbitHashedCosted_decision_eq`,
+> `InfiniteFO.hashedOrbit_finite_semantics_and_cost`,
+> `InfiniteFO.hashedOrbit_infinite_semantics_and_cost`,
+> `InfiniteFO.hashedOrbit_closed_equality_is_two_valued` — sorry-free. ·
+> *Axiom audit:* `[propext, Classical.choice, Quot.sound]`. ·
+> *DR:* DR-0022. · *Depends on:* Thm 2.115, 2.118, 2.121–2.122.
+
+
 ## Open items (chapter 2)
 - **C5** `[PROVEN]` The {¬,∧,∨}-fragment of FOUR coincides with the Belnap–Dunn FDE tables (with designated {T,B} matching BD's {t,b}). *Proof:* the BD tables are meet/join in the truth order of the square lattice with swap negation (SEP *Many-Valued Logic* §2.3; [belnap1977useful; dunn1976intuitive]); under the encoding t=(1,0), f=(0,1), b=(1,1), n=(0,0), truth-order meet = (min, max) = Def 2.3's ∧-clause, join = (max, min) = the ∨-clause, and negation = channel swap — entry-by-entry agreement of the 4×4 tables follows; full identification in `references/npl-positioning.md` §1. ∎ (The Lean side of the *NPL* tables is already `[VERIFIED]` — Lem 2.9; the identification itself is a literature comparison and stays paper-level by nature.)
