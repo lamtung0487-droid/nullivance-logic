@@ -1,4 +1,4 @@
-import Nullivance.QuantifiedEqualityDomainDecision
+import Nullivance.QuantifiedEqualityOpen
 
 /- Reproducible audit entry point:
    lake env lean ResearchValidation.lean
@@ -8,6 +8,15 @@ import Nullivance.QuantifiedEqualityDomainDecision
 open Nullivance.InfiniteFO
 open Nullivance.InfiniteFO.HashCost
 open Nullivance.FiniteFO
+
+#print axioms hasFreshCapacity_of_infinite
+#print axioms hasFreshCapacity_of_finite_card
+#print axioms open_equality_infinite_invariant
+#print axioms open_equality_infinite_finite_cutoff
+#print axioms open_equality_hashed_correct
+#print axioms decideOpenEqualityHashed_correct
+#print axioms decideOpenEqualityHashed_infinite_correct
+#eval (List.range 3).map openEqualityRegressionCheck
 
 #print axioms capacityEquiv_of_equiv
 #print axioms decideQuantifiedEqualityHashed_finite_correct
