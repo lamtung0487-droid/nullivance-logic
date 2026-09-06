@@ -1,6 +1,17 @@
-import Nullivance.Recognition
+import Nullivance.RecognitionProbes
 
 open Nullivance.Recognition
+
+#print axioms intensityProbe_response
+#print axioms scalar_half_stability
+#print axioms structureProbe_response
+#print axioms channelProbeSignature_injective
+#print axioms activeProbeSignature_injective
+#print axioms activeProbe_recognizes_every_property
+#print axioms decodeProbeQuasivance_correct
+#print axioms passive_impossible_active_possible
+#print axioms sequential_neutralization_erases_structure
+#print axioms thresholdedProbes_not_recognize_quasivance
 
 -- Structural proofs, not numerical evidence for claims about cognition.
 #print axioms recognizable_iff_fiber_constant

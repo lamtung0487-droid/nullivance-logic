@@ -33,3 +33,4 @@ import Nullivance.QuantifiedEqualityCompact
 import Nullivance.QuantifiedEqualityExactOpen
 import Nullivance.Generative
 import Nullivance.Recognition
+import Nullivance.RecognitionProbes
