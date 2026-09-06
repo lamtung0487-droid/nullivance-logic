@@ -1,6 +1,21 @@
-import Nullivance.RecognitionProbes
+import Nullivance.RecognitionNoise
 
 open Nullivance.Recognition
+
+#print axioms robustRecognizable_iff_overlap_constant
+#print axioms positive_noise_precludes_exact_quasivance
+#print axioms noisy_zero_test
+#print axioms noisy_nonneutral_test
+#print axioms decodeNoisyProbe_correct
+#print axioms margin_quasivance_robustly_recognizable
+#print axioms decodeNoisyProbeRat_eq
+#print axioms decodeNoisyProbeRat_correct
+#print axioms zero_boundary_overlap
+#eval [decodeNoisyProbeRat (1/4) ((0,0),(0,1)),
+  decodeNoisyProbeRat (1/4) ((1/100,-1/100),(1/100,99/100)),
+  decodeNoisyProbeRat (1/4) ((1/2,0),(0,1)),
+  decodeNoisyProbeRat (1/4) ((0,0),(1/2,1)),
+  decodeNoisyProbeRat (1/4) ((1/8,0),(0,1))]
 
 #print axioms intensityProbe_response
 #print axioms scalar_half_stability
