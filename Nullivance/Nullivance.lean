@@ -29,4 +29,5 @@ import Nullivance.QuantifiedEqualityCollisionCost
 import Nullivance.QuantifiedEqualityDomainDecision
 import Nullivance.QuantifiedEqualityOpen
 import Nullivance.QuantifiedEqualityEncoding
+import Nullivance.QuantifiedEqualityCompact
 import Nullivance.Generative

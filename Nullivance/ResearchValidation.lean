@@ -1,4 +1,4 @@
-import Nullivance.QuantifiedEqualityEncoding
+import Nullivance.QuantifiedEqualityCompact
 
 /- Reproducible audit entry point:
    lake env lean ResearchValidation.lean
@@ -8,6 +8,18 @@ import Nullivance.QuantifiedEqualityEncoding
 open Nullivance.InfiniteFO
 open Nullivance.InfiniteFO.HashCost
 open Nullivance.FiniteFO
+
+#print axioms namedEqualityClasses_length
+#print axioms compactEqualityEncoding_eq_iff
+#print axioms compactEqualityEncoding_image_bound
+#print axioms decideCompactOpenEquality_infinite_correct
+#print axioms decideFreshCompactOpenEquality_target_correct
+#print axioms decideFreshCompactOpenEquality_infinite_correct
+#print axioms decideFreshCompactOpenEquality_finite_capacity_correct
+#print axioms decideFreshCompactOpenEquality_eq_encoded
+#eval [(0,0), (0,1), (1,0), (10,20), (20,20)].map
+  (fun (a,b) => compactOpenRegressionCheck a b)
+#eval compactOpenTraversalSample
 
 #print axioms freeAssignmentEncoding_lt
 #print axioms freeAssignmentEncoding_eq_iff
