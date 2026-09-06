@@ -1,6 +1,23 @@
-import Nullivance.RecognitionNoise
+import Nullivance.RecognitionAbstention
 
 open Nullivance.Recognition
+
+#print axioms readout_bounds
+#print axioms compatible_readout_valid
+#print axioms upper_certificate_zero
+#print axioms separated_readout_nonneutral
+#print axioms affirmativeCertificate_sound
+#print axioms negativeCertificate_sound
+#print axioms classifyProbe_sound
+#print axioms classifyProbe_invalid_excludes_state
+#print axioms ambiguous_readout_forces_abstention
+#eval [classifyProbe 0 ((0,0),(0,1)),
+  classifyProbe (1/100) ((0,0),(0,1)),
+  classifyProbe (1/100) ((1/2,0),(0,1)),
+  classifyProbe (1/100) ((-1/100,-1/100),(0,1)),
+  classifyProbe (-1) ((0,0),(0,1)),
+  classifyProbe (1/10) ((2,0),(0,1)),
+  classifyProbe 0 ((0,0),(1/2,1))]
 
 #print axioms robustRecognizable_iff_overlap_constant
 #print axioms positive_noise_precludes_exact_quasivance
