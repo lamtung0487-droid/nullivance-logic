@@ -1,4 +1,4 @@
-import Nullivance.QuantifiedEqualityOpen
+import Nullivance.QuantifiedEqualityEncoding
 
 /- Reproducible audit entry point:
    lake env lean ResearchValidation.lean
@@ -8,6 +8,12 @@ import Nullivance.QuantifiedEqualityOpen
 open Nullivance.InfiniteFO
 open Nullivance.InfiniteFO.HashCost
 open Nullivance.FiniteFO
+
+#print axioms freeAssignmentEncoding_lt
+#print axioms freeAssignmentEncoding_eq_iff
+#print axioms freeAssignmentEncoding_sameType
+#print axioms decideEncodedOpenEquality_infinite_correct
+#eval encodedOpenRegressionResults
 
 #print axioms hasFreshCapacity_of_infinite
 #print axioms hasFreshCapacity_of_finite_card
