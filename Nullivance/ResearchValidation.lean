@@ -1,4 +1,4 @@
-import Nullivance.QuantifiedEqualityCompact
+import Nullivance.QuantifiedEqualityExactOpen
 
 /- Reproducible audit entry point:
    lake env lean ResearchValidation.lean
@@ -8,6 +8,22 @@ import Nullivance.QuantifiedEqualityCompact
 open Nullivance.InfiniteFO
 open Nullivance.InfiniteFO.HashCost
 open Nullivance.FiniteFO
+
+#print axioms exactFiniteEncoding_recovers
+#print axioms exactFiniteEqualityValuation_eq
+#print axioms decideExactFiniteOpenEquality_correct
+#print axioms decideExactFiniteOpenEquality_eq_direct
+#print axioms decideExactFiniteOpenEquality_enumeration_independent
+#print axioms exactFiniteEnumeration_length
+#print axioms decideFiniteOpenEquality_correct
+#print axioms decideFiniteOpenEquality_eq_direct
+#print axioms equalityFragmentCheck_correct
+#print axioms checkedFiniteOpenEquality_sound
+#print axioms checkedFiniteOpenEquality_accepts
+#eval (List.range 3).map exactOpenRegressionCheck
+#eval (decideExactFiniteOpenEquality ([0] : List (Fin 1)) (fun _ => 0)
+    (.ex 1 (.neg (.eq 1 0))),
+  decideFreshCompactOpenEquality (fun _ : Var => (0 : Nat)) (.ex 1 (.neg (.eq 1 0))))
 
 #print axioms namedEqualityClasses_length
 #print axioms compactEqualityEncoding_eq_iff
