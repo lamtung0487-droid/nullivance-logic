@@ -32,3 +32,4 @@ import Nullivance.QuantifiedEqualityEncoding
 import Nullivance.QuantifiedEqualityCompact
 import Nullivance.QuantifiedEqualityExactOpen
 import Nullivance.Generative
+import Nullivance.Recognition
