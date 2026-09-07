@@ -2,7 +2,7 @@ import Nullivance.RecognitionNoise
 
 /-! Sound, conservative rational certificates without a separation promise.
 Unknown is not false. Invalid measurement parameters have a distinct result.
-The classifier is not claimed maximally informative or complete. -/
+Completeness is established separately in RecognitionIntervals. -/
 namespace Nullivance.Recognition
 open Generative Continuous
 universe u v

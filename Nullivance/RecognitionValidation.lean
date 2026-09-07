@@ -1,6 +1,20 @@
-import Nullivance.RecognitionAbstention
+import Nullivance.RecognitionIntervals
 
 open Nullivance.Recognition
+
+#print axioms scalarCompatible_iff_interval
+#print axioms scalarCompatible_exists_iff
+#print axioms interval_endpoints_compatible
+#print axioms all_compatible_zero_iff
+#print axioms all_compatible_nonneutral_iff
+#print axioms all_compatible_neutral_iff
+#print axioms exists_quasivant_readout_iff
+#print axioms all_quasivant_readout_iff
+#print axioms validReadout_iff_exists_state
+#print axioms affirmativeCertificate_complete
+#print axioms negativeCertificate_complete
+#print axioms classifyProbe_complete
+#print axioms undetermined_is_unavoidable
 
 #print axioms readout_bounds
 #print axioms compatible_readout_valid
