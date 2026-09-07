@@ -1,6 +1,24 @@
-import Nullivance.RecognitionIntervals
+import Nullivance.RecognitionWitnesses
 
 open Nullivance.Recognition
+
+#print axioms ratScalarCompatible_cast
+#print axioms rational_interval_representative
+#print axioms scalarCandidates_represent
+#print axioms witnessCandidates_length
+#print axioms mem_witnessCandidates
+#print axioms witnessCandidates_represent
+#print axioms coordinatesState_compatible
+#print axioms coordinatesState_quasivant
+#print axioms exportWitness_sound
+#print axioms exportWitness_realizes
+#print axioms exportWitness_isSome_iff
+#print axioms exportWitness_none_iff
+#print axioms exportWitness_both_iff_undetermined
+#print axioms exportWitness_profile
+#print axioms witness_export_regression
+#eval witnessRegressionInputs.map (fun (ε,o) =>
+  (exportWitness ε o true, exportWitness ε o false))
 
 #print axioms scalarCompatible_iff_interval
 #print axioms scalarCompatible_exists_iff

@@ -37,3 +37,4 @@ import Nullivance.RecognitionProbes
 import Nullivance.RecognitionNoise
 import Nullivance.RecognitionAbstention
 import Nullivance.RecognitionIntervals
+import Nullivance.RecognitionWitnesses
