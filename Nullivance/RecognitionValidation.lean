@@ -1,6 +1,26 @@
-import Nullivance.RecognitionInfiniteHistory
+import Nullivance.RecognitionCompactHistory
 
 open Nullivance.Recognition
+
+#print axioms streamLower_nonnegative
+#print axioms streamUpper_le_one
+#print axioms stream_cross_bounds
+#print axioms streamLower_bddAbove
+#print axioms streamSupCoordinate_bounds
+#print axioms streamSupCoordinate_inUnit
+#print axioms streamSupState_coordinates
+#print axioms streamSupState_fits
+#print axioms stream_exists_iff_all_prefixes_feasible
+#print axioms stream_infeasible_iff_finite_infeasible
+#print axioms classifyHistory_invalid_iff
+#print axioms stream_infeasible_iff_finite_invalid
+#print axioms stream_cross_bounds_of_pairs
+#print axioms stream_exists_iff_pairwise_feasible
+#print axioms stream_infeasible_iff_two_observation_certificate
+#print axioms two_observation_bound_is_sharp
+#eval (historyFeasible [(0,((0,0),(0,1)))],
+  historyFeasible [(0,((1,0),(0,1)))],
+  classifyHistory [(0,((0,0),(0,1))),(0,((1,0),(0,1)))])
 
 #print axioms prefixFits_iff
 #print axioms streamFits_iff_all_prefixes
