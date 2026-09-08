@@ -1,6 +1,37 @@
-import Nullivance.RecognitionWitnesses
+import Nullivance.RecognitionHistory
 
 open Nullivance.Recognition
+
+#print axioms stateCoordinates_inUnit
+#print axioms readout_iff_coordinate_errors
+#print axioms in_initialProbeBox
+#print axioms in_narrowProbeBox
+#print axioms summarizeProbes_exact
+#print axioms summarizeProbes_bounded
+#print axioms inProbeBox_implies_consistent
+#print axioms lowerCornerState_coordinates
+#print axioms lowerCornerState_fits
+#print axioms historyFeasible_iff_exists
+#print axioms narrowProbeBox_comm
+#print axioms narrowProbeBox_idempotent
+#print axioms summarizeProbes_perm
+#print axioms historyFits_of_subset
+#print axioms historyFeasible_of_subset
+#print axioms history_inconsistency_persists
+#print axioms historyForces_refinement
+#print axioms historyForces_no_contradiction
+#print axioms inconsistent_history_forces_nothing
+#print axioms recorded_classification_persists
+#print axioms boxAffirmative_sound
+#print axioms historyAffirmative_sound
+#print axioms two_ambiguous_observations_force_quasivance
+#print axioms history_feasibility_regression
+#print axioms individually_valid_but_jointly_inconsistent
+#eval historyRegressionInputs.map historyFeasible
+#eval (classifyProbe complementaryProbeLeft.1 complementaryProbeLeft.2,
+  classifyProbe complementaryProbeRight.1 complementaryProbeRight.2,
+  historyAffirmative [complementaryProbeLeft,complementaryProbeRight])
+#eval List.ofFn (summarizeProbes [complementaryProbeLeft,complementaryProbeRight])
 
 #print axioms ratScalarCompatible_cast
 #print axioms rational_interval_representative

@@ -38,3 +38,4 @@ import Nullivance.RecognitionNoise
 import Nullivance.RecognitionAbstention
 import Nullivance.RecognitionIntervals
 import Nullivance.RecognitionWitnesses
+import Nullivance.RecognitionHistory
