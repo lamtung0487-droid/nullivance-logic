@@ -39,3 +39,4 @@ import Nullivance.RecognitionAbstention
 import Nullivance.RecognitionIntervals
 import Nullivance.RecognitionWitnesses
 import Nullivance.RecognitionHistory
+import Nullivance.RecognitionHistoryCompleteness

@@ -1,6 +1,15 @@
-import Nullivance.RecognitionHistory
+import Nullivance.RecognitionHistoryCompleteness
 
 open Nullivance.Recognition
+
+#print axioms boxPointState_coordinates
+#print axioms boxPointState_fits
+#print axioms box_coordinate_witness
+#print axioms box_all_zero_iff
+#print axioms box_all_nonneutral_iff
+#print axioms boxAffirmative_complete
+#print axioms historyAffirmative_complete
+#print axioms history_not_affirmed_counterexample
 
 #print axioms stateCoordinates_inUnit
 #print axioms readout_iff_coordinate_errors
