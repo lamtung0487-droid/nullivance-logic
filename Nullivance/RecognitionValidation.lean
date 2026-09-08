@@ -1,6 +1,34 @@
-import Nullivance.RecognitionHistoryCompleteness
+import Nullivance.RecognitionHistoryWitnesses
 
 open Nullivance.Recognition
+
+#print axioms boxWitnessCandidates_length
+#print axioms mem_boxWitnessCandidates
+#print axioms boxWitnessCandidates_represent
+#print axioms boxPointState_quasivant
+#print axioms exportHistoryWitness_sound
+#print axioms exportHistoryWitness_realizes
+#print axioms exportHistoryWitness_isSome_iff
+#print axioms exportHistoryWitness_none_iff
+#print axioms classifyHistory_complete
+#print axioms classifyHistory_sound
+#print axioms history_undetermined_unavoidable
+#print axioms exportHistoryWitness_singleton_profile
+#print axioms classifyHistory_singleton
+#print axioms exportHistoryWitness_perm
+#print axioms classifyHistory_perm
+#print axioms exportHistoryWitness_duplicate
+#print axioms classifyHistory_affirmed_iff
+#print axioms joint_neutrality_refutation_regression
+#print axioms history_classification_regression
+#print axioms empty_history_witnesses
+#eval (historyRegressionInputs ++ [[complementaryProbeLeft,complementaryProbeRight],
+  [neutralizingProbeLeft,neutralizingProbeRight]]).map classifyHistory
+#eval (classifyHistory [neutralizingProbeLeft],classifyHistory [neutralizingProbeRight],
+  classifyHistory [neutralizingProbeLeft,neutralizingProbeRight])
+#eval (exportHistoryWitness [] true,exportHistoryWitness [] false)
+#eval (exportHistoryWitness [neutralizingProbeLeft,neutralizingProbeRight] true,
+  exportHistoryWitness [neutralizingProbeLeft,neutralizingProbeRight] false)
 
 #print axioms boxPointState_coordinates
 #print axioms boxPointState_fits
