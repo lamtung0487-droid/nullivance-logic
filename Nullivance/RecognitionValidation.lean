@@ -1,6 +1,42 @@
-import Nullivance.RecognitionHistoryWitnesses
+import Nullivance.RecognitionInfiniteHistory
 
 open Nullivance.Recognition
+
+#print axioms prefixFits_iff
+#print axioms streamFits_iff_all_prefixes
+#print axioms prefix_forcing_implies_stream_forcing
+#print axioms shrinkingAllowance_pos
+#print axioms shrinkingAllowance_le_one
+#print axioms shrinkingAllowance_antitone
+#print axioms shrinkingAllowance_cast
+#print axioms error_below_all_shrinking_allowances
+#print axioms shrinkingStream_exact
+#print axioms sliceState_quasivant
+#print axioms sliceState_readout
+#print axioms zeroSliceState_quasivant
+#print axioms zeroSliceState_streamFits
+#print axioms zero_center_stream_forces_quasivance
+#print axioms shrinkingAllowance_inUnit
+#print axioms delayedIntensityState_not_quasivant
+#print axioms delayedIntensityState_prefixFits
+#print axioms classifyHistory_undetermined_of_witnesses
+#print axioms zero_center_every_prefix_undetermined
+#print axioms infinite_affirmation_without_finite_affirmation
+#print axioms neutralSliceState_not_quasivant
+#print axioms neutralSliceState_streamFits
+#print axioms neutral_center_stream_refutes_quasivance
+#print axioms delayedStructure_inUnit
+#print axioms delayedStructureState_quasivant
+#print axioms delayedStructureState_prefixFits
+#print axioms neutral_center_every_prefix_undetermined
+#print axioms infinite_refutation_without_finite_refutation
+#print axioms no_unconditional_finite_affirmation
+#print axioms no_unconditional_finite_refutation
+#print axioms zero_center_no_sound_finite_verdict
+#print axioms neutral_center_no_sound_finite_verdict
+#eval (List.range 5).map (fun N =>
+  (classifyHistory (probePrefix (shrinkingStream ((0,0),(0,0))) N),
+   classifyHistory (probePrefix (shrinkingStream ((0,0),(1/2,0))) N)))
 
 #print axioms boxWitnessCandidates_length
 #print axioms mem_boxWitnessCandidates
