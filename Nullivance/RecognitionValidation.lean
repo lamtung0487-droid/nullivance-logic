@@ -1,6 +1,40 @@
 import Nullivance.RecognitionSourcedConflict
+import Nullivance.RecognitionFiniteStopping
 
 open Nullivance.Recognition
+
+#print axioms replacedCoordinates_inUnit
+#print axioms replaceStateCoordinate_coordinates
+#print axioms replaceStateCoordinate_at
+#print axioms replaceStateCoordinate_readoutFits
+#print axioms replaceStateCoordinate_streamFits
+#print axioms stream_coordinate_exclusion_has_observation
+#print axioms coordinate_exclusion_observation_forces_prefix
+#print axioms stream_coordinate_exclusion_finite
+#print axioms stream_coordinate_exclusion_iff_observation
+#print axioms stream_coordinate_exclusion_iff_finite
+#print axioms summarizeProbes_upper_le_iff
+#print axioms prefix_upper_zero_iff
+#print axioms prefix_exists_of_stream
+#print axioms prefixForces_mono
+#print axioms finite_prefix_forcing_and
+#print axioms finite_coordinate_zero_iff_clamp
+#print axioms stream_forced_zero_upper_nonnegative
+#print axioms stream_zero_clamp_iff_attained
+#print axioms quasivant_iff_scalar_coordinates
+#print axioms classifyHistory_refuted_iff
+#print axioms finite_affirmation_iff_intensity_clamps
+#print axioms eventual_affirmation_iff_intensity_clamps
+#print axioms finite_affirmation_iff_attained_zero_bounds
+#print axioms stream_nonzero_iff_positive_lower
+#print axioms stream_nonzero_intensity_finitely_refuted
+#print axioms shrinking_zero_has_no_clamp
+#print axioms positive_quarter_stream_forces_nonzero
+#print axioms positive_quarter_finite_stopping_regression
+#print axioms exact_zero_finite_affirmation_regression
+#eval (classifyHistory (probePrefix (shrinkingStream ((1/4,0),(0,0))) 4),
+  classifyHistory (probePrefix (shrinkingStream ((1/4,0),(0,0))) 5))
+#eval classifyHistory (probePrefix (fun _ => (0,((0,0),(0,0)))) 1)
 
 #print axioms mem_sourcedIntervalCertificate
 #print axioms sourcedIntervalCertificate_length

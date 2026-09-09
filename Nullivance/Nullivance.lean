@@ -46,3 +46,5 @@ import Nullivance.RecognitionCompactHistory
 import Nullivance.RecognitionConflictExtraction
 import Nullivance.RecognitionSourcedHistory
 import Nullivance.RecognitionSourcedConflict
+import Nullivance.RecognitionCoordinateStopping
+import Nullivance.RecognitionFiniteStopping
