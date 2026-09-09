@@ -1,6 +1,56 @@
-import Nullivance.RecognitionConflictExtraction
+import Nullivance.RecognitionSourcedConflict
 
 open Nullivance.Recognition
+
+#print axioms mem_sourcedIntervalCertificate
+#print axioms sourcedIntervalCertificate_length
+#print axioms sourcedIntervalCertificate_nodup
+#print axioms sourcedIntervalCertificate_provenance
+#print axioms sourcedIntervalCertificate_bounds
+#print axioms sourcedIntervalCertificate_conflict
+#print axioms crossedCoordinate_some
+#print axioms crossedCoordinate_none_iff
+#print axioms extractSourcedConflict_sound
+#print axioms extractSourcedConflict_none_iff
+#print axioms extractSourcedConflict_isSome_iff
+#print axioms extractSourcedConflict_presence_eq_baseline
+#print axioms extractSourcedConflict_invalid_iff
+#print axioms extractSourcedConflict_certificate_invalid
+#print axioms extractSourcedConflict_certificate_nonempty
+#print axioms extractSourcedConflict_certificate_nodup
+#print axioms sourced_conflict_regression
+#print axioms sourced_conflict_sharp_pair
+#print axioms sourced_conflict_initial_endpoint_singletons
+#print axioms sourced_conflict_negative_allowance
+#print axioms sourced_conflict_delayed_index
+#print axioms sourced_conflict_touching_intervals
+#eval historyRegressionInputs.map (fun rs => (extractSourcedConflict rs).isSome)
+#eval extractSourcedConflict [(0,((0,0),(0,1))), (0,((1,0),(0,1)))]
+#eval extractSourcedConflict [(-1,((0,0),(0,1)))]
+-- A larger runtime check of one combined counted summary, not a timing claim.
+#eval let result := runSourcedHistory (List.replicate 10000 (0,((0,0),(0,1))))
+  (result.2, crossedCoordinate result.1)
+
+#print axioms updateSourcedIntervalCounted_comparisons
+#print axioms updateSourcedBoxCounted_comparisons
+#print axioms updateSourcedBox_at
+#print axioms updateSourcedInterval_bounds
+#print axioms updateSourcedBox_erase
+#print axioms initialSourcedBox_erase
+#print axioms updateSourcedInterval_valid
+#print axioms updateSourcedBox_valid
+#print axioms initialSourcedBox_valid
+#print axioms scanSourced_comparisons
+#print axioms scanSourced_append
+#print axioms scanSourced_valid
+#print axioms summarizeProbes_snoc
+#print axioms scanSourced_erase
+#print axioms runSourcedHistory_comparisons
+#print axioms runSourcedHistory_erase
+#print axioms runSourcedHistory_valid
+#print axioms runSourcedHistory_exact
+#print axioms runSourcedHistory_append
+#eval historyRegressionInputs.map (fun rs => (runSourcedHistory rs).2)
 
 #print axioms historyFeasible_iff_pairwise
 #print axioms mem_conflictCandidates
