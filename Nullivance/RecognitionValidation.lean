@@ -1,7 +1,14 @@
 import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionFiniteStopping
+import Nullivance.RecognitionVerdictPersistence
 
 open Nullivance.Recognition
+
+#print axioms prefix_affirmed_persistent
+#print axioms prefix_refuted_persistent
+#print axioms eventual_refutation_iff_finite
+#print axioms feasible_prefixes_cannot_disagree
+#print axioms contradictory_extension_regression
 
 #print axioms replacedCoordinates_inUnit
 #print axioms replaceStateCoordinate_coordinates
