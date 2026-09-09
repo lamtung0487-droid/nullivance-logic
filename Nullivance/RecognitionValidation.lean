@@ -1,6 +1,30 @@
-import Nullivance.RecognitionCompactHistory
+import Nullivance.RecognitionConflictExtraction
 
 open Nullivance.Recognition
+
+#print axioms historyFeasible_iff_pairwise
+#print axioms mem_conflictCandidates
+#print axioms conflictCandidates_length
+#print axioms scanConflicts_result
+#print axioms scanConflicts_checks_le
+#print axioms scanConflicts_none_checks
+#print axioms extractConflict_sound
+#print axioms extractConflict_none_iff
+#print axioms extractConflict_isSome_iff
+#print axioms extractConflict_invalid_iff
+#print axioms extractConflict_certificate_invalid
+#print axioms conflictChecks_le_square
+#print axioms conflictChecks_eq_square_of_feasible
+#print axioms extractConflict_empty
+#print axioms conflict_extraction_regression
+#print axioms conflict_extraction_sharp_pair
+#print axioms conflict_extraction_negative_allowance
+-- One annotated scan per history: the same run returns a certificate and its count.
+#eval historyRegressionInputs.map (fun rs =>
+  let result := scanConflicts (conflictCandidates rs)
+  (result.1.isSome, result.2))
+#eval extractConflict [(0,((0,0),(0,1))), (0,((1,0),(0,1)))]
+#eval extractConflict [(-1,((0,0),(0,1)))]
 
 #print axioms streamLower_nonnegative
 #print axioms streamUpper_le_one

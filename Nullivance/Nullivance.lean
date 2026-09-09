@@ -43,3 +43,4 @@ import Nullivance.RecognitionHistoryCompleteness
 import Nullivance.RecognitionHistoryWitnesses
 import Nullivance.RecognitionInfiniteHistory
 import Nullivance.RecognitionCompactHistory
+import Nullivance.RecognitionConflictExtraction
