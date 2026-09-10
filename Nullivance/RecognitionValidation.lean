@@ -2,8 +2,18 @@ import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
+import Nullivance.RecognitionSearchCost
 
 open Nullivance.Recognition
+
+#print axioms firstPassing_minimal
+#print axioms firstPassingCounted_result
+#print axioms firstPassingCounted_cost
+#print axioms firstPassingCounted_cost_le
+#print axioms searchCertificate_minimal
+#print axioms searchCertificateCounted_result
+#print axioms searchCertificateCounted_cost
+#print axioms counted_search_regression
 
 #print axioms firstPassing_none_iff
 #print axioms firstPassing_sound
