@@ -1,8 +1,16 @@
 import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
+import Nullivance.RecognitionCertificateSearch
 
 open Nullivance.Recognition
+
+#print axioms firstPassing_none_iff
+#print axioms firstPassing_sound
+#print axioms searchCertificate_sound
+#print axioms searchCertificate_timeout_iff
+#print axioms searchCertificate_eventual_success_iff
+#print axioms certificate_search_regression
 
 #print axioms prefix_affirmed_persistent
 #print axioms prefix_refuted_persistent

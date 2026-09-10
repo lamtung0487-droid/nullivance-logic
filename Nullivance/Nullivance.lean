@@ -49,3 +49,4 @@ import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionCoordinateStopping
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
+import Nullivance.RecognitionCertificateSearch
