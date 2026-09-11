@@ -1,0 +1,21 @@
+{
+  "milestone": "DR-0044",
+  "date": "2026-09-12",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionIncrementalSearch.lean",
+  "sourceSha256": "5c55894f20bb3cefb230f5a6d72bb83dfc301a1e363ace69c0168937516ad0bc",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2059
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "previousOutputUnchanged": true,
+    "sorryAxPresent": false
+  },
+  "newAuditAndRegressionOutput": "'Nullivance.Recognition.classifySummary_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.probePrefix_succ_append' depends on axioms: [propext]\n'Nullivance.Recognition.sourced_prefix_succ' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.initialSearchCursor_matches' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.advanceSearchCursor_matches' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sourcedHasCertificate_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_matches' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_tests' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_next' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_next_ge' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_comparisons' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_minimal' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_provenance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_comparisons' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchIncremental_append' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_cost_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runIncrementalSearch_timeout_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.incremental_limiting_zero_timeout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.incremental_search_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.incremental_edge_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n((none, 5, 5, 40), (some 5, 5, 6, 40), true)\n(none, 1000, 1000, 8000)\n",
+  "independentReview": "not performed; auxiliary review failed to execute"
+}

@@ -3,8 +3,40 @@ import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
+import Nullivance.RecognitionIncrementalSearch
 
 open Nullivance.Recognition
+
+#print axioms classifySummary_eq
+#print axioms probePrefix_succ_append
+#print axioms sourced_prefix_succ
+#print axioms initialSearchCursor_matches
+#print axioms advanceSearchCursor_matches
+#print axioms sourcedHasCertificate_eq
+#print axioms searchIncremental_result
+#print axioms searchIncremental_matches
+#print axioms searchIncremental_tests
+#print axioms searchIncremental_next
+#print axioms searchIncremental_next_ge
+#print axioms searchIncremental_comparisons
+#print axioms runIncrementalSearch_result
+#print axioms runIncrementalSearch_sound
+#print axioms runIncrementalSearch_minimal
+#print axioms runIncrementalSearch_provenance
+#print axioms runIncrementalSearch_comparisons
+#print axioms searchIncremental_append
+#print axioms runIncrementalSearch_cost_bounds
+#print axioms runIncrementalSearch_timeout_iff
+#print axioms incremental_limiting_zero_timeout
+#print axioms incremental_search_regression
+#print axioms incremental_edge_regression
+#eval let r := shrinkingStream ((1/4,0),(0,0))
+  let a := runIncrementalSearch r 5
+  let b := resumeIncremental r a 4
+  ((a.found,a.cursor.next,a.tests,a.comparisons),
+    (b.found,b.cursor.next,b.tests,b.comparisons), b == runIncrementalSearch r 9)
+#eval let result := runIncrementalSearch (fun _ => (1,((0,0),(0,0)))) 1000
+  (result.found,result.cursor.next,result.tests,result.comparisons)
 
 #print axioms firstPassing_minimal
 #print axioms firstPassingCounted_result
