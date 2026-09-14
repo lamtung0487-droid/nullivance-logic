@@ -1,0 +1,36 @@
+{
+  "milestone": "DR-0049",
+  "date": "2026-09-15",
+  "baseCommit": "fa8eaa1",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "sources": [
+    {
+      "path": "Nullivance/Nullivance/RecognitionExportCost.lean",
+      "sha256": "366e46d82ef6c3612276825314fee3c80dff1eca45f174b03efdceab8e540f2d"
+    }
+  ],
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2066
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 15,
+    "priorOutputUnchangedSuffix": true
+  },
+  "newAuditOutput": "'Nullivance.Recognition.refutingCoordinateCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.refutingCoordinateCounted_cost' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sourceEqualityCounted_spec' depends on axioms: [propext]\n'Nullivance.Recognition.intervalCertificateCounted_erasure' depends on axioms: [propext]\n'Nullivance.Recognition.intervalCertificateCounted_cost' depends on axioms: [propext]\n'Nullivance.Recognition.intervalCertificateCounted_cost_le' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.extractBoxRefutationCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxRefutationCounted_order_cost' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.extractBoxRefutationCounted_equality_bound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultRefutationCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultRefutationCounted_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchExportOrderTotal_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultRefutationCounted_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.export_cost_boundary_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.export_cost_empty_invalid_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "costModel": {
+    "orderNodes": "search plus one final export <= 24*fuel+10",
+    "separateWholeSourceEqualityCalls": "<=1",
+    "excludes": [
+      "source equality internals",
+      "rational arithmetic",
+      "bit cost",
+      "machine time",
+      "repeated intermediate exports"
+    ]
+  }
+}

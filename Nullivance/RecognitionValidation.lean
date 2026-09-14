@@ -8,8 +8,25 @@ import Nullivance.RecognitionRefutationCriteria
 import Nullivance.RecognitionEndpointSearch
 import Nullivance.RecognitionSourcedRefutation
 import Nullivance.RecognitionCursorRefutation
+import Nullivance.RecognitionExportCost
 
 open Nullivance.Recognition
+
+#print axioms refutingCoordinateCounted_erasure
+#print axioms refutingCoordinateCounted_cost
+#print axioms sourceEqualityCounted_spec
+#print axioms intervalCertificateCounted_erasure
+#print axioms intervalCertificateCounted_cost
+#print axioms intervalCertificateCounted_cost_le
+#print axioms extractBoxRefutationCounted_erasure
+#print axioms extractBoxRefutationCounted_order_cost
+#print axioms extractBoxRefutationCounted_equality_bound
+#print axioms resultRefutationCounted_erasure
+#print axioms resultRefutationCounted_bounds
+#print axioms searchExportOrderTotal_bound
+#print axioms resultRefutationCounted_resume
+#print axioms export_cost_boundary_regression
+#print axioms export_cost_empty_invalid_regression
 
 #print axioms extractBoxRefutation_history
 #print axioms extractBoxRefutation_cursor
