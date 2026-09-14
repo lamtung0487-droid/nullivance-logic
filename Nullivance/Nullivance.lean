@@ -53,3 +53,6 @@ import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
 import Nullivance.RecognitionIncrementalSearch
 import Nullivance.RecognitionRefutationCriteria
+import Nullivance.RecognitionEndpointClassifier
+import Nullivance.RecognitionEndpointCost
+import Nullivance.RecognitionEndpointSearch

@@ -1,0 +1,36 @@
+{
+  "milestone": "DR-0046",
+  "date": "2026-09-14",
+  "baseCommit": "20aa035",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "sources": [
+    {
+      "path": "Nullivance/Nullivance/RecognitionEndpointClassifier.lean",
+      "sha256": "ddb976387a61007461f340e64469026535f81abbc70f22cd2d64f23a8f53200d"
+    },
+    {
+      "path": "Nullivance/Nullivance/RecognitionEndpointCost.lean",
+      "sha256": "a0b7da4b9994ef11c2c6a226d9861011c6d11861cd25ea63d440ac1369875399"
+    },
+    {
+      "path": "Nullivance/Nullivance/RecognitionEndpointSearch.lean",
+      "sha256": "c61cb566d3b65ca912fce4e54ba1aaadd4db1f7ad667dc73768b7945ebcc8316"
+    }
+  ],
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2063
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "previousOutputUnchanged": true,
+    "sorryAxPresent": false
+  },
+  "theorems": 26,
+  "missingAudits": [],
+  "newAuditAndRegressionOutput": "'Nullivance.Recognition.classifyEndpoints_of_history' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.classifyEndpoints_complete' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.classifyEndpoints_of_cursor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpoint_classifier_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpoint_unbounded_box_counterexample' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.endpointLeCounted_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpointLtCounted_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpointConsistencyCounted_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpointAffirmationCounted_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpointRefutationCounted_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.classifyEndpointsCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.classifyEndpointsCounted_comparisons' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpoint_counted_invalid_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpoint_counted_undetermined_regression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.endpoint_counted_affirmed_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpoint_counted_refuted_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchEndpointCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchEndpointCounted_classifier_comparisons' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_found' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_minimal' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_total' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_total_le' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchEndpointCounted_append' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.endpoint_search_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n((none, 5, 40, 80, 120), (some 5, 6, 40, 96, 136), true)\n(none, 1000, 1000, 8000, 16000, 24000)\n",
+  "review": "Separate internal implementation and read-only review; integrated source inspection and kernel checking. Not external academic review."
+}

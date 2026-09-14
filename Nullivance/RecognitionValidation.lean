@@ -5,8 +5,43 @@ import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
 import Nullivance.RecognitionIncrementalSearch
 import Nullivance.RecognitionRefutationCriteria
+import Nullivance.RecognitionEndpointSearch
 
 open Nullivance.Recognition
+
+#print axioms classifyEndpoints_of_history
+#print axioms classifyEndpoints_complete
+#print axioms classifyEndpoints_of_cursor
+#print axioms endpoint_classifier_regression
+#print axioms endpoint_unbounded_box_counterexample
+#print axioms endpointLeCounted_spec
+#print axioms endpointLtCounted_spec
+#print axioms endpointConsistencyCounted_spec
+#print axioms endpointAffirmationCounted_spec
+#print axioms endpointRefutationCounted_spec
+#print axioms classifyEndpointsCounted_erasure
+#print axioms classifyEndpointsCounted_comparisons
+#print axioms endpoint_counted_invalid_regression
+#print axioms endpoint_counted_undetermined_regression
+#print axioms endpoint_counted_affirmed_regression
+#print axioms endpoint_counted_refuted_regression
+#print axioms searchEndpointCounted_erasure
+#print axioms searchEndpointCounted_classifier_comparisons
+#print axioms runEndpointSearch_erasure
+#print axioms runEndpointSearch_found
+#print axioms runEndpointSearch_sound
+#print axioms runEndpointSearch_minimal
+#print axioms runEndpointSearch_total
+#print axioms runEndpointSearch_total_le
+#print axioms searchEndpointCounted_append
+#print axioms endpoint_search_regression
+#eval let r := shrinkingStream ((1/4,0),(0,0))
+  let a := runEndpointSearch r 5
+  let b := resumeEndpointSearch r a 4
+  ((a.1.found,a.1.tests,a.1.comparisons,a.2,endpointSearchTotal a),
+    (b.1.found,b.1.tests,b.1.comparisons,b.2,endpointSearchTotal b), b == runEndpointSearch r 9)
+#eval let out := runEndpointSearch (fun _ => (1,((0,0),(0,0)))) 1000
+  (out.1.found,out.1.cursor.next,out.1.tests,out.1.comparisons,out.2,endpointSearchTotal out)
 
 #print axioms interval_nonneutral_witness
 #print axioms box_not_refuting_quasivant_witness
