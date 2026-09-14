@@ -1,0 +1,28 @@
+{
+  "milestone": "DR-0048",
+  "date": "2026-09-15",
+  "baseCommit": "b852494",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "sources": [
+    {
+      "path": "Nullivance/Nullivance/RecognitionCursorRefutation.lean",
+      "sha256": "d742e982ea215e2540961b2b11087841122f46f11ce8d54625283f27f1b510f9"
+    }
+  ],
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2065
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 9,
+    "priorOutputUnchangedSuffix": true
+  },
+  "newAuditOutput": "'Nullivance.Recognition.extractBoxRefutation_history' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxRefutation_cursor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.runEndpointSearch_cursor_matches' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultRefutation_baseline' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultRefutation_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultRefutation_complete' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultRefutation_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cursor_refutation_timeout_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cursor_refutation_affirmed_invalid' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "proofHoleFound": false,
+  "scope": "Matching/reachable cursors in fixed independent scalar alpha/Theta model",
+  "costCaveat": "Existing search counters exclude export work"
+}

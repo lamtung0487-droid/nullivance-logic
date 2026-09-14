@@ -7,8 +7,19 @@ import Nullivance.RecognitionIncrementalSearch
 import Nullivance.RecognitionRefutationCriteria
 import Nullivance.RecognitionEndpointSearch
 import Nullivance.RecognitionSourcedRefutation
+import Nullivance.RecognitionCursorRefutation
 
 open Nullivance.Recognition
+
+#print axioms extractBoxRefutation_history
+#print axioms extractBoxRefutation_cursor
+#print axioms runEndpointSearch_cursor_matches
+#print axioms resultRefutation_baseline
+#print axioms resultRefutation_sound
+#print axioms resultRefutation_complete
+#print axioms resultRefutation_resume
+#print axioms cursor_refutation_timeout_boundary
+#print axioms cursor_refutation_affirmed_invalid
 
 #print axioms refutingCoordinate_some
 #print axioms refutingCoordinate_none_iff
