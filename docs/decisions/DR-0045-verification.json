@@ -1,0 +1,24 @@
+{
+  "milestone": "DR-0045",
+  "date": "2026-09-12",
+  "baseCommit": "e737464",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionRefutationCriteria.lean",
+  "sourceSha256": "914de0c81996361909e146a77dbba068e6df4747727b1c2c59719f0cf204c916",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2060
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "previousOutputUnchanged": true,
+    "sorryAxPresent": false
+  },
+  "theorems": 22,
+  "missingAudits": [],
+  "newAuditAndRegressionOutput": "'Nullivance.Recognition.interval_nonneutral_witness' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.box_not_refuting_quasivant_witness' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.boxRefuting_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.boxRefuting_complete' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.classifyHistory_refuted_iff_box' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.summarizeProbes_lower_ge_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.summarizeProbes_lower_pos_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.boxRefuting_iff_events' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.classifyHistory_refuted_iff_events' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.prefix_event_iff' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.exists_prefix_event_iff' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.exists_prefix_pair_events_iff' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.exists_prefix_refutation_events_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.finite_refutation_iff_events' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.eventual_refutation_iff_events' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.refuted_stream_limit_only_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.neutral_limit_has_no_refutation_event' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.stream_neutral_clamps_attained' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.refutationEvents_small_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.finite_refutation_small_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.refutation_boundary_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.refutation_certificate_two_necessary' depends on axioms: [propext, Classical.choice, Quot.sound]\n[Nullivance.Recognition.ProbeVerdict.affirmed,\n Nullivance.Recognition.ProbeVerdict.undetermined,\n Nullivance.Recognition.ProbeVerdict.invalid,\n Nullivance.Recognition.ProbeVerdict.refuted]\n",
+  "review": "Separate read-only internal agent reviewed core criteria and small-certificate arguments; not external academic peer review."
+}

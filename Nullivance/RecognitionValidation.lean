@@ -4,8 +4,35 @@ import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
 import Nullivance.RecognitionIncrementalSearch
+import Nullivance.RecognitionRefutationCriteria
 
 open Nullivance.Recognition
+
+#print axioms interval_nonneutral_witness
+#print axioms box_not_refuting_quasivant_witness
+#print axioms boxRefuting_sound
+#print axioms boxRefuting_complete
+#print axioms classifyHistory_refuted_iff_box
+#print axioms summarizeProbes_lower_ge_iff
+#print axioms summarizeProbes_lower_pos_iff
+#print axioms boxRefuting_iff_events
+#print axioms classifyHistory_refuted_iff_events
+#print axioms prefix_event_iff
+#print axioms exists_prefix_event_iff
+#print axioms exists_prefix_pair_events_iff
+#print axioms exists_prefix_refutation_events_iff
+#print axioms finite_refutation_iff_events
+#print axioms eventual_refutation_iff_events
+#print axioms refuted_stream_limit_only_iff
+#print axioms neutral_limit_has_no_refutation_event
+#print axioms stream_neutral_clamps_attained
+#print axioms refutationEvents_small_certificate
+#print axioms finite_refutation_small_certificate
+#print axioms refutation_boundary_regression
+#print axioms refutation_certificate_two_necessary
+#eval ([[(0,((0,0),(0,0)))], [(1/4,((0,0),(3/4,1/4)))],
+  [(0,((0,0),(0,0))), (0,((1,0),(0,0)))],
+  [neutralizingProbeLeft,neutralizingProbeRight]] : List (List ProbeObservation)).map classifyHistory
 
 #print axioms classifySummary_eq
 #print axioms probePrefix_succ_append

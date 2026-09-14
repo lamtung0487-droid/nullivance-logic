@@ -52,3 +52,4 @@ import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
 import Nullivance.RecognitionIncrementalSearch
+import Nullivance.RecognitionRefutationCriteria
