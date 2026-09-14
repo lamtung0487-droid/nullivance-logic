@@ -6,8 +6,20 @@ import Nullivance.RecognitionSearchCost
 import Nullivance.RecognitionIncrementalSearch
 import Nullivance.RecognitionRefutationCriteria
 import Nullivance.RecognitionEndpointSearch
+import Nullivance.RecognitionSourcedRefutation
 
 open Nullivance.Recognition
+
+#print axioms refutingCoordinate_some
+#print axioms refutingCoordinate_none_iff
+#print axioms coordinateRefutes_sound
+#print axioms extractSourcedRefutation_sound
+#print axioms extractSourcedRefutation_isSome_iff
+#print axioms sourced_refutation_pair_regression
+#print axioms sourced_refutation_invalid_regression
+#print axioms sourced_refutation_boundary_regression
+
+#eval extractSourcedRefutation [neutralizingProbeLeft, neutralizingProbeRight]
 
 #print axioms classifyEndpoints_of_history
 #print axioms classifyEndpoints_complete

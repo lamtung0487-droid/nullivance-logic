@@ -1,0 +1,23 @@
+{
+  "milestone": "DR-0047",
+  "date": "2026-09-14",
+  "baseCommit": "b077808",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "sources": [{
+    "path": "Nullivance/Nullivance/RecognitionSourcedRefutation.lean",
+    "sha256": "3a459dce0d7fa7cc02e1562e8f0b845fa4080f574bcf3f95a71df37f105fc3f7"
+  }],
+  "fullBuild": {"exitCode": 0, "jobs": 2064},
+  "researchValidation": {"exitCode": 0},
+  "recognitionValidation": {"exitCode": 0, "newNamedTheoremsAudited": 8},
+  "allowedNewTheoremDependencies": ["propext", "Classical.choice", "Quot.sound"],
+  "proofHoleFound": false,
+  "diffCheckExitCode": 0,
+  "kernelRegressions": {
+    "neutralPairIndices": [1, 0],
+    "delayedDuplicateIndices": [2, 0],
+    "invalidHistory": null,
+    "boundaryExpectedIndices": [null, null, null, null, [0], [0], [0], [2, 0]]
+  },
+  "limitations": ["fixed independent scalar model", "not shortest certificates", "no cursor integration yet", "no bit-cost bound", "no general infinite completeness"]
+}
