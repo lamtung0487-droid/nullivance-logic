@@ -9,8 +9,17 @@ import Nullivance.RecognitionEndpointSearch
 import Nullivance.RecognitionSourcedRefutation
 import Nullivance.RecognitionCursorRefutation
 import Nullivance.RecognitionExportCost
+import Nullivance.RecognitionIndexedDedup
 
 open Nullivance.Recognition
+
+#print axioms authenticated_sources_eq_iff
+#print axioms indexedIntervalCertificate_eq
+#print axioms extractIndexedBoxRefutation_eq
+#print axioms indexedResultRefutation_eq
+#print axioms indexedResultRefutation_baseline
+#print axioms indexedResultRefutation_resume
+#print axioms indexed_dedup_forgery_regression
 
 #print axioms refutingCoordinateCounted_erasure
 #print axioms refutingCoordinateCounted_cost

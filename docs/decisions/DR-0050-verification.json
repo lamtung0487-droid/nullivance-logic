@@ -1,0 +1,31 @@
+{
+  "milestone": "DR-0050",
+  "date": "2026-09-15",
+  "baseCommit": "6d9f0e4",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "sources": [
+    {
+      "path": "Nullivance/Nullivance/RecognitionIndexedDedup.lean",
+      "sha256": "3748885054f3a4f7f9805d41edd11148baf19149e881d8e263bafb824933e931"
+    }
+  ],
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2067
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 7,
+    "priorOutputUnchangedSuffix": true
+  },
+  "newAuditOutput": "'Nullivance.Recognition.authenticated_sources_eq_iff' depends on axioms: [propext]\n'Nullivance.Recognition.indexedIntervalCertificate_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractIndexedBoxRefutation_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.indexedResultRefutation_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.indexedResultRefutation_baseline' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.indexedResultRefutation_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.indexed_dedup_forgery_regression' depends on axioms: [propext, Quot.sound]\n",
+  "regression": {
+    "forgedSameIndexNewLength": 1,
+    "forgedSameIndexOldLength": 2
+  },
+  "scope": "Index-only deduplication equivalent under authenticated provenance; no arbitrary forged-record equivalence",
+  "remaining": "Instrumented cost composition of replacement; bit complexity; stopping schedules"
+}
