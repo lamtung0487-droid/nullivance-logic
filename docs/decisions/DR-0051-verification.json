@@ -1,0 +1,15 @@
+{
+  "milestone": "DR-0051",
+  "date": "2026-09-15",
+  "baseCommit": "81c5fff",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionSeparationStopping.lean",
+  "sha256": "369ca99a5b2627831c6775a66894a2a4563b9d5d6456dfe8b716bfe4c8ae7cfc",
+  "fullBuild": {"exitCode": 0, "jobs": 2068},
+  "researchValidation": {"exitCode": 0},
+  "recognitionValidation": {"exitCode": 0, "newNamedTheoremsAudited": 6},
+  "dependencies": ["propext", "Classical.choice", "Quot.sound"],
+  "bound": "Explicit observation n with 2*allowance<delta implies refutation export with fuel n+2",
+  "scope": "Fixed feasible scalar stream and one alpha coordinate at least delta",
+  "remaining": "Construct a suitable n from an explicit rational error schedule; no universal termination claim"
+}

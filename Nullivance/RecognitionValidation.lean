@@ -10,8 +10,16 @@ import Nullivance.RecognitionSourcedRefutation
 import Nullivance.RecognitionCursorRefutation
 import Nullivance.RecognitionExportCost
 import Nullivance.RecognitionIndexedDedup
+import Nullivance.RecognitionSeparationStopping
 
 open Nullivance.Recognition
+
+#print axioms positive_margin_observation
+#print axioms positive_margin_prefix_refuted
+#print axioms certificate_budget_of_refuted_prefix
+#print axioms positive_margin_search_budget
+#print axioms positive_margin_export_exists
+#print axioms margin_factor_two_boundary
 
 #print axioms authenticated_sources_eq_iff
 #print axioms indexedIntervalCertificate_eq
