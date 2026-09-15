@@ -62,3 +62,4 @@ import Nullivance.RecognitionExportCost
 import Nullivance.RecognitionIndexedDedup
 import Nullivance.RecognitionSeparationStopping
 import Nullivance.RecognitionRationalSchedule
+import Nullivance.RecognitionAffirmationSchedule

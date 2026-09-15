@@ -12,8 +12,18 @@ import Nullivance.RecognitionExportCost
 import Nullivance.RecognitionIndexedDedup
 import Nullivance.RecognitionSeparationStopping
 import Nullivance.RecognitionRationalSchedule
+import Nullivance.RecognitionAffirmationSchedule
 
 open Nullivance.Recognition
+
+#print axioms separated_marker_observation
+#print axioms prefix_marker_exclusion
+#print axioms reciprocal_affirmation_prefix
+#print axioms affirmed_search_budget
+#print axioms reciprocal_affirmation_search
+#print axioms affirmation_budget_regression
+#print axioms affirmation_strict_margin_regression
+#print axioms reciprocal_without_clamps_timeout
 
 #print axioms reciprocalMarginIndex_strict
 #print axioms reciprocal_schedule_margin

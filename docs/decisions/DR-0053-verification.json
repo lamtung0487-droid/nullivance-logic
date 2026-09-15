@@ -1,0 +1,29 @@
+{
+  "milestone": "DR-0053",
+  "date": "2026-09-16",
+  "baseCommit": "c10cd1c",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionAffirmationSchedule.lean",
+  "sha256": "d153dc3886d3d106f41bf9a89f4d3eaf4bccd9d3ab15b69dcd688f34009366dd",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2070
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 8
+  },
+  "newAuditOutput": "'Nullivance.Recognition.separated_marker_observation' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.prefix_marker_exclusion' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_affirmation_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmed_search_budget' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_affirmation_search' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmation_budget_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmation_strict_margin_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_without_clamps_timeout' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "review": "Separate read-only internal mathematical and source/report review; no blocker found; not academic peer review",
+  "scope": "Fixed feasible scalar stream, supplied alpha clamp indices, positive rational theta separation, reciprocal allowance upper bound",
+  "budget": "max(max k0 k1,floor(2/delta))+2",
+  "limits": [
+    "clamp times not inferred from schedule",
+    "no indexed affirmative exporter",
+    "no unrestricted infinite completeness",
+    "no machine-time bound"
+  ]
+}
