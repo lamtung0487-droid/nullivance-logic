@@ -11,8 +11,18 @@ import Nullivance.RecognitionCursorRefutation
 import Nullivance.RecognitionExportCost
 import Nullivance.RecognitionIndexedDedup
 import Nullivance.RecognitionSeparationStopping
+import Nullivance.RecognitionRationalSchedule
 
 open Nullivance.Recognition
+
+#print axioms reciprocalMarginIndex_strict
+#print axioms reciprocal_schedule_margin
+#print axioms reciprocal_schedule_export
+#print axioms reciprocal_schedule_search
+#print axioms reciprocal_schedule_order_budget
+#print axioms reciprocal_margin_budget_regression
+#print axioms reciprocal_zero_not_strict
+#eval [1,1/2,1/4,1/10].map reciprocalMarginFuel
 
 #print axioms positive_margin_observation
 #print axioms positive_margin_prefix_refuted

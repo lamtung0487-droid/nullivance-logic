@@ -1,0 +1,34 @@
+{
+  "milestone": "DR-0052",
+  "date": "2026-09-15",
+  "baseCommit": "8dcc305",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionRationalSchedule.lean",
+  "sha256": "fb94f1da2b502970620c0a20b75ba1e032ff9a146fbd1e2db99454d5b128aad1",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2069
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 7
+  },
+  "newAuditOutput": "'Nullivance.Recognition.reciprocalMarginIndex_strict' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_schedule_margin' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_schedule_export' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_schedule_search' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_schedule_order_budget' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_margin_budget_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.reciprocal_zero_not_strict' depends on axioms: [propext, Classical.choice, Quot.sound]\n[4, 6, 10, 22]\n",
+  "scope": "Positive rational alpha margin, common fitting state, allowances <= 1/(n+1)",
+  "fuel": "Nat.floor(2/delta)+2",
+  "regressionFuel": [
+    4,
+    6,
+    10,
+    22
+  ],
+  "limits": [
+    "not minimal stopping time",
+    "no learned hidden margin",
+    "no zero-margin guarantee",
+    "not machine-time bound"
+  ]
+}
