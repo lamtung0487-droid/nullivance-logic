@@ -14,8 +14,20 @@ import Nullivance.RecognitionSeparationStopping
 import Nullivance.RecognitionRationalSchedule
 import Nullivance.RecognitionAffirmationSchedule
 import Nullivance.RecognitionSourcedAffirmation
+import Nullivance.RecognitionCursorAffirmation
 
 open Nullivance.Recognition
+
+#print axioms extractBoxAffirmation_history
+#print axioms extractBoxAffirmation_cursor
+#print axioms resultAffirmation_baseline
+#print axioms resultAffirmation_sound
+#print axioms resultAffirmation_complete
+#print axioms resultAffirmation_resume
+#print axioms cursor_affirmation_timeout_boundary
+#print axioms cursor_affirmation_refuted_invalid
+#print axioms resultAffirmation_zero_fuel
+#print axioms cursor_affirmation_unmatched_regression
 
 #print axioms upperSource_provenance
 #print axioms lowerSource_provenance

@@ -65,3 +65,4 @@ import Nullivance.RecognitionRationalSchedule
 import Nullivance.RecognitionAffirmationSchedule
 import Nullivance.RecognitionEndpointSourceBounds
 import Nullivance.RecognitionSourcedAffirmation
+import Nullivance.RecognitionCursorAffirmation

@@ -1,0 +1,43 @@
+{
+  "milestone": "DR-0055",
+  "date": "2026-09-21",
+  "baseCommit": "8e9179c",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionCursorAffirmation.lean",
+  "sha256": "9bf17c6fcda482bff1bdd8639071df576224ca0cacbe378221b8644fdd7883cb",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2073,
+    "output": "✔ [2072/2073] Built Nullivance (7.6s)\nBuild completed successfully (2073 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 10
+  },
+  "newAuditOutput": "'Nullivance.Recognition.extractBoxAffirmation_history' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmation_cursor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmation_baseline' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmation_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmation_complete' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmation_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cursor_affirmation_timeout_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cursor_affirmation_refuted_invalid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmation_zero_fuel' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cursor_affirmation_unmatched_regression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+  "sourceScan": {
+    "noSorryAdmitCustomAxiomNativeDecideUnsafePartial": true
+  },
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "regressions": [
+    "Timeout retains an affirmative untested prefix but returns no certificate; resume exports index [0]",
+    "Refuted and invalid streams give no affirmative export",
+    "Every stream with zero fuel gives none by definitional equality",
+    "Mismatched cursor/stream yields different box and batch outputs; CursorMatches cannot be dropped"
+  ],
+  "scope": "Exact batch/cursor certificate equality and exact resume equality for generated endpoint search results under fixed scalar alpha/Theta semantics",
+  "limits": [
+    "No semantic authentication theorem for arbitrary forged boxes or result structures",
+    "Completeness conditional on an actually found prefix",
+    "No general infinite termination/completeness",
+    "No operation-count or bit-complexity theorem for the new exporter",
+    "No shortest-certificate or chronological-order guarantee"
+  ],
+  "review": "Main-agent proof, source, and hypothesis review plus kernel checks; no separate-agent or external peer review",
+  "unrelatedChanges": "Storage scripts retained and excluded from milestone commit"
+}
