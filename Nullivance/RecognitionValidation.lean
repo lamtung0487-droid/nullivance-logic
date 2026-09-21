@@ -16,8 +16,24 @@ import Nullivance.RecognitionAffirmationSchedule
 import Nullivance.RecognitionSourcedAffirmation
 import Nullivance.RecognitionCursorAffirmation
 import Nullivance.RecognitionAffirmationCost
+import Nullivance.RecognitionCachedAffirmation
 
 open Nullivance.Recognition
+
+#print axioms cachedAffirmationGuard_spec
+#print axioms pickAffirmationCached_eq
+#print axioms cachedAffirmationSources_eq
+#print axioms extractBoxAffirmationCached_spec
+#print axioms extractBoxAffirmationCached_erasure
+#print axioms extractBoxAffirmationCached_saving
+#print axioms resultAffirmationCached_erasure
+#print axioms resultAffirmationCached_bounds
+#print axioms searchCachedAffirmationOrderTotal_bound
+#print axioms resultAffirmationCached_resume
+#print axioms cached_affirmation_cost_regression
+#print axioms cached_affirmation_timeout_resume
+#print axioms cached_affirmation_wrong_flags
+#eval (extractBoxAffirmationCached (runSourcedHistory fourSourceAffirmation).1).2
 
 #print axioms sourceMemCounted_spec
 #print axioms sourceDedupCounted_erasure

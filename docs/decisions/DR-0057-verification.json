@@ -1,0 +1,50 @@
+{
+  "milestone": "DR-0057",
+  "date": "2026-09-22",
+  "baseCommit": "ec872c3",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionCachedAffirmation.lean",
+  "sha256": "eb377b2ede374f6e0bd718689b4665d5556289c4ef1630f3b4bf1fbbe4b2f459",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2075,
+    "output": "✔ [2073/2075] Built Nullivance.RecognitionCachedAffirmation (7.9s)\n✔ [2074/2075] Built Nullivance (6.8s)\nBuild completed successfully (2075 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 13,
+    "executableRegression": "(10, 6)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.cachedAffirmationGuard_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.pickAffirmationCached_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cachedAffirmationSources_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmationCached_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmationCached_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmationCached_saving' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmationCached_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmationCached_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchCachedAffirmationOrderTotal_bound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultAffirmationCached_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cached_affirmation_cost_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cached_affirmation_timeout_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.cached_affirmation_wrong_flags' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "exactOldCertificatePreserved": true,
+    "exactOldEqualityCounterPreserved": true,
+    "orderSaving": "Exactly 2 when BoxConsistent AND BoxAffirmative, 0 otherwise",
+    "exportOrderBound": 10,
+    "exportWholeRecordEqualityBound": 6,
+    "searchPlusOneExportOrderBound": "24*fuel+10",
+    "resume": "Exact equality of output and both export counters"
+  },
+  "regressions": [
+    "Initial/invalid/four-source boxes cost (10,0)/(4,0)/(10,6)",
+    "Timeout export (0,0), resumed export (10,6), total order 24 then 50",
+    "Wrong same-selector flags on high-side example yield an undetermined selected history; correct selection is affirmed"
+  ],
+  "proofHoleScan": "No sorry/admit, custom axiom, native_decide, unsafe or partial in new module",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "Initial let-expansion, proposition simplification and type-inference failures corrected; algorithm and theorem statements not weakened.",
+  "method": "nullivance-research-method applied to explicit claim scope and a wrong-flags counterexample, not used as a mathematical premise",
+  "review": "Main-agent source/assumption inspection and kernel validation; no separate-agent or external peer review",
+  "limits": [
+    "Instrumented comparison semantics, not bit or elapsed-time savings",
+    "No savings claimed on consistent nonaffirmative or inconsistent branches",
+    "No semantic authentication for arbitrary forged boxes",
+    "No general infinite recognition result",
+    "One final export rather than accumulated repeated exports"
+  ]
+}
