@@ -1,0 +1,61 @@
+{
+  "milestone": "DR-0056",
+  "date": "2026-09-21",
+  "baseCommit": "0927004",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionAffirmationCost.lean",
+  "sha256": "4c17cc3085becb24a49e6ea89a968c96c1b1f3eeba0aaf391691804d7f756ac6",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2074,
+    "output": "✔ [2072/2074] Built Nullivance.RecognitionAffirmationCost (7.8s)\n✔ [2073/2074] Built Nullivance (7.7s)\nBuild completed successfully (2074 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 17,
+    "executableRegression": "(12, 6)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.sourceMemCounted_spec' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.sourceDedupCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sourceDedupCounted_cost' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.sourcePairBudget_le_six' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.affirmationPickCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationPickCounted_cost' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSourcesCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSourcesCounted_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmationCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmationCounted_order_cost' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.extractBoxAffirmationCounted_equality_bound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultAffirmationCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmationCounted_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchAffirmationOrderTotal_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultAffirmationCounted_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmation_cost_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmation_cost_timeout_resume' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "costModel": {
+    "rationalOrderPrimitive": "One endpointLeCounted or endpointLtCounted call",
+    "equalityPrimitive": "One WHOLE IndexedProbe equality call, not a field or bit operation",
+    "membership": "Eager full original-tail scan, including after an equality hit",
+    "dedupRecurrence": "B(0)=0; B(n+1)=n+B(n)",
+    "localOrderBound": 12,
+    "localWholeRecordEqualityBound": 6,
+    "combinedOrderBound": "24*fuel+12 for search and ONE final export",
+    "invalidBox": [
+      4,
+      0
+    ],
+    "consistentNonaffirmativeBox": [
+      10,
+      0
+    ],
+    "timeoutExport": [
+      0,
+      0
+    ]
+  },
+  "regressions": [
+    "Empty/invalid/four-distinct-source box counts (10,0)/(4,0)/(12,6)",
+    "Timeout then resume has export (0,0) then (12,6), total order counts 24 then 52",
+    "Four selected roles sharing one record still incur six eager membership comparisons"
+  ],
+  "proofHoleScan": "No sorry/admit, custom axiom, native_decide, unsafe or partial in new module",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "Initial elaboration failures: unavailable interval_cases tactic and unresolved propositional branch simplification. Replaced by finite arithmetic case analysis and explicit contradiction; statements and algorithm were not weakened.",
+  "review": "Main-agent implementation/proof/assumption review and kernel validation; no separate-agent or external peer review",
+  "limits": [
+    "Instrumented alternative, not a measured count for compiled library dedup",
+    "No bit-cost, wall-clock or memory bound",
+    "No general infinite recognition result",
+    "Counters exclude stream-generation cost and repeated intermediate exports",
+    "Whole-record equality cannot be replaced by index equality without a provenance condition"
+  ]
+}

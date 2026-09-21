@@ -66,3 +66,4 @@ import Nullivance.RecognitionAffirmationSchedule
 import Nullivance.RecognitionEndpointSourceBounds
 import Nullivance.RecognitionSourcedAffirmation
 import Nullivance.RecognitionCursorAffirmation
+import Nullivance.RecognitionAffirmationCost
