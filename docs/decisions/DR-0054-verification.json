@@ -1,0 +1,49 @@
+{
+  "milestone": "DR-0054",
+  "date": "2026-09-21",
+  "baseCommit": "32dabd79ef456525d278df0ed341219f91f8cf36",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "sources": [
+    {
+      "path": "Nullivance/Nullivance/RecognitionEndpointSourceBounds.lean",
+      "sha256": "98fab7b6a2e302bd5dbf7478e8a33e5aa237b89e8fa09d3e5e7982db05e5874e"
+    },
+    {
+      "path": "Nullivance/Nullivance/RecognitionSourcedAffirmation.lean",
+      "sha256": "472aa242c9640d6cba2ad93bba3651ff1c6ec6379b9d835d1607fbf004fed5af"
+    }
+  ],
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2072,
+    "output": "✔ [2071/2072] Built Nullivance (7.7s)\nBuild completed successfully (2072 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 15
+  },
+  "newAuditOutput": "'Nullivance.Recognition.upperSource_provenance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.lowerSource_provenance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.upperSource_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.lowerSource_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSources_length' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSources_nodup' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.mem_affirmationSources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSources_provenance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSources_fit_selected' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmationSources_force' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractSourcedAffirmation_isSome_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractSourcedAffirmation_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.affirmation_certificate_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.four_source_affirmation_export' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.four_source_proper_sublists_undetermined' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+  "counterexampleChecks": [
+    "Empty history has no certificate",
+    "Invalid negative allowance has no certificate",
+    "Refuted positive-alpha record has no affirmative certificate",
+    "Exact single-record affirmative certificate",
+    "Complementary low-side records export [1,0]",
+    "Four distinct endpoint roles, high-side theta exclusions, export [0,1,2,3]",
+    "Every proper sublist of the four-record example is undetermined; exhaustive kernel proof"
+  ],
+  "scope": "Authenticated batch certificates for fixed scalar alpha/Theta histories under existing interval observation semantics",
+  "limits": [
+    "Not a shortest-certificate algorithm for all inputs",
+    "Four-record necessity tested for sublist certificates, not arbitrary compressed proof formats",
+    "No chronological output guarantee",
+    "No incremental cursor exporter in this milestone",
+    "No general infinite recognition completeness",
+    "No bit or wall-clock complexity theorem"
+  ],
+  "review": "Main-agent source/semantic review and Lean kernel validation; no completed separate final review or academic peer review",
+  "storage": "Existing immutable F archive predates final DR-0054 regressions; storage scripts excluded from this milestone commit"
+}

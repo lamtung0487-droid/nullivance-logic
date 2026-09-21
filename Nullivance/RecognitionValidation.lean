@@ -13,8 +13,28 @@ import Nullivance.RecognitionIndexedDedup
 import Nullivance.RecognitionSeparationStopping
 import Nullivance.RecognitionRationalSchedule
 import Nullivance.RecognitionAffirmationSchedule
+import Nullivance.RecognitionSourcedAffirmation
 
 open Nullivance.Recognition
+
+#print axioms upperSource_provenance
+#print axioms lowerSource_provenance
+#print axioms upperSource_bound
+#print axioms lowerSource_bound
+#print axioms affirmationSources_length
+#print axioms affirmationSources_nodup
+#print axioms mem_affirmationSources
+#print axioms affirmationSources_provenance
+#print axioms affirmationSources_fit_selected
+#print axioms affirmationSources_force
+#print axioms extractSourcedAffirmation_isSome_iff
+#print axioms extractSourcedAffirmation_sound
+#print axioms affirmation_certificate_regression
+#print axioms four_source_affirmation_export
+#print axioms four_source_proper_sublists_undetermined
+
+#eval (extractSourcedAffirmation [complementaryProbeLeft,complementaryProbeRight]).map
+  (List.map Prod.snd)
 
 #print axioms separated_marker_observation
 #print axioms prefix_marker_exclusion
