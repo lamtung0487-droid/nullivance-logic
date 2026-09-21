@@ -68,3 +68,4 @@ import Nullivance.RecognitionSourcedAffirmation
 import Nullivance.RecognitionCursorAffirmation
 import Nullivance.RecognitionAffirmationCost
 import Nullivance.RecognitionCachedAffirmation
+import Nullivance.RecognitionIndexedAffirmation

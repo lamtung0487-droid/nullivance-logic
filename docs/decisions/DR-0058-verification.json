@@ -1,0 +1,52 @@
+{
+  "milestone": "DR-0058",
+  "date": "2026-09-22",
+  "baseCommit": "4f93ab6",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionIndexedAffirmation.lean",
+  "sha256": "b36e6c26cec2831a7b96fa6d97f9556aa14a8d90e7aea29560dc314033136170",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2076,
+    "output": "✔ [2074/2076] Built Nullivance.RecognitionIndexedAffirmation (8.1s)\n✔ [2075/2076] Built Nullivance (7.5s)\nBuild completed successfully (2076 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 12,
+    "executableRegression": "(10, 6)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.indexMemCounted_eq' depends on axioms: [propext]\n'Nullivance.Recognition.indexDedupCounted_eq' depends on axioms: [propext]\n'Nullivance.Recognition.pickAffirmationCached_provenance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractIndexedAffirmationCached_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.extractIndexedAffirmationCached_erasure' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultIndexedAffirmation_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultIndexedAffirmation_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultIndexedAffirmation_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultIndexedAffirmation_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.resultIndexedAffirmation_resume' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.indexed_affirmation_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.indexed_affirmation_forgery' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "authentication": "All candidate occurrences refer to ONE history; exporter uses SourcedBoxValid; generated endpoint searches satisfy it",
+    "exactCertificateAndOrderPreserved": true,
+    "numericalEqualityCounterPreserved": true,
+    "oldEqualityUnit": "Whole IndexedProbe equality",
+    "newEqualityUnit": "Nat occurrence-index equality",
+    "exportOrderBound": 10,
+    "exportIndexEqualityBound": 6,
+    "resume": "Exact output and numerical-counter equality"
+  },
+  "regressions": [
+    "Four-source indices [0,1,2,3], counters (10,6)",
+    "Exact-zero stream fuel one exports (none,0,0); fuel two exports original occurrence zero",
+    "Forged affirmative box: indexed exporter returns one record, reference returns two"
+  ],
+  "proofHoleScan": "No sorry/admit/custom axiom/native_decide/unsafe/partial in new module",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "Full-product decidability synthesis and rfl failed for one regression; Prod.ext plus kernel reduction proves the unchanged statement.",
+  "review": "Main-agent source/assumption review and Lean kernel checking, not independent peer review",
+  "method": "nullivance-research-method guided explicit provenance and cost-unit separation; no mathematical premise added",
+  "limits": [
+    "No equivalence for arbitrary forged source boxes",
+    "Authentication is a proved invariant, not a runtime checker in this exporter",
+    "No bit-complexity or elapsed-time performance theorem",
+    "No new unrestricted infinite-recognition theorem",
+    "Counters describe one export, not accumulated repeated exports"
+  ],
+  "nextObligation": "Computable source-box validity checker with acceptance specification and a typed authenticated export interface, distinguishing provenance from feasibility"
+}
