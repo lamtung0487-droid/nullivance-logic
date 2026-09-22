@@ -22,8 +22,18 @@ import Nullivance.RecognitionAuthenticatedBox
 import Nullivance.RecognitionCheckedCursor
 import Nullivance.RecognitionCheckedAffirmation
 import Nullivance.RecognitionCheckedRefutation
+import Nullivance.RecognitionJointCertificates
 
 open Nullivance.Recognition
+
+#print axioms checked_certificates_exactly_one
+#print axioms jointCertificates_baseline
+#print axioms jointCertificates_empty_iff
+#print axioms checkedJointCertificates_rejected
+#print axioms checkedJointCertificates_spec
+#print axioms joint_certificates_regression
+#eval (checkedJointCertificates (fun _ => (0,((1,0),(0,0)))) initialSearchCursor 2).map
+  (fun p => (p.1.isSome,p.2.isSome))
 
 #print axioms checkedRefutation_eq
 #print axioms checkedRefutation_baseline

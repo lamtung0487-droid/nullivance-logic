@@ -73,3 +73,4 @@ import Nullivance.RecognitionAuthenticatedBox
 import Nullivance.RecognitionCheckedCursor
 import Nullivance.RecognitionCheckedAffirmation
 import Nullivance.RecognitionCheckedRefutation
+import Nullivance.RecognitionJointCertificates
