@@ -18,8 +18,21 @@ import Nullivance.RecognitionCursorAffirmation
 import Nullivance.RecognitionAffirmationCost
 import Nullivance.RecognitionCachedAffirmation
 import Nullivance.RecognitionIndexedAffirmation
+import Nullivance.RecognitionAuthenticatedBox
 
 open Nullivance.Recognition
+
+#print axioms checkSourcedInterval_spec
+#print axioms checkSourcedBox_spec
+#print axioms authenticateBox_accepts
+#print axioms authenticateBox_preserves
+#print axioms exportAuthenticatedAffirmation_eq
+#print axioms checkedAffirmationExport_spec
+#print axioms checkedAffirmationExport_generated
+#print axioms authenticated_box_regression
+#print axioms authentication_not_full_history
+#eval (checkedAffirmationExport fourSourceAffirmation
+  (runSourcedHistory fourSourceAffirmation).1).map (fun out => out.1.map (List.map Prod.snd))
 
 #print axioms indexMemCounted_eq
 #print axioms indexDedupCounted_eq

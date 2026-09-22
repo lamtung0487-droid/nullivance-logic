@@ -1,0 +1,46 @@
+{
+  "milestone": "DR-0059",
+  "date": "2026-09-22",
+  "baseCommit": "e58ff47",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionAuthenticatedBox.lean",
+  "sha256": "59cb70c0c5de4e5fabd42e46917bb038ab2ff72e4cf917e59f7760f333c50376",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2077,
+    "output": "✔ [2075/2077] Built Nullivance.RecognitionAuthenticatedBox (7.2s)\n✔ [2076/2077] Built Nullivance (7.2s)\nBuild completed successfully (2077 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 9,
+    "executableRegression": "some (some [0, 1, 2, 3])"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.checkSourcedInterval_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkSourcedBox_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.authenticateBox_accepts' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.authenticateBox_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.exportAuthenticatedAffirmation_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmationExport_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmationExport_generated' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.authenticated_box_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.authentication_not_full_history' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "checker": "checkSourcedBox rs b = true iff SourcedBoxValid rs b",
+    "typedBoundary": "Option (AuthenticatedBox rs), successful input preserved exactly",
+    "export": "Exact reference equality after successful authentication",
+    "generated": "All runSourcedHistory boxes accepted"
+  },
+  "negativeResults": [
+    "Forged affirmative box rejected against exact-zero history",
+    "Empty history accepted with no affirmation, distinguished from authentication failure",
+    "Initial box accepted against an invalid history but differs from its generated summary"
+  ],
+  "limits": [
+    "Provenance does not imply feasibility or full-history matching",
+    "Authentication checks supplied history, not physical or cryptographic origin",
+    "Export counters exclude authentication work",
+    "No new infinite recognition or general cognition theorem"
+  ],
+  "proofHoleScan": "Passed: no sorry/admit/custom axiom/native_decide/unsafe/partial",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "Corrected simplification and doc-comment placement; regression's nested Option-record equality rephrased using accepted/nonaffirmative Boolean observation; no universal theorem weakened.",
+  "review": "Main-agent source/assumption inspection and Lean kernel validation, not external peer review",
+  "nextObligation": "Separate computable full-history cursor matching check and safe-resumption theorem"
+}
