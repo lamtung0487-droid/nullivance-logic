@@ -21,8 +21,21 @@ import Nullivance.RecognitionIndexedAffirmation
 import Nullivance.RecognitionAuthenticatedBox
 import Nullivance.RecognitionCheckedCursor
 import Nullivance.RecognitionCheckedAffirmation
+import Nullivance.RecognitionCheckedRefutation
 
 open Nullivance.Recognition
+
+#print axioms checkedRefutation_eq
+#print axioms checkedRefutation_baseline
+#print axioms checkedRefutation_sound
+#print axioms checkedRefutation_complete
+#print axioms checkedContinueRefutation_spec
+#print axioms checkedContinueRefutation_append
+#print axioms checked_certificates_disjoint
+#print axioms checked_refutation_regression
+#eval let r : ProbeStream := fun _ => (0,((1,0),(0,0)))
+  (checkedContinueRefutation r (runEndpointSearch r 1).1.cursor 1).map
+    (Option.map (List.map Prod.snd))
 
 #print axioms checkedContinue_next
 #print axioms checkedAffirmation_eq

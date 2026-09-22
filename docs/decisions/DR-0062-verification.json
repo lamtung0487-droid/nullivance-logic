@@ -1,0 +1,48 @@
+{
+  "milestone": "DR-0062",
+  "date": "2026-09-23",
+  "baseCommit": "f4f823a",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionCheckedRefutation.lean",
+  "sha256": "5aefe5b13ab8f4f6f0f2c9958da0e30bc95e77f2e69c1d5f5f10ac01eacb9f91",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2080,
+    "output": "✔ [2078/2080] Built Nullivance.RecognitionCheckedRefutation (7.6s)\n✔ [2079/2080] Built Nullivance (7.3s)\nBuild completed successfully (2080 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 8,
+    "executableRegression": "some (some [0])"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.checkedRefutation_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedRefutation_baseline' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedRefutation_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedRefutation_complete' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueRefutation_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueRefutation_append' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checked_certificates_disjoint' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checked_refutation_regression' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "baseline": "Exact batch refutation at found prefix, none on timeout",
+    "soundness": "At most two distinct authenticated occurrences, selected history refuted, found index in continuation window",
+    "completeness": "Conditional iff at found prefix",
+    "disjointness": "Affirmative and refutation exporters cannot both succeed at the same found prefix",
+    "append": "Exact final certificate under split internal search"
+  },
+  "regressions": [
+    "Stale cursor rejected",
+    "Zero-fuel continuation exports no untested refutation",
+    "One extra test exports occurrence zero",
+    "Negative-error stream exports no refutation"
+  ],
+  "limits": [
+    "Disjointness is at-most-one, not yet joint exact-one packaging",
+    "No new counted refutation implementation or total cost theorem",
+    "No global earliest-prefix assertion",
+    "No unrestricted infinite recognition or cognition claim"
+  ],
+  "proofHoleScan": "Passed",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "None",
+  "review": "Main-agent source/assumption inspection and Lean kernel validation, not independent peer review",
+  "nextObligation": "Exact-one joint outcome specification, then validation-inclusive costs"
+}
