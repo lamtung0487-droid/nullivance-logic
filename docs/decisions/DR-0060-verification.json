@@ -1,0 +1,49 @@
+{
+  "milestone": "DR-0060",
+  "date": "2026-09-22",
+  "baseCommit": "4e4259d",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionCheckedCursor.lean",
+  "sha256": "b71a30277b1a974108fc0fdcc43f2fff3e93f8de54083182e3ee89b073ac211b",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2078,
+    "output": "✔ [2076/2078] Built Nullivance.RecognitionCheckedCursor (7.5s)\n✔ [2077/2078] Built Nullivance (7.2s)\nBuild completed successfully (2078 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 9,
+    "executableRegression": "some (some 1)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.checkSearchCursor_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_accepts' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_output' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_matches' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_minimal' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinue_append' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checked_cursor_regression' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "acceptance": "iff CursorMatches r c",
+    "reference": "firstPassing (prefixHasCertificate r) c.next fuel",
+    "soundness": "Success lies within the searched window and nonvacuously forces Quasivant or its negation",
+    "preservation": "Returned cursor still matches",
+    "minimality": "Within searched window only",
+    "append": "Exact output and local counter equality under split fuel"
+  },
+  "regressions": [
+    "Authentic initial box at index one rejected as stale against feasible exact-zero prefix",
+    "Genuine saved cursor with zero extra fuel reports no found result",
+    "One extra test finds prefix one"
+  ],
+  "limits": [
+    "No validation of imported success flags or historic counters",
+    "No earliest-success guarantee before starting index",
+    "Acceptance does not imply feasibility or raw-history identity",
+    "Returned counters exclude summary rebuilding, validation and prior work",
+    "Requires executable stream for execution; no unconditional infinite termination"
+  ],
+  "proofHoleScan": "Passed",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "None in direct Lean check or final gates",
+  "review": "Main-agent inspection and Lean kernel validation, not external peer review",
+  "nextObligation": "Connect accepted arbitrary-cursor continuation to optimized certificate exporters with window-scoped correctness and local cost accounting"
+}

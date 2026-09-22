@@ -19,8 +19,21 @@ import Nullivance.RecognitionAffirmationCost
 import Nullivance.RecognitionCachedAffirmation
 import Nullivance.RecognitionIndexedAffirmation
 import Nullivance.RecognitionAuthenticatedBox
+import Nullivance.RecognitionCheckedCursor
 
 open Nullivance.Recognition
+
+#print axioms checkSearchCursor_spec
+#print axioms checkedContinue_accepts
+#print axioms checkedContinue_output
+#print axioms checkedContinue_result
+#print axioms checkedContinue_matches
+#print axioms checkedContinue_sound
+#print axioms checkedContinue_minimal
+#print axioms checkedContinue_append
+#print axioms checked_cursor_regression
+#eval let r : ProbeStream := fun _ => (0,((0,0),(0,0)))
+  (checkedContinue r (runEndpointSearch r 1).1.cursor 1).map (fun o => o.1.found)
 
 #print axioms checkSourcedInterval_spec
 #print axioms checkSourcedBox_spec
