@@ -71,3 +71,4 @@ import Nullivance.RecognitionCachedAffirmation
 import Nullivance.RecognitionIndexedAffirmation
 import Nullivance.RecognitionAuthenticatedBox
 import Nullivance.RecognitionCheckedCursor
+import Nullivance.RecognitionCheckedAffirmation

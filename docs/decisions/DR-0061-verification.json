@@ -1,0 +1,48 @@
+{
+  "milestone": "DR-0061",
+  "date": "2026-09-22",
+  "baseCommit": "b0f4dd5",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionCheckedAffirmation.lean",
+  "sha256": "ddd139a5de97873e8189a0e8b4b2ec3279cc24eeedbd6ccfa379b50299456b30",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2079,
+    "output": "✔ [2077/2079] Built Nullivance.RecognitionCheckedAffirmation (6.5s)\n✔ [2078/2079] Built Nullivance (6.5s)\nBuild completed successfully (2079 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 9,
+    "executableRegression": "some (some [0], 10, 6)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.checkedContinue_next' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmation_eq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmation_baseline' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmation_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmation_complete' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedAffirmation_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueAffirmation_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueAffirmation_append' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checked_affirmation_regression' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "scope": "Affirmative export from arbitrary accepted checkedContinue cursor",
+    "baseline": "Exact batch certificate at found prefix; none on timeout",
+    "soundness": "At most four distinct authenticated occurrences, affirmed selected history, found index inside searched window",
+    "completeness": "Conditional on found=some n, export exists iff prefix n is affirmed",
+    "cost": "One final export: <=10 rational order nodes and <=6 Nat-index equality calls",
+    "append": "Exact final export and numerical counter equality after split internal search"
+  },
+  "regressions": [
+    "Stale imported cursor rejected",
+    "Accepted zero-fuel continuation does not export an untested affirmative summary",
+    "One additional test exports occurrence zero with counts (10,6)"
+  ],
+  "proofHoleScan": "Passed",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "None",
+  "review": "Main-agent source/assumption inspection and Lean kernel validation, not independent peer review",
+  "limits": [
+    "Refutation transport remains open",
+    "Conditional completeness only at the found prefix",
+    "Export counters exclude validation, search and repeated exports",
+    "No unrestricted infinite recognition or physical cognition claim"
+  ],
+  "nextObligation": "Transport optimized refutation certificates to accepted arbitrary cursors, then joint outcome and validation-inclusive cost"
+}
