@@ -1,0 +1,48 @@
+{
+  "milestone": "DR-0066",
+  "date": "2026-09-23",
+  "baseCommit": "55db298",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionSharedExport.lean",
+  "sha256": "acddc91b3374ef2a1ce49c4a9d7b6b7cf51a3122e7821a583e4f4fbee67cd517",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2084,
+    "output": "✔ [2082/2084] Built Nullivance.RecognitionSharedExport (7.8s)\n✔ [2083/2084] Built Nullivance (7.3s)\nBuild completed successfully (2084 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 10,
+    "executableRegression": "(40, 1, 6)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.sharedBoxExport_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedBoxExport_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedBoxExport_saving' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedResultExport_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedResultExport_saving' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedResultExport_index_count' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.shared_export_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedCountedJoint_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.sharedCountedJoint_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.shared_pipeline_regression' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "boxSaving": "Exactly four order nodes, all boxes",
+    "gatedSaving": "Exactly four if found.isSome, otherwise zero",
+    "indexCount": "Exactly preserved",
+    "erasure": "Exact checkedJointCertificates output",
+    "orderBound": "8*c.next+24*fuel+16",
+    "wholeBoxEqualityCalls": 1,
+    "indexEqualityBound": 7
+  },
+  "regressions": [
+    "Initial/invalid/timeout/affirmed export (16,0)/(4,0)/(0,0)/(16,6)",
+    "Rejected/timeout/affirmed pipeline (8,1,0)/(24,1,0)/(40,1,6)"
+  ],
+  "limits": [
+    "Share final-export consistency only; no sharing of prior search classifier",
+    "No elapsed-time or bit-complexity claim",
+    "No savings on rejected or timed-out invocation",
+    "No unrestricted infinite recognition"
+  ],
+  "proofHoleScan": "Passed",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "None",
+  "review": "Main-agent source and assumption inspection plus Lean kernel checks, not independent peer review",
+  "nextObligation": "Refine whole-box equality to field-level comparison counts with erasure"
+}

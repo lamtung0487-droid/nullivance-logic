@@ -25,8 +25,22 @@ import Nullivance.RecognitionCheckedRefutation
 import Nullivance.RecognitionJointCertificates
 import Nullivance.RecognitionValidationCost
 import Nullivance.RecognitionIndexedRefutationCost
+import Nullivance.RecognitionSharedExport
 
 open Nullivance.Recognition
+
+#print axioms sharedBoxExport_spec
+#print axioms sharedBoxExport_erasure
+#print axioms sharedBoxExport_saving
+#print axioms sharedResultExport_erasure
+#print axioms sharedResultExport_saving
+#print axioms sharedResultExport_index_count
+#print axioms shared_export_regression
+#print axioms sharedCountedJoint_erasure
+#print axioms sharedCountedJoint_bounds
+#print axioms shared_pipeline_regression
+#eval let r : ProbeStream := fun _ => (0,((0,0),(0,0)))
+  (sharedCountedJoint r (runEndpointSearch r 1).1.cursor 1).2
 
 #print axioms indexedIntervalCounted_erasure
 #print axioms indexedIntervalCounted_cost
