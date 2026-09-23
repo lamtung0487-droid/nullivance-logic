@@ -24,8 +24,26 @@ import Nullivance.RecognitionCheckedAffirmation
 import Nullivance.RecognitionCheckedRefutation
 import Nullivance.RecognitionJointCertificates
 import Nullivance.RecognitionValidationCost
+import Nullivance.RecognitionIndexedRefutationCost
 
 open Nullivance.Recognition
+
+#print axioms indexedIntervalCounted_erasure
+#print axioms indexedIntervalCounted_cost
+#print axioms indexedIntervalCounted_bound
+#print axioms extractIndexedRefutationCounted_erasure
+#print axioms extractIndexedRefutationCounted_order
+#print axioms extractIndexedRefutationCounted_index_bound
+#print axioms resultIndexedRefutationCounted_erasure
+#print axioms resultIndexedRefutationCounted_bounds
+#print axioms resultIndexedRefutationCounted_checked
+#print axioms indexed_refutation_cost_regression
+#print axioms countedJointCertificates_erasure
+#print axioms countedJointCertificates_bounds
+#print axioms countedJointCertificates_rejected
+#print axioms counted_joint_regression
+#eval let r : ProbeStream := fun _ => (0,((1/4,0),(0,0)))
+  (countedJointCertificates r (runEndpointSearch r 1).1.cursor 1).2
 
 #print axioms checkSearchCursorCounted_spec
 #print axioms checkedContinueCounted_erasure

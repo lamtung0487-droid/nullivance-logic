@@ -1,0 +1,49 @@
+{
+  "milestone": "DR-0065",
+  "date": "2026-09-23",
+  "baseCommit": "b1be2c3",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionIndexedRefutationCost.lean",
+  "sha256": "af4034edd02b218e552a2b2c723908f12f27e0c374d6b808b4c95355631a8c7a",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2083,
+    "output": "✔ [2081/2083] Built Nullivance.RecognitionIndexedRefutationCost (7.2s)\n✔ [2082/2083] Built Nullivance (7.5s)\nBuild completed successfully (2083 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 14,
+    "executableRegression": "(44, 1, 1)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.indexedIntervalCounted_erasure' depends on axioms: [propext]\n'Nullivance.Recognition.indexedIntervalCounted_cost' depends on axioms: [propext]\n'Nullivance.Recognition.indexedIntervalCounted_bound' depends on axioms: [propext, Quot.sound]\n'Nullivance.Recognition.extractIndexedRefutationCounted_erasure' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.extractIndexedRefutationCounted_order' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.extractIndexedRefutationCounted_index_bound' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultIndexedRefutationCounted_erasure' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultIndexedRefutationCounted_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.resultIndexedRefutationCounted_checked' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'Nullivance.Recognition.indexed_refutation_cost_regression' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.countedJointCertificates_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.countedJointCertificates_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.countedJointCertificates_rejected' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.counted_joint_regression' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "refutationErasure": "Exact index-only reference for all inputs; authenticated reference on accepted continuation",
+    "jointErasure": "Exact checkedJointCertificates value for all inputs",
+    "orderBound": "8*c.next+24*fuel+20",
+    "wholeBoxEqualityCalls": 1,
+    "indexEqualityBound": 7,
+    "rejection": "Exact (none,8*c.next,1,0)"
+  },
+  "regressions": [
+    "Initial/invalid/timeout/refuted boundary export counts (10,0)/(4,0)/(0,0)/(10,0)",
+    "Joint rejected/timeout/affirmed/boundary-refuted counts (8,1,0)/(24,1,0)/(44,1,6)/(44,1,0)",
+    "Interior alpha=1/4 executable joint cost (44,1,1)"
+  ],
+  "developmentErrors": "Initially expected one index comparison for alpha=1; strict endpoint updates retain absent upper source at default one. Corrected two concrete expected counts to zero; algorithm and universal bounds unchanged.",
+  "limits": [
+    "Only charged comparisons, not all machine operations or elapsed time",
+    "Whole-box equality has variable field/bit cost",
+    "Stream generation, allocation and rational arithmetic bit costs excluded",
+    "One final pair of exports, not repeated export accumulation",
+    "No unrestricted infinite recognition theorem"
+  ],
+  "proofHoleScan": "Passed",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "review": "Main-agent source/assumption review and Lean kernel validation, not independent peer review",
+  "nextObligation": "Share same-final-box classification/export decisions with exact savings proof, or refine whole-box equality to field-level cost"
+}

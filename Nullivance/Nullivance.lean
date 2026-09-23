@@ -75,3 +75,4 @@ import Nullivance.RecognitionCheckedAffirmation
 import Nullivance.RecognitionCheckedRefutation
 import Nullivance.RecognitionJointCertificates
 import Nullivance.RecognitionValidationCost
+import Nullivance.RecognitionIndexedRefutationCost
