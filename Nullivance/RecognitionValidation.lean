@@ -1,4 +1,5 @@
 import Nullivance.RecognitionSourcedConflict
+import Nullivance.RecognitionCursorFieldCost
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -712,6 +713,17 @@ open Nullivance.Recognition
 #print axioms known_no_contradiction
 #print axioms known_with_extra_observation
 #print axioms recognizable_iff_known_complete
+
+#print axioms Nullivance.Recognition.indexedProbeEqCost_erasure
+#print axioms Nullivance.Recognition.sourceEqCost_erasure
+#print axioms Nullivance.Recognition.sourceEqCost_bounds
+#print axioms Nullivance.Recognition.intervalEqCost_erasure
+#print axioms Nullivance.Recognition.intervalEqCost_bounds
+#print axioms Nullivance.Recognition.boxEqCost_erasure
+#print axioms Nullivance.Recognition.boxEqCost_bounds
+#print axioms Nullivance.Recognition.checkSearchCursorFieldCounted_erasure
+#print axioms Nullivance.Recognition.checkSearchCursorFieldCounted_bounds
+#print axioms Nullivance.Recognition.cursor_field_cost_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))

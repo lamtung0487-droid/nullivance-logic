@@ -77,3 +77,4 @@ import Nullivance.RecognitionJointCertificates
 import Nullivance.RecognitionValidationCost
 import Nullivance.RecognitionIndexedRefutationCost
 import Nullivance.RecognitionSharedExport
+import Nullivance.RecognitionCursorFieldCost
