@@ -1,0 +1,49 @@
+{
+  "milestone": "DR-0064",
+  "date": "2026-09-23",
+  "baseCommit": "89bbdb6",
+  "toolchain": "leanprover/lean4:v4.32.1",
+  "source": "Nullivance/Nullivance/RecognitionValidationCost.lean",
+  "sha256": "d1c4d3fd19673529d78c43b0b624b344ebbd12e3a6c7824f93216e03980f017f",
+  "fullBuild": {
+    "exitCode": 0,
+    "jobs": 2082,
+    "output": "✔ [2080/2082] Built Nullivance.RecognitionValidationCost (7.7s)\n✔ [2081/2082] Built Nullivance (7.7s)\nBuild completed successfully (2082 jobs).\n"
+  },
+  "researchValidation": {
+    "exitCode": 0
+  },
+  "recognitionValidation": {
+    "exitCode": 0,
+    "newNamedTheoremsAudited": 8,
+    "executableRegression": "(24, 1)"
+  },
+  "newAuditOutput": "'Nullivance.Recognition.checkSearchCursorCounted_spec' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueCounted_erasure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueCounted_cost' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.searchEndpointCounted_total_le' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueCounted_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueCounted_rejected' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.checkedContinueCounted_zero' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Nullivance.Recognition.validation_cost_regression' depends on axioms: [propext, Classical.choice, Quot.sound]",
+  "result": {
+    "erasure": "Exact checkedContinue output for all inputs",
+    "check": "8*c.next order nodes and one whole-box equality call",
+    "combinedBound": "<=8*c.next+24*fuel order nodes, exactly one whole-box equality call",
+    "rejection": "(none,8*c.next,1)",
+    "zeroFuel": "Still charges (8*c.next,1)"
+  },
+  "regressions": [
+    "Stale index-one cursor with fuel100 costs (8,1)",
+    "Valid index-one cursor with zero fuel costs (8,1)",
+    "Valid index-one cursor with one successful test costs (24,1)",
+    "Initial one-test timeout costs (24,1)"
+  ],
+  "limits": [
+    "No final-export cost in this milestone",
+    "Whole-box equality is not a constant bit-cost operation",
+    "No stream-generation, allocation or rational bit-complexity bound",
+    "No bound independent of starting index",
+    "No unrestricted infinite recognition claim"
+  ],
+  "proofHoleScan": "Passed",
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "developmentErrors": "None",
+  "review": "Main-agent source and assumption inspection plus Lean kernel checks, not independent peer review",
+  "nextObligation": "Instrument index-only refutation export; compose both final exports with counted validation/search"
+}

@@ -23,8 +23,20 @@ import Nullivance.RecognitionCheckedCursor
 import Nullivance.RecognitionCheckedAffirmation
 import Nullivance.RecognitionCheckedRefutation
 import Nullivance.RecognitionJointCertificates
+import Nullivance.RecognitionValidationCost
 
 open Nullivance.Recognition
+
+#print axioms checkSearchCursorCounted_spec
+#print axioms checkedContinueCounted_erasure
+#print axioms checkedContinueCounted_cost
+#print axioms searchEndpointCounted_total_le
+#print axioms checkedContinueCounted_bound
+#print axioms checkedContinueCounted_rejected
+#print axioms checkedContinueCounted_zero
+#print axioms validation_cost_regression
+#eval let r : ProbeStream := fun _ => (0,((0,0),(0,0)))
+  (checkedContinueCounted r (runEndpointSearch r 1).1.cursor 1).2
 
 #print axioms checked_certificates_exactly_one
 #print axioms jointCertificates_baseline
