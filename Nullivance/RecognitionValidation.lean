@@ -724,6 +724,10 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.checkSearchCursorFieldCounted_erasure
 #print axioms Nullivance.Recognition.checkSearchCursorFieldCounted_bounds
 #print axioms Nullivance.Recognition.cursor_field_cost_regression
+#print axioms Nullivance.Recognition.fieldCountedJoint_erasure
+#print axioms Nullivance.Recognition.fieldCountedJoint_old_counts
+#print axioms Nullivance.Recognition.fieldCountedJoint_bounds
+#print axioms Nullivance.Recognition.field_joint_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))

@@ -111,4 +111,81 @@ theorem cursor_field_cost_regression :
   · decide +kernel
   constructor <;> decide +kernel
 
+/-- The existing order-node counter and certificate-index counter, now paired
+with the field-level validation charges. -/
+structure FieldJointResult where
+  certificates : Option (Option (List IndexedProbe) × Option (List IndexedProbe))
+  orderNodes : ℕ
+  rationalEqNodes : ℕ
+  presenceTests : ℕ
+  sourceIndexEqNodes : ℕ
+  certificateIndexEqNodes : ℕ
+
+def fieldCountedJoint (r : ProbeStream) (c : SearchCursor) (fuel : ℕ) :
+    FieldJointResult :=
+  let checked := checkSearchCursorFieldCounted r c
+  let eq := checked.1
+  if eq.1 then
+    let out := searchEndpointCounted r c fuel
+    let cert := sharedResultExport out
+    ⟨some cert.1,checked.2 + endpointSearchTotal out + cert.2.1,
+      eq.2.1,eq.2.2.1,eq.2.2.2,cert.2.2⟩
+  else
+    ⟨none,checked.2,eq.2.1,eq.2.2.1,eq.2.2.2,0⟩
+
+theorem fieldCountedJoint_erasure (r : ProbeStream) (c : SearchCursor) (fuel : ℕ) :
+    (fieldCountedJoint r c fuel).certificates = checkedJointCertificates r c fuel := by
+  simp only [fieldCountedJoint,checkSearchCursorFieldCounted_erasure]
+  unfold checkedJointCertificates checkedContinue
+  split <;> simp [sharedResultExport_erasure]
+
+theorem fieldCountedJoint_old_counts (r : ProbeStream) (c : SearchCursor) (fuel : ℕ) :
+    (fieldCountedJoint r c fuel).orderNodes = (sharedCountedJoint r c fuel).2.1 ∧
+    (fieldCountedJoint r c fuel).certificateIndexEqNodes =
+      (sharedCountedJoint r c fuel).2.2.2 := by
+  simp only [fieldCountedJoint,sharedCountedJoint,checkedContinueCounted,
+    checkSearchCursorCounted_spec,checkSearchCursorFieldCounted_erasure]
+  split <;> simp [checkSearchCursorFieldCounted_bounds r c]
+
+theorem fieldCountedJoint_bounds (r : ProbeStream) (c : SearchCursor) (fuel : ℕ) :
+    (fieldCountedJoint r c fuel).orderNodes ≤ 8*c.next+24*fuel+16 ∧
+    (fieldCountedJoint r c fuel).rationalEqNodes ≤ 48 ∧
+    (fieldCountedJoint r c fuel).presenceTests = 8 ∧
+    (fieldCountedJoint r c fuel).sourceIndexEqNodes ≤ 8 ∧
+    (fieldCountedJoint r c fuel).certificateIndexEqNodes ≤ 7 := by
+  have ho := sharedCountedJoint_bounds r c fuel
+  have he := checkSearchCursorFieldCounted_bounds r c
+  have hc := fieldCountedJoint_old_counts r c fuel
+  constructor
+  · omega
+  constructor
+  · cases h : (checkSearchCursorFieldCounted r c).1.1 <;>
+      simpa [fieldCountedJoint,h] using he.2.1
+  constructor
+  · cases h : (checkSearchCursorFieldCounted r c).1.1 <;>
+      simpa [fieldCountedJoint,h] using he.2.2.1
+  constructor
+  · cases h : (checkSearchCursorFieldCounted r c).1.1 <;>
+      simpa [fieldCountedJoint,h] using he.2.2.2
+  · omega
+
+set_option maxRecDepth 4096 in
+theorem field_joint_regression :
+    let r : ProbeStream := fun _ => (0,((0,0),(0,0)))
+    (fieldCountedJoint r initialSearchCursor 0).certificates.isSome = true ∧
+    (fieldCountedJoint r initialSearchCursor 0).orderNodes = 0 ∧
+    (fieldCountedJoint r initialSearchCursor 0).rationalEqNodes = 8 ∧
+    (fieldCountedJoint r ⟨1,initialSourcedBox⟩ 0).certificates.isSome = false ∧
+    (fieldCountedJoint r initialSearchCursor 1).orderNodes = 24 ∧
+    (fieldCountedJoint r initialSearchCursor 2).certificates.isSome = true := by
+  constructor
+  · decide +kernel
+  constructor
+  · decide +kernel
+  constructor
+  · decide +kernel
+  constructor
+  · decide +kernel
+  constructor <;> decide +kernel
+
 end Nullivance.Recognition
