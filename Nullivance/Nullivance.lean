@@ -79,3 +79,4 @@ import Nullivance.RecognitionIndexedRefutationCost
 import Nullivance.RecognitionSharedExport
 import Nullivance.RecognitionCursorFieldCost
 import Nullivance.RecognitionShortCircuitEquality
+import Nullivance.RecognitionAcceptedCostBoundary

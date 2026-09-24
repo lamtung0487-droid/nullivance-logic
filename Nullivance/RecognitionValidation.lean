@@ -1,6 +1,7 @@
 import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionCursorFieldCost
 import Nullivance.RecognitionShortCircuitEquality
+import Nullivance.RecognitionAcceptedCostBoundary
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -748,6 +749,15 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.shortCountedJoint_refines
 #print axioms Nullivance.Recognition.shortCountedJoint_bounds
 #print axioms Nullivance.Recognition.short_box_mismatch_regression
+#print axioms Nullivance.Recognition.indexedProbeShortEq_self
+#print axioms Nullivance.Recognition.sourceShortEqCost_self
+#print axioms Nullivance.Recognition.intervalShortEqCost_self
+#print axioms Nullivance.Recognition.boxShortEqCost_self
+#print axioms Nullivance.Recognition.boxShortEqCost_eq_of_success
+#print axioms Nullivance.Recognition.accepted_cursor_no_short_savings
+#print axioms Nullivance.Recognition.accepted_pipeline_no_short_savings
+#print axioms Nullivance.Recognition.short_saving_requires_rejection
+#print axioms Nullivance.Recognition.rejected_cursor_short_saving_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
