@@ -738,6 +738,16 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.sourceShortEqCost_first_mismatch
 #print axioms Nullivance.Recognition.sourceShortEqCost_refines_budget
 #print axioms Nullivance.Recognition.sourceShortEqCost_first_mismatch_saves
+#print axioms Nullivance.Recognition.intervalShortEqCost_erasure
+#print axioms Nullivance.Recognition.intervalShortEqCost_refines_budget
+#print axioms Nullivance.Recognition.boxShortEqCost_erasure
+#print axioms Nullivance.Recognition.boxShortEqCost_refines_budget
+#print axioms Nullivance.Recognition.checkSearchCursorShortCounted_erasure
+#print axioms Nullivance.Recognition.checkSearchCursorShortCounted_refines
+#print axioms Nullivance.Recognition.shortCountedJoint_erasure
+#print axioms Nullivance.Recognition.shortCountedJoint_refines
+#print axioms Nullivance.Recognition.shortCountedJoint_bounds
+#print axioms Nullivance.Recognition.short_box_mismatch_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
