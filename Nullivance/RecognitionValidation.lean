@@ -2,6 +2,7 @@ import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionCursorFieldCost
 import Nullivance.RecognitionShortCircuitEquality
 import Nullivance.RecognitionAcceptedCostBoundary
+import Nullivance.RecognitionDigestLimit
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -758,6 +759,14 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.accepted_pipeline_no_short_savings
 #print axioms Nullivance.Recognition.short_saving_requires_rejection
 #print axioms Nullivance.Recognition.rejected_cursor_short_saving_regression
+#print axioms Nullivance.Recognition.boxWithLower_injective
+#print axioms Nullivance.Recognition.finite_digest_not_injective
+#print axioms Nullivance.Recognition.finite_digest_collision
+#print axioms Nullivance.Recognition.oneProbeSummary_lower
+#print axioms Nullivance.Recognition.oneProbeSummary_injective
+#print axioms Nullivance.Recognition.finite_digest_reachable_collision
+#print axioms Nullivance.Recognition.oneProbeStream_prefix
+#print axioms Nullivance.Recognition.finite_digest_only_cursor_check_unsound
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
