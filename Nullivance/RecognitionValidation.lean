@@ -1,5 +1,6 @@
 import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionCursorFieldCost
+import Nullivance.RecognitionShortCircuitEquality
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -728,6 +729,15 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.fieldCountedJoint_old_counts
 #print axioms Nullivance.Recognition.fieldCountedJoint_bounds
 #print axioms Nullivance.Recognition.field_joint_regression
+#print axioms Nullivance.Recognition.indexedProbeShortEq_erasure
+#print axioms Nullivance.Recognition.indexedProbeShortEq_bounds
+#print axioms Nullivance.Recognition.indexedProbeShortEq_first_mismatch
+#print axioms Nullivance.Recognition.indexedProbeShortEq_matching_record
+#print axioms Nullivance.Recognition.sourceShortEqCost_erasure
+#print axioms Nullivance.Recognition.sourceShortEqCost_bounds
+#print axioms Nullivance.Recognition.sourceShortEqCost_first_mismatch
+#print axioms Nullivance.Recognition.sourceShortEqCost_refines_budget
+#print axioms Nullivance.Recognition.sourceShortEqCost_first_mismatch_saves
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
