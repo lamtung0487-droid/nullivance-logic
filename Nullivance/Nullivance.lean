@@ -81,3 +81,4 @@ import Nullivance.RecognitionCursorFieldCost
 import Nullivance.RecognitionShortCircuitEquality
 import Nullivance.RecognitionAcceptedCostBoundary
 import Nullivance.RecognitionDigestLimit
+import Nullivance.RecognitionFeasibleDigestLimit
