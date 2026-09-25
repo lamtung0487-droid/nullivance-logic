@@ -7,6 +7,7 @@ import Nullivance.RecognitionFeasibleDigestLimit
 import Nullivance.RecognitionTrustedResume
 import Nullivance.RecognitionTrustedImport
 import Nullivance.RecognitionTrustedSession
+import Nullivance.RecognitionImportedSession
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -801,6 +802,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.foldlTrusted_terminal
 #print axioms Nullivance.Recognition.runTrustedSchedule_certificates
 #print axioms Nullivance.Recognition.trusted_session_regression
+#print axioms Nullivance.Recognition.importTrustedSessionCounted_spec
+#print axioms Nullivance.Recognition.importTrustedSessionCounted_isSome
+#print axioms Nullivance.Recognition.importTrustedSessionCounted_accepted
+#print axioms Nullivance.Recognition.foldlTrusted_from_cursor
+#print axioms Nullivance.Recognition.importedSchedule_spec
+#print axioms Nullivance.Recognition.importedSchedule_accepted_spec
+#print axioms Nullivance.Recognition.importedSchedule_order_bound
+#print axioms Nullivance.Recognition.importedSchedule_certificates
+#print axioms Nullivance.Recognition.importedSchedule_with_final_export_bound
+#print axioms Nullivance.Recognition.importedSchedule_checked_equivalence
+#print axioms Nullivance.Recognition.importedSchedule_one_time_cost_bound
+#print axioms Nullivance.Recognition.importedSchedule_validation_once
+#print axioms Nullivance.Recognition.importedSchedule_accepted_bound
+#print axioms Nullivance.Recognition.importedSchedule_accepted_certificates
+#print axioms Nullivance.Recognition.imported_session_regression
+#print axioms Nullivance.Recognition.imported_nonzero_cursor_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
