@@ -84,3 +84,4 @@ import Nullivance.RecognitionDigestLimit
 import Nullivance.RecognitionFeasibleDigestLimit
 import Nullivance.RecognitionTrustedResume
 import Nullivance.RecognitionTrustedImport
+import Nullivance.RecognitionTrustedSession
