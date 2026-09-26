@@ -9,6 +9,7 @@ import Nullivance.RecognitionTrustedImport
 import Nullivance.RecognitionTrustedSession
 import Nullivance.RecognitionImportedSession
 import Nullivance.RecognitionCheckpoint
+import Nullivance.RecognitionCheckpointBytes
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -833,6 +834,25 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.restoredActive_observation
 #print axioms Nullivance.Recognition.restoredActive_certificates
 #print axioms Nullivance.Recognition.checkpoint_active_terminal_regression
+#print axioms Nullivance.Recognition.encodeNatBytes_values
+#print axioms Nullivance.Recognition.decodeNatBytes_encode
+#print axioms Nullivance.Recognition.decodeCursorBytes_encode
+#print axioms Nullivance.Recognition.decodeCursorBytes_sound
+#print axioms Nullivance.Recognition.decodeCursorBytes_iff
+#print axioms Nullivance.Recognition.decodeCursorBytes_noncanonical
+#print axioms Nullivance.Recognition.encodeCursorBytes_injective
+#print axioms Nullivance.Recognition.malformed_zero_padding_rejected
+#print axioms Nullivance.Recognition.saveActiveBytes_output
+#print axioms Nullivance.Recognition.restoreActiveBytesCounted_of_decode
+#print axioms Nullivance.Recognition.restoreActiveBytesCounted_noncanonical
+#print axioms Nullivance.Recognition.encodedCursor_restore_iff
+#print axioms Nullivance.Recognition.encodedCursor_restore_cost
+#print axioms Nullivance.Recognition.encoded_forged_cursor_rejected
+#print axioms Nullivance.Recognition.saveActiveBytes_restores
+#print axioms Nullivance.Recognition.restoredActiveBytes_observation
+#print axioms Nullivance.Recognition.restoredActiveBytes_certificates
+#print axioms Nullivance.Recognition.restoredActiveBytes_abstract_cost_bound
+#print axioms Nullivance.Recognition.encoded_forged_cursor_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
