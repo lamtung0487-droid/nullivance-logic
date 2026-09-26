@@ -8,6 +8,7 @@ import Nullivance.RecognitionTrustedResume
 import Nullivance.RecognitionTrustedImport
 import Nullivance.RecognitionTrustedSession
 import Nullivance.RecognitionImportedSession
+import Nullivance.RecognitionCheckpoint
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -818,6 +819,20 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.importedSchedule_accepted_certificates
 #print axioms Nullivance.Recognition.imported_session_regression
 #print axioms Nullivance.Recognition.imported_nonzero_cursor_regression
+#print axioms Nullivance.Recognition.saveActiveCursor_output
+#print axioms Nullivance.Recognition.saveActiveCursor_terminal
+#print axioms Nullivance.Recognition.saveActiveCursor_accepts
+#print axioms Nullivance.Recognition.saveActiveCursor_restores
+#print axioms Nullivance.Recognition.restoredSession_starts_unfound
+#print axioms Nullivance.Recognition.terminal_cursor_cannot_restore_success
+#print axioms Nullivance.Recognition.terminal_cursor_imports_but_loses_success
+#print axioms Nullivance.Recognition.restoredSession_resets_nonzero_tests
+#print axioms Nullivance.Recognition.stepTrustedSession_observation_congr
+#print axioms Nullivance.Recognition.foldlTrusted_observation_congr
+#print axioms Nullivance.Recognition.sharedResultExport_observation_congr
+#print axioms Nullivance.Recognition.restoredActive_observation
+#print axioms Nullivance.Recognition.restoredActive_certificates
+#print axioms Nullivance.Recognition.checkpoint_active_terminal_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
