@@ -13,6 +13,7 @@ import Nullivance.RecognitionCheckpointBytes
 import Nullivance.RecognitionCheckpointEnvelope
 import Nullivance.RecognitionCheckpointDecodeCost
 import Nullivance.RecognitionFiniteStopping
+import Nullivance.RecognitionHistoryKnowledge
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -878,6 +879,12 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.unwrapCheckpointBytes_length_le
 #print axioms Nullivance.Recognition.unwrapCheckpointBytes_counted_bounds
 #print axioms Nullivance.Recognition.decode_nat_cost_regression
+#print axioms Nullivance.Recognition.historyForces_iff_exists_known
+#print axioms Nullivance.Recognition.known_historyMembership_iff_forces
+#print axioms Nullivance.Recognition.classifyHistory_affirmed_iff_exists_known
+#print axioms Nullivance.Recognition.classifyHistory_refuted_iff_exists_known
+#print axioms Nullivance.Recognition.infeasible_known_true_not_forced
+#print axioms Nullivance.Recognition.undetermined_no_history_knowledge
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))

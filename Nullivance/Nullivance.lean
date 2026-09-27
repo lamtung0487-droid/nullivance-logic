@@ -48,6 +48,7 @@ import Nullivance.RecognitionSourcedHistory
 import Nullivance.RecognitionSourcedConflict
 import Nullivance.RecognitionCoordinateStopping
 import Nullivance.RecognitionFiniteStopping
+import Nullivance.RecognitionHistoryKnowledge
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
