@@ -15,6 +15,7 @@ import Nullivance.RecognitionCheckpointDecodeCost
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionHistoryKnowledge
 import Nullivance.RecognitionEvidenceBoundary
+import Nullivance.RecognitionInitEvidenceLimit
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -892,6 +893,11 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.truthSupport_alone_not_known
 #print axioms Nullivance.Recognition.adequate_truth_without_stability_not_known
 #print axioms Nullivance.Recognition.history_truthSupport_forces_of_adequate
+#print axioms Nullivance.Recognition.processed_init_truth_sound_incomplete
+#print axioms Nullivance.Recognition.processed_init_truth_complete_unsound
+#print axioms Nullivance.Recognition.processed_init_false_sound_incomplete
+#print axioms Nullivance.Recognition.processed_init_false_complete_unsound
+#print axioms Nullivance.Recognition.no_exact_processed_init_four_report
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
