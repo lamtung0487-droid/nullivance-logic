@@ -88,3 +88,4 @@ import Nullivance.RecognitionTrustedSession
 import Nullivance.RecognitionImportedSession
 import Nullivance.RecognitionCheckpoint
 import Nullivance.RecognitionCheckpointBytes
+import Nullivance.RecognitionCheckpointEnvelope

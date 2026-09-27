@@ -10,6 +10,7 @@ import Nullivance.RecognitionTrustedSession
 import Nullivance.RecognitionImportedSession
 import Nullivance.RecognitionCheckpoint
 import Nullivance.RecognitionCheckpointBytes
+import Nullivance.RecognitionCheckpointEnvelope
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -853,6 +854,21 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.restoredActiveBytes_certificates
 #print axioms Nullivance.Recognition.restoredActiveBytes_abstract_cost_bound
 #print axioms Nullivance.Recognition.encoded_forged_cursor_regression
+#print axioms Nullivance.Recognition.wrapCheckpointBytes_size
+#print axioms Nullivance.Recognition.unwrapCheckpointBytes_wrap
+#print axioms Nullivance.Recognition.unwrapCheckpointBytes_over_limit
+#print axioms Nullivance.Recognition.unwrapCheckpointBytes_wrong_version
+#print axioms Nullivance.Recognition.decodeCursorEnvelope_encode
+#print axioms Nullivance.Recognition.decodeCursorEnvelope_over_limit
+#print axioms Nullivance.Recognition.saveActiveEnvelope_output
+#print axioms Nullivance.Recognition.restoreActiveEnvelopeCounted_over_limit
+#print axioms Nullivance.Recognition.restoreActiveEnvelopeCounted_wrong_version
+#print axioms Nullivance.Recognition.restoreActiveEnvelopeCounted_noncanonical
+#print axioms Nullivance.Recognition.restoreActiveEnvelopeCounted_success
+#print axioms Nullivance.Recognition.saveActiveEnvelope_restores
+#print axioms Nullivance.Recognition.restoredActiveEnvelope_observation
+#print axioms Nullivance.Recognition.restoredActiveEnvelope_certificates
+#print axioms Nullivance.Recognition.restoredActiveEnvelope_abstract_cost_bound
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
