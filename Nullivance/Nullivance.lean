@@ -89,3 +89,4 @@ import Nullivance.RecognitionImportedSession
 import Nullivance.RecognitionCheckpoint
 import Nullivance.RecognitionCheckpointBytes
 import Nullivance.RecognitionCheckpointEnvelope
+import Nullivance.RecognitionCheckpointDecodeCost

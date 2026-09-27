@@ -11,6 +11,7 @@ import Nullivance.RecognitionImportedSession
 import Nullivance.RecognitionCheckpoint
 import Nullivance.RecognitionCheckpointBytes
 import Nullivance.RecognitionCheckpointEnvelope
+import Nullivance.RecognitionCheckpointDecodeCost
 import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
@@ -869,6 +870,14 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.restoredActiveEnvelope_observation
 #print axioms Nullivance.Recognition.restoredActiveEnvelope_certificates
 #print axioms Nullivance.Recognition.restoredActiveEnvelope_abstract_cost_bound
+#print axioms Nullivance.Recognition.decodeNatBytesCounted_spec
+#print axioms Nullivance.Recognition.decodeNatBytes_lt_pow
+#print axioms Nullivance.Recognition.decodeNatBytesCounted_cost
+#print axioms Nullivance.Recognition.decodeNatBytesCounted_value_bound
+#print axioms Nullivance.Recognition.unwrapCheckpointBytes_size
+#print axioms Nullivance.Recognition.unwrapCheckpointBytes_length_le
+#print axioms Nullivance.Recognition.unwrapCheckpointBytes_counted_bounds
+#print axioms Nullivance.Recognition.decode_nat_cost_regression
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
