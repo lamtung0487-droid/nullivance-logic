@@ -18,6 +18,7 @@ import Nullivance.RecognitionEvidenceBoundary
 import Nullivance.RecognitionInitEvidenceLimit
 import Nullivance.RecognitionPartialProbeLimit
 import Nullivance.RecognitionFiniteThresholdLimit
+import Nullivance.RecognitionInfiniteThresholdZero
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -907,6 +908,11 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.positiveThresholdFloor_pos
 #print axioms Nullivance.Recognition.positiveThresholdFloor_le_of_mem
 #print axioms Nullivance.Recognition.finite_positive_thresholds_not_recognizable
+#print axioms Nullivance.Recognition.zero_iff_no_shrinking_threshold
+#print axioms Nullivance.Recognition.infiniteThreshold_pos_intensity_zero
+#print axioms Nullivance.Recognition.infiniteThreshold_both_intensities_zero
+#print axioms Nullivance.Recognition.infiniteThreshold_recognizes_both_intensities_zero
+#print axioms Nullivance.Recognition.positive_intensity_eventually_detected
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))

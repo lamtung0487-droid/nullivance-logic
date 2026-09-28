@@ -53,6 +53,7 @@ import Nullivance.RecognitionEvidenceBoundary
 import Nullivance.RecognitionInitEvidenceLimit
 import Nullivance.RecognitionPartialProbeLimit
 import Nullivance.RecognitionFiniteThresholdLimit
+import Nullivance.RecognitionInfiniteThresholdZero
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
