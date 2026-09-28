@@ -19,6 +19,7 @@ import Nullivance.RecognitionInitEvidenceLimit
 import Nullivance.RecognitionPartialProbeLimit
 import Nullivance.RecognitionFiniteThresholdLimit
 import Nullivance.RecognitionInfiniteThresholdZero
+import Nullivance.RecognitionCountableThreshold
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -913,6 +914,12 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.infiniteThreshold_both_intensities_zero
 #print axioms Nullivance.Recognition.infiniteThreshold_recognizes_both_intensities_zero
 #print axioms Nullivance.Recognition.positive_intensity_eventually_detected
+#print axioms Nullivance.Recognition.aboveNeutralThreshold_in_unit
+#print axioms Nullivance.Recognition.neutral_iff_half_and_no_above
+#print axioms Nullivance.Recognition.positiveStructureNeutral_correct
+#print axioms Nullivance.Recognition.negativeStructureNeutral_correct
+#print axioms Nullivance.Recognition.decodeCountableQuasivance_correct
+#print axioms Nullivance.Recognition.countableThreshold_recognizes_quasivance
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
