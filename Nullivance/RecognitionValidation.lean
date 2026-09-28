@@ -16,6 +16,7 @@ import Nullivance.RecognitionFiniteStopping
 import Nullivance.RecognitionHistoryKnowledge
 import Nullivance.RecognitionEvidenceBoundary
 import Nullivance.RecognitionInitEvidenceLimit
+import Nullivance.RecognitionPartialProbeLimit
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -898,6 +899,10 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.processed_init_false_sound_incomplete
 #print axioms Nullivance.Recognition.processed_init_false_complete_unsound
 #print axioms Nullivance.Recognition.no_exact_processed_init_four_report
+#print axioms Nullivance.Recognition.init_intensity_not_recognizable
+#print axioms Nullivance.Recognition.fullPolarSliceState_init_zero
+#print axioms Nullivance.Recognition.init_structure_not_recognizable
+#print axioms Nullivance.Recognition.two_probe_design_strictly_separates
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
