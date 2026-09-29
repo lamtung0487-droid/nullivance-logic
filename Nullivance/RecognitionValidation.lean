@@ -22,6 +22,7 @@ import Nullivance.RecognitionInfiniteThresholdZero
 import Nullivance.RecognitionCountableThreshold
 import Nullivance.RecognitionThresholdMargin
 import Nullivance.RecognitionThresholdPartial
+import Nullivance.RecognitionThresholdStructure
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -936,6 +937,18 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.positive_intensity_can_evade_prefix
 #print axioms Nullivance.Recognition.zero_intensities_never_refuted
 #print axioms Nullivance.Recognition.intensity_monitor_abstention_counterexample
+#print axioms Nullivance.Recognition.finiteNonneutralBit_iff
+#print axioms Nullivance.Recognition.finiteNonneutralBit_zero
+#print axioms Nullivance.Recognition.finiteNonneutralBit_mono
+#print axioms Nullivance.Recognition.finiteNonneutralBit_eventually_iff
+#print axioms Nullivance.Recognition.nonneutral_iff_finite_structure_witness
+#print axioms Nullivance.Recognition.positiveStructure_finite_eventually_iff
+#print axioms Nullivance.Recognition.negativeStructure_finite_eventually_iff
+#print axioms Nullivance.Recognition.positiveStructure_finite_sound
+#print axioms Nullivance.Recognition.negativeStructure_finite_sound
+#print axioms Nullivance.Recognition.positiveStructure_neutral_never_witness
+#print axioms Nullivance.Recognition.negativeStructure_neutral_never_witness
+#print axioms Nullivance.Recognition.upper_structure_can_evade_prefix
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))

@@ -57,6 +57,7 @@ import Nullivance.RecognitionInfiniteThresholdZero
 import Nullivance.RecognitionCountableThreshold
 import Nullivance.RecognitionThresholdMargin
 import Nullivance.RecognitionThresholdPartial
+import Nullivance.RecognitionThresholdStructure
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
