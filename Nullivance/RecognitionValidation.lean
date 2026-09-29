@@ -24,6 +24,7 @@ import Nullivance.RecognitionThresholdMargin
 import Nullivance.RecognitionThresholdPartial
 import Nullivance.RecognitionThresholdStructure
 import Nullivance.RecognitionThresholdPrefixLimit
+import Nullivance.RecognitionThresholdNeutralLimit
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -953,6 +954,10 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.quasivant_prefix_has_nonquasivant_match
 #print axioms Nullivance.Recognition.quasivant_no_finite_prefix_affirmation
 #print axioms Nullivance.Recognition.countable_prefix_not_recognizable
+#print axioms Nullivance.Recognition.nearZero_structure_neutral_upper_agree
+#print axioms Nullivance.Recognition.silent_neutral_prefix_has_quasivant_match
+#print axioms Nullivance.Recognition.silent_neutral_no_finite_prefix_refutation
+#print axioms Nullivance.Recognition.finite_prefix_two_sided_boundary
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
