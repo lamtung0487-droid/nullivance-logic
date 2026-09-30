@@ -60,6 +60,7 @@ import Nullivance.RecognitionThresholdPartial
 import Nullivance.RecognitionThresholdStructure
 import Nullivance.RecognitionThresholdPrefixLimit
 import Nullivance.RecognitionThresholdNeutralLimit
+import Nullivance.RecognitionThresholdZeroSlice
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
