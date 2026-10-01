@@ -63,6 +63,7 @@ import Nullivance.RecognitionThresholdNeutralLimit
 import Nullivance.RecognitionThresholdZeroSlice
 import Nullivance.RecognitionThresholdExactRefutation
 import Nullivance.RecognitionThresholdHalfPrefix
+import Nullivance.RecognitionThresholdFullPrefix
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
