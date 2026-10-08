@@ -31,6 +31,7 @@ import Nullivance.RecognitionThresholdHalfPrefix
 import Nullivance.RecognitionThresholdFullPrefix
 import Nullivance.RecognitionThresholdPrefixCompression
 import Nullivance.RecognitionThresholdEndpoint
+import Nullivance.RecognitionThresholdListCost
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -996,6 +997,20 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.endpoint_index_regression
 #print axioms Nullivance.Recognition.arbitrary_endpoint_compression_counterexample
 #print axioms Nullivance.Recognition.nonmonotoneThresholdData_not_realizable
+#print axioms Nullivance.Recognition.lastThresholdPairCounted_spec
+#print axioms Nullivance.Recognition.lastThresholdPair_range_succ
+#print axioms Nullivance.Recognition.selectedPrefixPairCounted_spec
+#print axioms Nullivance.Recognition.listPrefixIntensityRefutedCounted_spec
+#print axioms Nullivance.Recognition.listPrefixIntensityRefuted_eq_full
+#print axioms Nullivance.Recognition.listPrefixIntensityRefuted_forces
+#print axioms Nullivance.Recognition.listPrefixIntensityRefuted_sound
+#print axioms Nullivance.Recognition.listPrefixIntensityRefutedCounted_generated
+#print axioms Nullivance.Recognition.arbitrary_list_prefix_counterexample
+#print axioms Nullivance.Recognition.nonmonotonePrefixData_not_realizable
+#print axioms Nullivance.Recognition.list_prefix_cost_regression
+
+#eval ([0, 1, 2, 5] : List ℕ).map
+  (fun N => listPrefixIntensityRefutedCounted (silentListPrefix N))
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
