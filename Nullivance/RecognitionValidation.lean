@@ -30,6 +30,7 @@ import Nullivance.RecognitionThresholdExactRefutation
 import Nullivance.RecognitionThresholdHalfPrefix
 import Nullivance.RecognitionThresholdFullPrefix
 import Nullivance.RecognitionThresholdPrefixCompression
+import Nullivance.RecognitionThresholdEndpoint
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -986,6 +987,15 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.full_prefix_refutation_eq_extended_monitor
 #print axioms Nullivance.Recognition.full_prefix_forces_iff_extended_monitor
 #print axioms Nullivance.Recognition.full_prefix_forces_iff_nearZero_monitor_of_two_le
+#print axioms Nullivance.Recognition.nearZero_intensity_bit_mono
+#print axioms Nullivance.Recognition.finiteIntensityRefuted_succ_eq_endpoint
+#print axioms Nullivance.Recognition.full_prefix_refutation_eq_endpoint
+#print axioms Nullivance.Recognition.full_prefix_forces_iff_endpoint
+#print axioms Nullivance.Recognition.endpointIntensityRefuted_sound
+#print axioms Nullivance.Recognition.endpoint_small_prefix_eq_half
+#print axioms Nullivance.Recognition.endpoint_index_regression
+#print axioms Nullivance.Recognition.arbitrary_endpoint_compression_counterexample
+#print axioms Nullivance.Recognition.nonmonotoneThresholdData_not_realizable
 
 #eval ([(false,false), (false,true), (true,false), (true,true)] : List (Bool × Bool)).map
   (fun s => (s, toyObserve s, toyObserve (toyStep s)))
