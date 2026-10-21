@@ -32,6 +32,7 @@ import Nullivance.RecognitionThresholdFullPrefix
 import Nullivance.RecognitionThresholdPrefixCompression
 import Nullivance.RecognitionThresholdEndpoint
 import Nullivance.RecognitionThresholdListCost
+import Nullivance.RecognitionThresholdIncremental
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1008,6 +1009,30 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.arbitrary_list_prefix_counterexample
 #print axioms Nullivance.Recognition.nonmonotonePrefixData_not_realizable
 #print axioms Nullivance.Recognition.list_prefix_cost_regression
+#print axioms Nullivance.Recognition.feedThresholdEndpoint_spec
+#print axioms Nullivance.Recognition.feedThresholdEndpoint_append
+#print axioms Nullivance.Recognition.thresholdCachePair_spec
+#print axioms Nullivance.Recognition.thresholdCacheRefuted_eq_list
+#print axioms Nullivance.Recognition.thresholdCacheRefuted_generated
+#print axioms Nullivance.Recognition.advanceThresholdEndpoint_generated
+#print axioms Nullivance.Recognition.thresholdCacheRefuted_forces
+#print axioms Nullivance.Recognition.advanceThresholdEndpointCounted_spec
+#print axioms Nullivance.Recognition.readThresholdEndpointCounted_spec
+#print axioms Nullivance.Recognition.updateReadThresholdEndpointCounted_spec
+#print axioms Nullivance.Recognition.feedThresholdEndpointCounted_spec
+#print axioms Nullivance.Recognition.scanReadThresholdEndpointCounted_spec
+#print axioms Nullivance.Recognition.scanReadThresholdEndpointCounted_generated
+#print axioms Nullivance.Recognition.updateReadThresholdEndpointCounted_generated
+#print axioms Nullivance.Recognition.forged_threshold_cache_counterexample
+#print axioms Nullivance.Recognition.forged_threshold_cache_not_generated
+#print axioms Nullivance.Recognition.arbitrary_cache_verdict_can_disappear
+#print axioms Nullivance.Recognition.incremental_update_boundary_regression
+#print axioms Nullivance.Recognition.incremental_scan_cost_regression
+#print axioms Nullivance.Recognition.incremental_chunk_regression
+
+#eval ([0, 1, 2, 5] : List ℕ).map (fun N =>
+  scanReadThresholdEndpointCounted incrementalSilentPair
+    (List.replicate N incrementalSilentPair))
 
 #eval ([0, 1, 2, 5] : List ℕ).map
   (fun N => listPrefixIntensityRefutedCounted (silentListPrefix N))
