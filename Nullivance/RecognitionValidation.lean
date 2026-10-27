@@ -34,6 +34,7 @@ import Nullivance.RecognitionThresholdEndpoint
 import Nullivance.RecognitionThresholdListCost
 import Nullivance.RecognitionThresholdIncremental
 import Nullivance.RecognitionThresholdCacheCheck
+import Nullivance.RecognitionThresholdCheckedImport
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1050,6 +1051,31 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.checked_cache_nonrealizable_counterexample
 #print axioms Nullivance.Recognition.checkThresholdCache_boundary_regression
 #print axioms Nullivance.Recognition.checkThresholdCache_cost_regression
+
+#print axioms Nullivance.Recognition.importThresholdCache_isSome
+#print axioms Nullivance.Recognition.importThresholdCache_none
+#print axioms Nullivance.Recognition.importThresholdCache_output
+#print axioms Nullivance.Recognition.verifiedThresholdCache_matches
+#print axioms Nullivance.Recognition.resumeVerifiedThresholdCache_erasure
+#print axioms Nullivance.Recognition.readVerifiedThresholdCache_eq_list
+#print axioms Nullivance.Recognition.readVerifiedThresholdCache_forces
+#print axioms Nullivance.Recognition.importThresholdCacheCounted_spec
+#print axioms Nullivance.Recognition.importThresholdCacheCounted_bounds
+#print axioms Nullivance.Recognition.importThresholdCacheCounted_accepted
+#print axioms Nullivance.Recognition.advanceVerifiedThresholdCacheCounted_spec
+#print axioms Nullivance.Recognition.updateReadVerifiedThresholdCacheCounted_spec
+#print axioms Nullivance.Recognition.importThresholdCache_forged_rejected
+#print axioms Nullivance.Recognition.verifiedThresholdCache_forged_impossible
+#print axioms Nullivance.Recognition.threshold_import_cost_regression
+#print axioms Nullivance.Recognition.threshold_import_rejection_regression
+#print axioms Nullivance.Recognition.threshold_import_update_regression
+#print axioms Nullivance.Recognition.threshold_import_nonrealizable_regression
+
+#eval ([0, 1, 2, 5] : List ℕ).map (fun N =>
+  let xs := List.replicate N incrementalSilentPair
+  let r := importThresholdCacheCounted incrementalSilentPair xs
+    (feedThresholdEndpoint (initThresholdEndpointCache incrementalSilentPair) xs)
+  (r.1.isSome, r.2))
 
 #eval ([0, 1, 2, 5] : List ℕ).map (fun N =>
   let xs := List.replicate N incrementalSilentPair
