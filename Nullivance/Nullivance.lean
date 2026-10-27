@@ -68,6 +68,7 @@ import Nullivance.RecognitionThresholdPrefixCompression
 import Nullivance.RecognitionThresholdEndpoint
 import Nullivance.RecognitionThresholdListCost
 import Nullivance.RecognitionThresholdIncremental
+import Nullivance.RecognitionThresholdCacheCheck
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
