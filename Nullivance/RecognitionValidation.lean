@@ -38,6 +38,7 @@ import Nullivance.RecognitionThresholdCheckedImport
 import Nullivance.RecognitionThresholdOnlineTrace
 import Nullivance.RecognitionThresholdFirstHit
 import Nullivance.RecognitionThresholdStopResume
+import Nullivance.RecognitionThresholdConsumed
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1126,6 +1127,32 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.threshold_stop_resume_regression
 #print axioms Nullivance.Recognition.threshold_stop_saved_hit_regression
 #print axioms Nullivance.Recognition.threshold_import_stop_regression
+
+#print axioms Nullivance.Recognition.measureThresholdStop_spec
+#print axioms Nullivance.Recognition.measureThresholdStop_exhausted
+#print axioms Nullivance.Recognition.measureThresholdStop_cost
+#print axioms Nullivance.Recognition.measureThresholdChunks_spec
+#print axioms Nullivance.Recognition.measureThresholdChunks_bound
+#print axioms Nullivance.Recognition.measureThresholdChunks_consumed_le
+#print axioms Nullivance.Recognition.measureThresholdChunks_input_bound
+#print axioms Nullivance.Recognition.measureThresholdChunks_exhausted_cost
+#print axioms Nullivance.Recognition.certifiedThresholdChunks
+#print axioms Nullivance.Recognition.consumedThresholdEndpoint
+#print axioms Nullivance.Recognition.certifiedThresholdChunks_erasure
+#print axioms Nullivance.Recognition.consumedThresholdEndpoint_erasure
+#print axioms Nullivance.Recognition.certifiedThresholdConsumption_sound
+#print axioms Nullivance.Recognition.measured_chunks_boundary_regression
+#print axioms Nullivance.Recognition.measured_empty_chunks_cost
+#print axioms Nullivance.Recognition.measured_chunks_not_uniformly_cheaper
+#print axioms Nullivance.Recognition.measured_firing_empty_regression
+
+#eval ([[], [[]], [[], []],
+  [[incrementalSilentPair], [incrementalFiringPair, incrementalSilentPair]],
+  [[incrementalSilentPair, incrementalFiringPair], [], [incrementalSilentPair]],
+  [[], [incrementalSilentPair], [], [incrementalFiringPair]]] :
+    List (List (List ThresholdPair))).map (fun chunks =>
+      let r := measureThresholdChunks (initThresholdEndpointCache incrementalSilentPair) chunks
+      (r.index, r.consumed, r.cost))
 
 #eval ([(initThresholdEndpointCache incrementalSilentPair, [], []),
   (forgedThresholdEndpointCache, [incrementalSilentPair, incrementalSilentPair], []),

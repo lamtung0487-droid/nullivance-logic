@@ -73,6 +73,7 @@ import Nullivance.RecognitionThresholdCheckedImport
 import Nullivance.RecognitionThresholdOnlineTrace
 import Nullivance.RecognitionThresholdFirstHit
 import Nullivance.RecognitionThresholdStopResume
+import Nullivance.RecognitionThresholdConsumed
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
