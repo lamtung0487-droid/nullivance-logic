@@ -35,6 +35,7 @@ import Nullivance.RecognitionThresholdListCost
 import Nullivance.RecognitionThresholdIncremental
 import Nullivance.RecognitionThresholdCacheCheck
 import Nullivance.RecognitionThresholdCheckedImport
+import Nullivance.RecognitionThresholdOnlineTrace
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1070,6 +1071,33 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.threshold_import_rejection_regression
 #print axioms Nullivance.Recognition.threshold_import_update_regression
 #print axioms Nullivance.Recognition.threshold_import_nonrealizable_regression
+
+#print axioms Nullivance.Recognition.runThresholdTrace_final
+#print axioms Nullivance.Recognition.runThresholdTrace_length
+#print axioms Nullivance.Recognition.runThresholdTrace_nth
+#print axioms Nullivance.Recognition.runThresholdTrace_append
+#print axioms Nullivance.Recognition.runVerifiedThresholdTrace_nth
+#print axioms Nullivance.Recognition.runVerifiedThresholdTrace_generated
+#print axioms Nullivance.Recognition.runVerifiedThresholdTrace_sound
+#print axioms Nullivance.Recognition.runThresholdTraceCounted_spec
+#print axioms Nullivance.Recognition.runVerifiedThresholdTraceCounted_spec
+#print axioms Nullivance.Recognition.importRunThresholdTrace_erasure
+#print axioms Nullivance.Recognition.importRunThresholdTrace_isSome
+#print axioms Nullivance.Recognition.importRunThresholdTraceCounted_spec
+#print axioms Nullivance.Recognition.importRunThresholdTraceCounted_rejected
+#print axioms Nullivance.Recognition.importRunThresholdTraceCounted_accepted_cost
+#print axioms Nullivance.Recognition.importRunThresholdTraceCounted_bound
+#print axioms Nullivance.Recognition.threshold_trace_regression
+#print axioms Nullivance.Recognition.threshold_import_run_regression
+#print axioms Nullivance.Recognition.threshold_import_run_empty_regression
+#print axioms Nullivance.Recognition.threshold_import_run_rejected_regression
+
+#eval ([0, 1, 2, 5] : List ℕ).map (fun N =>
+  let xs := List.replicate N incrementalSilentPair
+  let r := importRunThresholdTraceCounted incrementalSilentPair xs
+    (feedThresholdEndpoint (initThresholdEndpointCache incrementalSilentPair) xs)
+    [incrementalSilentPair, incrementalFiringPair]
+  (r.1.map Prod.snd, r.2))
 
 #eval ([0, 1, 2, 5] : List ℕ).map (fun N =>
   let xs := List.replicate N incrementalSilentPair
