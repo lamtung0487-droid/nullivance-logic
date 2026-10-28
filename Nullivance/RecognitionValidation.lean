@@ -37,6 +37,7 @@ import Nullivance.RecognitionThresholdCacheCheck
 import Nullivance.RecognitionThresholdCheckedImport
 import Nullivance.RecognitionThresholdOnlineTrace
 import Nullivance.RecognitionThresholdFirstHit
+import Nullivance.RecognitionThresholdStopResume
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1107,6 +1108,32 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.stopThresholdPrefixCounted_bound
 #print axioms Nullivance.Recognition.threshold_stop_boundary_regression
 #print axioms Nullivance.Recognition.threshold_stop_not_always_cheaper
+
+#print axioms Nullivance.Recognition.stopThresholdPrefix_append
+#print axioms Nullivance.Recognition.resumeThresholdStop_exhausted
+#print axioms Nullivance.Recognition.resumeThresholdStop_found
+#print axioms Nullivance.Recognition.thresholdChunkLengthCounted_spec
+#print axioms Nullivance.Recognition.resumeThresholdStopCounted_spec
+#print axioms Nullivance.Recognition.stopVerifiedThresholdPrefixCounted_spec
+#print axioms Nullivance.Recognition.verifiedThresholdStop_ext
+#print axioms Nullivance.Recognition.exhaustedThresholdResume_erasure
+#print axioms Nullivance.Recognition.importStopThresholdPrefix_erasure
+#print axioms Nullivance.Recognition.importStopThresholdPrefix_isSome
+#print axioms Nullivance.Recognition.importStopThresholdPrefixCounted_spec
+#print axioms Nullivance.Recognition.importStopThresholdPrefixCounted_rejected
+#print axioms Nullivance.Recognition.importStopThresholdPrefixCounted_accepted_cost
+#print axioms Nullivance.Recognition.importStopThresholdPrefixCounted_bound
+#print axioms Nullivance.Recognition.threshold_stop_resume_regression
+#print axioms Nullivance.Recognition.threshold_stop_saved_hit_regression
+#print axioms Nullivance.Recognition.threshold_import_stop_regression
+
+#eval ([(initThresholdEndpointCache incrementalSilentPair, [], []),
+  (forgedThresholdEndpointCache, [incrementalSilentPair, incrementalSilentPair], []),
+  (initThresholdEndpointCache incrementalSilentPair, [],
+    [incrementalSilentPair, incrementalFiringPair, incrementalSilentPair])] :
+  List (ThresholdEndpointCache × List ThresholdPair × List ThresholdPair)).map (fun r =>
+    let a := importStopThresholdPrefixCounted incrementalSilentPair r.2.1 r.1 r.2.2
+    (a.1.map VerifiedThresholdStop.index, a.2))
 
 #eval ([(initThresholdEndpointCache incrementalSilentPair, []),
   (initThresholdEndpointCache incrementalFiringPair, []),
