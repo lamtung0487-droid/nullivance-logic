@@ -42,6 +42,7 @@ import Nullivance.RecognitionThresholdConsumed
 import Nullivance.RecognitionThresholdImportedChunks
 import Nullivance.RecognitionThresholdStopCheckpoint
 import Nullivance.RecognitionThresholdCheckpointResume
+import Nullivance.RecognitionThresholdSessionLedger
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1203,6 +1204,33 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.continue_checkpoint_regression
 #print axioms Nullivance.Recognition.import_continue_checkpoint_regression
 #print axioms Nullivance.Recognition.continue_checkpoint_empty_regression
+
+#print axioms Nullivance.Recognition.thresholdCallsData_flatten
+#print axioms Nullivance.Recognition.runThresholdCalls
+#print axioms Nullivance.Recognition.runThresholdCalls_ledger
+#print axioms Nullivance.Recognition.runThresholdCalls_reference
+#print axioms Nullivance.Recognition.runThresholdCalls_consumed
+#print axioms Nullivance.Recognition.runThresholdCalls_bound
+#print axioms Nullivance.Recognition.runThresholdCalls_found
+#print axioms Nullivance.Recognition.runThresholdCalls_ignore_old_cost
+#print axioms Nullivance.Recognition.runThresholdCalls_empty_calls
+#print axioms Nullivance.Recognition.runThresholdCalls_sound
+#print axioms Nullivance.Recognition.importRunThresholdCalls_spec
+#print axioms Nullivance.Recognition.importRunThresholdCalls_rejected
+#print axioms Nullivance.Recognition.importRunThresholdCalls_erasure
+#print axioms Nullivance.Recognition.importRunThresholdCalls_bound
+#print axioms Nullivance.Recognition.importRunThresholdCalls_accepted_ledger
+#print axioms Nullivance.Recognition.threshold_session_ledger_regression
+#print axioms Nullivance.Recognition.threshold_session_import_regression
+
+#eval
+  let q := initThresholdEndpointCache incrementalSilentPair
+  let old := [[incrementalSilentPair]]
+  let c := stopCheckpointOf (measureThresholdChunks q old)
+  let calls := [[[incrementalFiringPair, incrementalSilentPair]], [], [[incrementalSilentPair]]]
+  ([c, { c with consumed := 0 }] : List ThresholdStopCheckpoint).map (fun cp =>
+    let a := importRunThresholdCalls q old calls cp
+    (a.1.map (fun r => (r.val.index, r.val.consumed)), a.2))
 
 #eval
   let q := initThresholdEndpointCache incrementalSilentPair
