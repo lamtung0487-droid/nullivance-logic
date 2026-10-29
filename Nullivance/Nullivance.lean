@@ -76,6 +76,7 @@ import Nullivance.RecognitionThresholdStopResume
 import Nullivance.RecognitionThresholdConsumed
 import Nullivance.RecognitionThresholdImportedChunks
 import Nullivance.RecognitionThresholdStopCheckpoint
+import Nullivance.RecognitionThresholdCheckpointResume
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
