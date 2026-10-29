@@ -43,6 +43,7 @@ import Nullivance.RecognitionThresholdImportedChunks
 import Nullivance.RecognitionThresholdStopCheckpoint
 import Nullivance.RecognitionThresholdCheckpointResume
 import Nullivance.RecognitionThresholdSessionLedger
+import Nullivance.RecognitionThresholdDelivery
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1207,6 +1208,25 @@ open Nullivance.Recognition
 
 #print axioms Nullivance.Recognition.thresholdCallsData_flatten
 #print axioms Nullivance.Recognition.runThresholdCalls
+#print axioms Nullivance.Recognition.thresholdNearZero_take
+#print axioms Nullivance.Recognition.generatedThresholdStop_hit_iff
+#print axioms Nullivance.Recognition.runThresholdDelivery_reference
+#print axioms Nullivance.Recognition.runThresholdDelivery_bound
+#print axioms Nullivance.Recognition.orderedThresholdDelivery_hit_iff
+#print axioms Nullivance.Recognition.orderedThresholdDelivery_eventually_iff
+#print axioms Nullivance.Recognition.orderedThresholdDelivery_eventually_with_cost
+#print axioms Nullivance.Recognition.orderedThresholdDelivery_zero_intensity
+#print axioms Nullivance.Recognition.orderedThresholdDelivery_neutral_boundary
+#print axioms Nullivance.Recognition.thresholdCallsData_append
+#print axioms Nullivance.Recognition.scalarThresholdDelivery_data
+#print axioms Nullivance.Recognition.scalarThresholdDelivery_ordered
+#print axioms Nullivance.Recognition.scalarThresholdDelivery_progress
+#print axioms Nullivance.Recognition.emptyThresholdDelivery_data
+#print axioms Nullivance.Recognition.emptyThresholdDelivery_ordered
+#print axioms Nullivance.Recognition.emptyThresholdDelivery_no_progress
+#print axioms Nullivance.Recognition.emptyThresholdDelivery_no_hit
+#print axioms Nullivance.Recognition.threshold_delivery_order_regression
+#print axioms Nullivance.Recognition.threshold_delivery_empty_boundary_regression
 #print axioms Nullivance.Recognition.runThresholdCalls_ledger
 #print axioms Nullivance.Recognition.runThresholdCalls_reference
 #print axioms Nullivance.Recognition.runThresholdCalls_consumed
