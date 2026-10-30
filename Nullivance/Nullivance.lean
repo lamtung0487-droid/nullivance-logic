@@ -82,6 +82,7 @@ import Nullivance.RecognitionThresholdDelivery
 import Nullivance.RecognitionThresholdBudget
 import Nullivance.RecognitionThresholdCertificates
 import Nullivance.RecognitionPartialThresholdSearch
+import Nullivance.RecognitionLazyThresholdSearch
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost

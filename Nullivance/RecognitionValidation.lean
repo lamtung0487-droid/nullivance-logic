@@ -47,6 +47,7 @@ import Nullivance.RecognitionThresholdDelivery
 import Nullivance.RecognitionThresholdBudget
 import Nullivance.RecognitionThresholdCertificates
 import Nullivance.RecognitionPartialThresholdSearch
+import Nullivance.RecognitionLazyThresholdSearch
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1248,6 +1249,24 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.partial_threshold_scan_regression
 #print axioms Nullivance.Recognition.partial_threshold_history_regression
 #print axioms Nullivance.Recognition.partial_threshold_invalid_history_regression
+
+-- DR-0116: lazy certification, safe refinement replay, and invocation counts.
+#print axioms Nullivance.Recognition.lazyThresholdScan_eq
+#print axioms Nullivance.Recognition.lazyHistoryThresholds_eq
+#print axioms Nullivance.Recognition.lazyHistoryThresholds_sound
+#print axioms Nullivance.Recognition.lazyThresholdScanCounted_spec
+#print axioms Nullivance.Recognition.lazyThresholdScanCounted_found
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_above_refinement
+#print axioms Nullivance.Recognition.intensityCertificateStatus_above_refinement
+#print axioms Nullivance.Recognition.searchHistoryThresholds_first_le
+#print axioms Nullivance.Recognition.lazyHistoryThresholds_refinement
+#print axioms Nullivance.Recognition.refineLazyThresholdSearch_sound
+#print axioms Nullivance.Recognition.refineLazyThresholdSearch_preserves
+#print axioms Nullivance.Recognition.refineLazyThresholdSearch_invalid
+#print axioms Nullivance.Recognition.refineLazyThresholdSearch_margin
+#print axioms Nullivance.Recognition.lazy_refinement_revisit_regression
+#print axioms Nullivance.Recognition.lazy_refinement_inconsistent_regression
+#print axioms Nullivance.Recognition.lazy_threshold_cost_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
