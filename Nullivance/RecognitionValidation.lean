@@ -46,6 +46,7 @@ import Nullivance.RecognitionThresholdSessionLedger
 import Nullivance.RecognitionThresholdDelivery
 import Nullivance.RecognitionThresholdBudget
 import Nullivance.RecognitionThresholdCertificates
+import Nullivance.RecognitionPartialThresholdSearch
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1228,6 +1229,25 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.threshold_interval_boundary_regression
 #print axioms Nullivance.Recognition.threshold_error_boundary_regression
 #print axioms Nullivance.Recognition.threshold_history_inconsistent_regression
+
+-- DR-0115: partial intensity certificates, finite progress, scanner-only cost.
+#print axioms Nullivance.Recognition.intensityCertificateStatus_above
+#print axioms Nullivance.Recognition.intensityCertificateStatus_valid
+#print axioms Nullivance.Recognition.intensityCertificateStatus_sound
+#print axioms Nullivance.Recognition.scanPartialThresholds_found
+#print axioms Nullivance.Recognition.scanPartialThresholds_first
+#print axioms Nullivance.Recognition.advancePartialThreshold_isFound
+#print axioms Nullivance.Recognition.scanPartialThresholds_complete
+#print axioms Nullivance.Recognition.scanPartialThresholds_exhausted
+#print axioms Nullivance.Recognition.searchHistoryThresholds_found
+#print axioms Nullivance.Recognition.searchHistoryThresholds_sound
+#print axioms Nullivance.Recognition.searchHistoryThresholds_complete
+#print axioms Nullivance.Recognition.boundedError_partial_search
+#print axioms Nullivance.Recognition.boundedError_partial_prefix
+#print axioms Nullivance.Recognition.scanPartialThresholdsCounted_spec
+#print axioms Nullivance.Recognition.partial_threshold_scan_regression
+#print axioms Nullivance.Recognition.partial_threshold_history_regression
+#print axioms Nullivance.Recognition.partial_threshold_invalid_history_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
