@@ -44,6 +44,7 @@ import Nullivance.RecognitionThresholdStopCheckpoint
 import Nullivance.RecognitionThresholdCheckpointResume
 import Nullivance.RecognitionThresholdSessionLedger
 import Nullivance.RecognitionThresholdDelivery
+import Nullivance.RecognitionThresholdBudget
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1209,6 +1210,21 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.thresholdCallsData_flatten
 #print axioms Nullivance.Recognition.runThresholdCalls
 #print axioms Nullivance.Recognition.thresholdNearZero_take
+#print axioms Nullivance.Recognition.thresholdObservationBudget_ge_two
+#print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
+#print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
+#print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
+#print axioms Nullivance.Recognition.rationalMargin_delivery_hit
+#print axioms Nullivance.Recognition.rationalMargin_exhaustion_bounds
+#print axioms Nullivance.Recognition.rationalMargin_delivery_consumption
+#print axioms Nullivance.Recognition.rationalMargin_modulus_deadline
+#print axioms Nullivance.Recognition.rationalMargin_modulus_cost
+#print axioms Nullivance.Recognition.scalarThresholdDelivery_modulus
+#print axioms Nullivance.Recognition.scalarThresholdDelivery_chunks
+#print axioms Nullivance.Recognition.rationalMargin_singleton_budget
+#print axioms Nullivance.Recognition.threshold_observation_budget_regression
+#print axioms Nullivance.Recognition.zero_margin_not_a_guarantee
+#print axioms Nullivance.Recognition.threshold_budget_empty_chunk_regression
 #print axioms Nullivance.Recognition.generatedThresholdStop_hit_iff
 #print axioms Nullivance.Recognition.runThresholdDelivery_reference
 #print axioms Nullivance.Recognition.runThresholdDelivery_bound

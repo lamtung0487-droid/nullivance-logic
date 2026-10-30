@@ -79,6 +79,7 @@ import Nullivance.RecognitionThresholdStopCheckpoint
 import Nullivance.RecognitionThresholdCheckpointResume
 import Nullivance.RecognitionThresholdSessionLedger
 import Nullivance.RecognitionThresholdDelivery
+import Nullivance.RecognitionThresholdBudget
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
