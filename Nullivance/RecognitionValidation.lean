@@ -45,6 +45,7 @@ import Nullivance.RecognitionThresholdCheckpointResume
 import Nullivance.RecognitionThresholdSessionLedger
 import Nullivance.RecognitionThresholdDelivery
 import Nullivance.RecognitionThresholdBudget
+import Nullivance.RecognitionThresholdCertificates
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1211,6 +1212,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.runThresholdCalls
 #print axioms Nullivance.Recognition.thresholdNearZero_take
 #print axioms Nullivance.Recognition.thresholdObservationBudget_ge_two
+#print axioms Nullivance.Recognition.certifyThresholdInterval_above
+#print axioms Nullivance.Recognition.certifyThresholdInterval_below
+#print axioms Nullivance.Recognition.certifyThresholdInterval_unknown
+#print axioms Nullivance.Recognition.certifyThresholdInterval_unknown_witnesses
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_above
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_above_forces
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_below_forces
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_unknown_states
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_refutes
+#print axioms Nullivance.Recognition.boundedError_threshold_above
+#print axioms Nullivance.Recognition.boundedError_budget_certificate
+#print axioms Nullivance.Recognition.boundedError_budget_refutes
+#print axioms Nullivance.Recognition.certifyThresholdIntervalCounted_spec
+#print axioms Nullivance.Recognition.threshold_interval_boundary_regression
+#print axioms Nullivance.Recognition.threshold_error_boundary_regression
+#print axioms Nullivance.Recognition.threshold_history_inconsistent_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
