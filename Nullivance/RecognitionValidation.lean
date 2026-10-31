@@ -49,6 +49,7 @@ import Nullivance.RecognitionThresholdCertificates
 import Nullivance.RecognitionPartialThresholdSearch
 import Nullivance.RecognitionLazyThresholdSearch
 import Nullivance.RecognitionSharedThresholdSummary
+import Nullivance.RecognitionSummarySessions
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1283,6 +1284,20 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.continueSummaryThresholds_sound
 #print axioms Nullivance.Recognition.shared_threshold_replay_regression
 #print axioms Nullivance.Recognition.shared_threshold_invalid_regression
+
+-- DR-0118: stored length, source-correct sessions and cumulative comparison cost.
+#print axioms Nullivance.Recognition.makeLengthThresholdCache_matches
+#print axioms Nullivance.Recognition.updateLengthThresholdCache_matches
+#print axioms Nullivance.Recognition.updateLengthThresholdCache_cost
+#print axioms Nullivance.Recognition.stepLengthThresholds_spec
+#print axioms Nullivance.Recognition.stepLengthThresholds_sound
+#print axioms Nullivance.Recognition.runSummaryThresholdSession_spec
+#print axioms Nullivance.Recognition.startSummaryThresholdSession_spec
+#print axioms Nullivance.Recognition.runSummaryThresholdSession_provenance
+#print axioms Nullivance.Recognition.stepLengthThresholds_empty_cost
+#print axioms Nullivance.Recognition.runSummaryThresholdSession_empty_calls
+#print axioms Nullivance.Recognition.summary_session_refinement_regression
+#print axioms Nullivance.Recognition.summary_session_forged_length_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
