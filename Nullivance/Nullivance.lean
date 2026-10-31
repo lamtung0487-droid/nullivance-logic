@@ -86,6 +86,7 @@ import Nullivance.RecognitionLazyThresholdSearch
 import Nullivance.RecognitionSharedThresholdSummary
 import Nullivance.RecognitionSummarySessions
 import Nullivance.RecognitionSelectiveThresholdRefresh
+import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost

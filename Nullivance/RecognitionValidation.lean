@@ -51,6 +51,7 @@ import Nullivance.RecognitionLazyThresholdSearch
 import Nullivance.RecognitionSharedThresholdSummary
 import Nullivance.RecognitionSummarySessions
 import Nullivance.RecognitionSelectiveThresholdRefresh
+import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1317,6 +1318,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.selective_inconsistent_regression
 #print axioms Nullivance.Recognition.selective_resolved_unknown_regression
 #print axioms Nullivance.Recognition.selective_forged_label_regression
+
+-- DR-0120: counted initialization, invalidation, and selective finite sessions.
+#print axioms Nullivance.Recognition.buildThresholdRequests_spec
+#print axioms Nullivance.Recognition.initializeThresholdRequests_spec
+#print axioms Nullivance.Recognition.initializeSelectiveCache_spec
+#print axioms Nullivance.Recognition.invalidateThresholdRequests_spec
+#print axioms Nullivance.Recognition.stepSelectiveCache_spec
+#print axioms Nullivance.Recognition.stepSelectiveCache_sound
+#print axioms Nullivance.Recognition.runSelectiveCacheSession_spec
+#print axioms Nullivance.Recognition.startSelectiveCacheSession_spec
+#print axioms Nullivance.Recognition.startSelectiveCacheSession_provenance
+#print axioms Nullivance.Recognition.selective_lifecycle_refinement_regression
+#print axioms Nullivance.Recognition.selective_lifecycle_inconsistent_regression
+#print axioms Nullivance.Recognition.selective_lifecycle_empty_regression
+#print axioms Nullivance.Recognition.selective_lifecycle_initially_inconsistent_regression
+#print axioms Nullivance.Recognition.selective_lifecycle_unchanged_unknown_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
