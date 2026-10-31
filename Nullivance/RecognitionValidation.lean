@@ -50,6 +50,7 @@ import Nullivance.RecognitionPartialThresholdSearch
 import Nullivance.RecognitionLazyThresholdSearch
 import Nullivance.RecognitionSharedThresholdSummary
 import Nullivance.RecognitionSummarySessions
+import Nullivance.RecognitionSelectiveThresholdRefresh
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1298,6 +1299,24 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.runSummaryThresholdSession_empty_calls
 #print axioms Nullivance.Recognition.summary_session_refinement_regression
 #print axioms Nullivance.Recognition.summary_session_forged_length_regression
+
+-- DR-0119: resolved-status reuse, ordered refresh and two explicit cost metrics.
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_below_iff
+#print axioms Nullivance.Recognition.certifyHistoryThreshold_below_refinement
+#print axioms Nullivance.Recognition.intensityCertificateStatus_below
+#print axioms Nullivance.Recognition.intensityCertificateStatus_resolved_refinement
+#print axioms Nullivance.Recognition.makeThresholdRequestCache_matches
+#print axioms Nullivance.Recognition.refreshThresholdRequest_spec
+#print axioms Nullivance.Recognition.refreshThresholdRequests_spec
+#print axioms Nullivance.Recognition.refreshedRequests_match
+#print axioms Nullivance.Recognition.requestStatusesCounted_spec
+#print axioms Nullivance.Recognition.selectiveThresholdSearch_spec
+#print axioms Nullivance.Recognition.selectiveThresholdSearch_sound
+#print axioms Nullivance.Recognition.selectiveThresholdSearch_cache
+#print axioms Nullivance.Recognition.selective_refresh_regression
+#print axioms Nullivance.Recognition.selective_inconsistent_regression
+#print axioms Nullivance.Recognition.selective_resolved_unknown_regression
+#print axioms Nullivance.Recognition.selective_forged_label_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
