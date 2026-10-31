@@ -48,6 +48,7 @@ import Nullivance.RecognitionThresholdBudget
 import Nullivance.RecognitionThresholdCertificates
 import Nullivance.RecognitionPartialThresholdSearch
 import Nullivance.RecognitionLazyThresholdSearch
+import Nullivance.RecognitionSharedThresholdSummary
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1267,6 +1268,21 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.lazy_refinement_revisit_regression
 #print axioms Nullivance.Recognition.lazy_refinement_inconsistent_regression
 #print axioms Nullivance.Recognition.lazy_threshold_cost_regression
+
+-- DR-0117: shared materialized summaries and joint rational-comparison bounds.
+#print axioms Nullivance.Recognition.summaryIntensity_eq
+#print axioms Nullivance.Recognition.summaryIntensityCounted_spec
+#print axioms Nullivance.Recognition.scanSummaryThresholds_eq
+#print axioms Nullivance.Recognition.scanSummaryThresholdsCounted_spec
+#print axioms Nullivance.Recognition.searchSourcedThresholdsCounted_spec
+#print axioms Nullivance.Recognition.materializedThresholdSearch_spec
+#print axioms Nullivance.Recognition.ThresholdSummary.valid
+#print axioms Nullivance.Recognition.scanSourced_fst_counter
+#print axioms Nullivance.Recognition.extendThresholdSummary_cost
+#print axioms Nullivance.Recognition.continueSummaryThresholds_spec
+#print axioms Nullivance.Recognition.continueSummaryThresholds_sound
+#print axioms Nullivance.Recognition.shared_threshold_replay_regression
+#print axioms Nullivance.Recognition.shared_threshold_invalid_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
