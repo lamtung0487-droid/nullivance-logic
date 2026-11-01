@@ -54,6 +54,7 @@ import Nullivance.RecognitionSelectiveThresholdRefresh
 import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionSelectiveCacheImport
 import Nullivance.RecognitionSelectiveProgress
+import Nullivance.RecognitionErrorResolutionDeadline
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1380,6 +1381,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.uninformativeSelective_prefix
 #print axioms Nullivance.Recognition.selective_exits_invalidation_regression
 #print axioms Nullivance.Recognition.selective_exits_resolution_regression
+
+-- DR-0123: precision delivery plus strict margins give explicit resolution deadlines.
+#print axioms Nullivance.Recognition.boundedError_threshold_below
+#print axioms Nullivance.Recognition.boundedError_intensity_resolved
+#print axioms Nullivance.Recognition.history_intensity_resolved_of_precise_member
+#print axioms Nullivance.Recognition.precisionDelivery_intensity_deadline
+#print axioms Nullivance.Recognition.unknownRequests_zero_of_resolved
+#print axioms Nullivance.Recognition.precisionDelivery_cache_deadline
+#print axioms Nullivance.Recognition.precisionDelivery_next_step_cost
+#print axioms Nullivance.Recognition.precisionDelivery_generated_cache
+#print axioms Nullivance.Recognition.reciprocalPrecision_delivery
+#print axioms Nullivance.Recognition.reciprocalPrecision_deadline
+#print axioms Nullivance.Recognition.reciprocalError_intensity_resolved
+#print axioms Nullivance.Recognition.reciprocalPrecision_budget_regression
+#print axioms Nullivance.Recognition.precisionDelivery_strict_boundary_regression
+#print axioms Nullivance.Recognition.precisionDelivery_two_sides_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
