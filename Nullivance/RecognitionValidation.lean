@@ -53,6 +53,7 @@ import Nullivance.RecognitionSummarySessions
 import Nullivance.RecognitionSelectiveThresholdRefresh
 import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionSelectiveCacheImport
+import Nullivance.RecognitionSelectiveProgress
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1357,6 +1358,28 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.selective_import_empty_cost_regression
 #print axioms Nullivance.Recognition.selective_import_inconsistent_regression
 #print axioms Nullivance.Recognition.selective_import_guarded_session_regression
+
+-- DR-0122: finite unknown-exit potential, stabilization, and nontermination boundaries.
+#print axioms Nullivance.Recognition.intensity_unknown_backwards
+#print axioms Nullivance.Recognition.unknownRequests_le_length
+#print axioms Nullivance.Recognition.unknownRequests_reference_antitone
+#print axioms Nullivance.Recognition.stepSelectiveCache_unknowns
+#print axioms Nullivance.Recognition.selectiveSessionExits_balance
+#print axioms Nullivance.Recognition.selectiveSessionExits_bound
+#print axioms Nullivance.Recognition.unresolvedSelectiveCache_valid
+#print axioms Nullivance.Recognition.unresolvedSelectiveCache_step
+#print axioms Nullivance.Recognition.unresolvedSelectiveCache_repeated
+#print axioms Nullivance.Recognition.selective_rechecks_not_bounded_by_request_count
+#print axioms Nullivance.Recognition.intensityStatus_eventually_constant
+#print axioms Nullivance.Recognition.finiteThresholdCache_eventually_constant
+#print axioms Nullivance.Recognition.finiteThresholdSearch_eventually_constant
+#print axioms Nullivance.Recognition.matchingSelectiveCaches_eventually_constant
+#print axioms Nullivance.Recognition.feasibleStream_finiteThreshold_stabilization
+#print axioms Nullivance.Recognition.uninformativeSelective_summary
+#print axioms Nullivance.Recognition.uninformativeSelective_every_state
+#print axioms Nullivance.Recognition.uninformativeSelective_prefix
+#print axioms Nullivance.Recognition.selective_exits_invalidation_regression
+#print axioms Nullivance.Recognition.selective_exits_resolution_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress

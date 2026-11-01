@@ -88,6 +88,7 @@ import Nullivance.RecognitionSummarySessions
 import Nullivance.RecognitionSelectiveThresholdRefresh
 import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionSelectiveCacheImport
+import Nullivance.RecognitionSelectiveProgress
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
