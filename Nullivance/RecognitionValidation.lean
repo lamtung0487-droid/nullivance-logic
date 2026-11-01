@@ -55,6 +55,7 @@ import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionSelectiveCacheImport
 import Nullivance.RecognitionSelectiveProgress
 import Nullivance.RecognitionErrorResolutionDeadline
+import Nullivance.RecognitionAdaptiveResolution
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1397,6 +1398,20 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.reciprocalPrecision_budget_regression
 #print axioms Nullivance.Recognition.precisionDelivery_strict_boundary_regression
 #print axioms Nullivance.Recognition.precisionDelivery_two_sides_regression
+
+-- DR-0124: first certified prefix, margin-free execution and conditional success.
+#print axioms Nullivance.Recognition.intensityMargin_mono
+#print axioms Nullivance.Recognition.exists_intensityMargin_iff
+#print axioms Nullivance.Recognition.finite_thresholds_common_margin
+#print axioms Nullivance.Recognition.resolutionReady_spec
+#print axioms Nullivance.Recognition.findResolvedPrefix_some_iff
+#print axioms Nullivance.Recognition.findResolvedPrefix_none_iff
+#print axioms Nullivance.Recognition.findResolvedPrefix_complete
+#print axioms Nullivance.Recognition.findResolvedPrefix_resume
+#print axioms Nullivance.Recognition.findResolvedPrefix_certified
+#print axioms Nullivance.Recognition.separated_stream_adaptive_resolution
+#print axioms Nullivance.Recognition.uninformative_adaptive_timeout
+#print axioms Nullivance.Recognition.adaptiveResolution_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress

@@ -90,6 +90,7 @@ import Nullivance.RecognitionSelectiveCacheLifecycle
 import Nullivance.RecognitionSelectiveCacheImport
 import Nullivance.RecognitionSelectiveProgress
 import Nullivance.RecognitionErrorResolutionDeadline
+import Nullivance.RecognitionAdaptiveResolution
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
