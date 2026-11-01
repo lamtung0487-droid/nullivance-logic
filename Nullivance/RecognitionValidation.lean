@@ -52,6 +52,7 @@ import Nullivance.RecognitionSharedThresholdSummary
 import Nullivance.RecognitionSummarySessions
 import Nullivance.RecognitionSelectiveThresholdRefresh
 import Nullivance.RecognitionSelectiveCacheLifecycle
+import Nullivance.RecognitionSelectiveCacheImport
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1334,6 +1335,28 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.selective_lifecycle_empty_regression
 #print axioms Nullivance.Recognition.selective_lifecycle_initially_inconsistent_regression
 #print axioms Nullivance.Recognition.selective_lifecycle_unchanged_unknown_regression
+
+-- DR-0121: checked import of canonical summary, length, ordered requests and labels.
+#print axioms Nullivance.Recognition.requestListEqCounted_erasure
+#print axioms Nullivance.Recognition.requestListEqCounted_pairs
+#print axioms Nullivance.Recognition.requestCache_eq_reference
+#print axioms Nullivance.Recognition.selectiveCache_matchesInput_iff
+#print axioms Nullivance.Recognition.checkSelectiveCache_spec
+#print axioms Nullivance.Recognition.checkSelectiveCache_cost
+#print axioms Nullivance.Recognition.importSelectiveCache_isSome
+#print axioms Nullivance.Recognition.importSelectiveCache_output
+#print axioms Nullivance.Recognition.importSelectiveCache_cost
+#print axioms Nullivance.Recognition.importSelectiveCache_generated
+#print axioms Nullivance.Recognition.importedSelectiveCache_session
+#print axioms Nullivance.Recognition.importRunSelectiveSession_isSome
+#print axioms Nullivance.Recognition.importRunSelectiveSession_spec
+#print axioms Nullivance.Recognition.selective_import_missing_requests_regression
+#print axioms Nullivance.Recognition.selective_import_forged_label_regression
+#print axioms Nullivance.Recognition.selective_import_length_and_order_regression
+#print axioms Nullivance.Recognition.selective_import_source_index_regression
+#print axioms Nullivance.Recognition.selective_import_empty_cost_regression
+#print axioms Nullivance.Recognition.selective_import_inconsistent_regression
+#print axioms Nullivance.Recognition.selective_import_guarded_session_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
