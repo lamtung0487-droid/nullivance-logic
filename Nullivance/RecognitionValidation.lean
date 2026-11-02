@@ -57,6 +57,7 @@ import Nullivance.RecognitionSelectiveProgress
 import Nullivance.RecognitionErrorResolutionDeadline
 import Nullivance.RecognitionAdaptiveResolution
 import Nullivance.RecognitionIncrementalResolution
+import Nullivance.RecognitionResolutionComposition
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1429,6 +1430,23 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.incrementalResolution_untested_regression
 #print axioms Nullivance.Recognition.incrementalResolution_guard_regression
 #print axioms Nullivance.Recognition.incrementalResolution_forgery_regression
+
+-- DR-0126: full-cache and exact counted-work invariance under budget partitioning.
+#print axioms Nullivance.Recognition.addResolutionCosts_zero
+#print axioms Nullivance.Recognition.addResolutionCosts_add
+#print axioms Nullivance.Recognition.resumeIncrementalResolution_addCosts
+#print axioms Nullivance.Recognition.runIncrementalResolution_add
+#print axioms Nullivance.Recognition.resumeIncrementalResolution_zero
+#print axioms Nullivance.Recognition.resumeIncrementalResolution_assoc
+#print axioms Nullivance.Recognition.resumeResolutionBudgets_eq
+#print axioms Nullivance.Recognition.runResolutionBudgets_eq
+#print axioms Nullivance.Recognition.runResolutionBudgets_partition
+#print axioms Nullivance.Recognition.runResolutionBudgets_spec
+#print axioms Nullivance.Recognition.startResolutionBudgets_eq
+#print axioms Nullivance.Recognition.startResolutionBudgets_cost
+#print axioms Nullivance.Recognition.resolutionComposition_success_regression
+#print axioms Nullivance.Recognition.resolutionComposition_partition_regression
+#print axioms Nullivance.Recognition.resolutionComposition_timeout_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
