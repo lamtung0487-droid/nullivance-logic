@@ -56,6 +56,7 @@ import Nullivance.RecognitionSelectiveCacheImport
 import Nullivance.RecognitionSelectiveProgress
 import Nullivance.RecognitionErrorResolutionDeadline
 import Nullivance.RecognitionAdaptiveResolution
+import Nullivance.RecognitionIncrementalResolution
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1412,6 +1413,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.separated_stream_adaptive_resolution
 #print axioms Nullivance.Recognition.uninformative_adaptive_timeout
 #print axioms Nullivance.Recognition.adaptiveResolution_regression
+
+-- DR-0125: incremental all-request resolution, continuation and counted costs.
+#print axioms Nullivance.Recognition.resolvedRequestsCounted_spec
+#print axioms Nullivance.Recognition.resolutionCacheCheck_spec
+#print axioms Nullivance.Recognition.stepSelectiveCache_prefix
+#print axioms Nullivance.Recognition.runIncrementalResolution_spec
+#print axioms Nullivance.Recognition.runIncrementalResolution_cursor
+#print axioms Nullivance.Recognition.runIncrementalResolution_first
+#print axioms Nullivance.Recognition.runIncrementalResolution_resume
+#print axioms Nullivance.Recognition.startIncrementalResolution_spec
+#print axioms Nullivance.Recognition.separated_stream_incremental_resolution
+#print axioms Nullivance.Recognition.uninformative_incremental_timeout
+#print axioms Nullivance.Recognition.incrementalResolution_cost_regression
+#print axioms Nullivance.Recognition.incrementalResolution_untested_regression
+#print axioms Nullivance.Recognition.incrementalResolution_guard_regression
+#print axioms Nullivance.Recognition.incrementalResolution_forgery_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
