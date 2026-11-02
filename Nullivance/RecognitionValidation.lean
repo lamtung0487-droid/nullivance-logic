@@ -58,6 +58,7 @@ import Nullivance.RecognitionErrorResolutionDeadline
 import Nullivance.RecognitionAdaptiveResolution
 import Nullivance.RecognitionIncrementalResolution
 import Nullivance.RecognitionResolutionComposition
+import Nullivance.RecognitionResolutionReplay
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1447,6 +1448,20 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.resolutionComposition_success_regression
 #print axioms Nullivance.Recognition.resolutionComposition_partition_regression
 #print axioms Nullivance.Recognition.resolutionComposition_timeout_regression
+
+-- DR-0127: exact whole-run replay, finite input coverage and guarded resume.
+#print axioms Nullivance.Recognition.compareResolutionRecords_spec
+#print axioms Nullivance.Recognition.compareResolutionRecords_cost
+#print axioms Nullivance.Recognition.checkResolutionReplay_iff
+#print axioms Nullivance.Recognition.checkResolutionReplay_cost
+#print axioms Nullivance.Recognition.importResumeResolution_spec
+#print axioms Nullivance.Recognition.checkResolutionReplay_partition
+#print axioms Nullivance.Recognition.runResolution_window_congr
+#print axioms Nullivance.Recognition.startResolution_prefix_congr
+#print axioms Nullivance.Recognition.checkFiniteResolutionReplay_spec
+#print axioms Nullivance.Recognition.resolutionReplay_forgery_regression
+#print axioms Nullivance.Recognition.resolutionReplay_finite_regression
+#print axioms Nullivance.Recognition.resolutionReplay_source_collision
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress

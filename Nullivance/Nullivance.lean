@@ -93,6 +93,7 @@ import Nullivance.RecognitionErrorResolutionDeadline
 import Nullivance.RecognitionAdaptiveResolution
 import Nullivance.RecognitionIncrementalResolution
 import Nullivance.RecognitionResolutionComposition
+import Nullivance.RecognitionResolutionReplay
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
