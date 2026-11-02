@@ -59,6 +59,7 @@ import Nullivance.RecognitionAdaptiveResolution
 import Nullivance.RecognitionIncrementalResolution
 import Nullivance.RecognitionResolutionComposition
 import Nullivance.RecognitionResolutionReplay
+import Nullivance.RecognitionDemandReplay
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1462,6 +1463,19 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.resolutionReplay_forgery_regression
 #print axioms Nullivance.Recognition.resolutionReplay_finite_regression
 #print axioms Nullivance.Recognition.resolutionReplay_source_collision
+
+-- DR-0128: exact operational coverage of finite read-on-demand replay.
+#print axioms Nullivance.Recognition.resolutionRun_cursor_bounds
+#print axioms Nullivance.Recognition.resolutionStart_cursor_bounds
+#print axioms Nullivance.Recognition.runDemandResolution_spec
+#print axioms Nullivance.Recognition.startDemandResolution_spec
+#print axioms Nullivance.Recognition.demandResolution_all_extensions
+#print axioms Nullivance.Recognition.demandResolution_prefix_cutoff
+#print axioms Nullivance.Recognition.checkDemandResolutionReplay_spec
+#print axioms Nullivance.Recognition.checkDemandResolutionReplay_accept
+#print axioms Nullivance.Recognition.checkDemandResolutionReplay_agrees
+#print axioms Nullivance.Recognition.demandReplay_early_regression
+#print axioms Nullivance.Recognition.demandReplay_boundary_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
