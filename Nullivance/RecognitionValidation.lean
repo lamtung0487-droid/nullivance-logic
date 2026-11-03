@@ -60,6 +60,7 @@ import Nullivance.RecognitionIncrementalResolution
 import Nullivance.RecognitionResolutionComposition
 import Nullivance.RecognitionResolutionReplay
 import Nullivance.RecognitionDemandReplay
+import Nullivance.RecognitionPartialReplayCost
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1476,6 +1477,20 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.checkDemandResolutionReplay_agrees
 #print axioms Nullivance.Recognition.demandReplay_early_regression
 #print axioms Nullivance.Recognition.demandReplay_boundary_regression
+
+-- DR-0129: retain costs of incomplete replay; distinguish shortage from timeout.
+#print axioms Nullivance.Recognition.meterDemand_erasure
+#print axioms Nullivance.Recognition.meterDemand_complete_cost
+#print axioms Nullivance.Recognition.meterDemand_work
+#print axioms Nullivance.Recognition.startMeterDemand_erasure
+#print axioms Nullivance.Recognition.startMeterDemand_complete_cost
+#print axioms Nullivance.Recognition.startMeterDemand_shortage
+#print axioms Nullivance.Recognition.checkMeterDemand_erasure
+#print axioms Nullivance.Recognition.checkMeterDemand_shortage
+#print axioms Nullivance.Recognition.startMeterDemand_short_initial
+#print axioms Nullivance.Recognition.partialReplay_empty_regression
+#print axioms Nullivance.Recognition.partialReplay_tight_regression
+#print axioms Nullivance.Recognition.partialReplay_complete_timeout_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
