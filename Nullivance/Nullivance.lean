@@ -99,6 +99,7 @@ import Nullivance.RecognitionPartialReplayCost
 import Nullivance.RecognitionReplaySuspension
 import Nullivance.RecognitionPhaseImport
 import Nullivance.RecognitionPrefixBoot
+import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost

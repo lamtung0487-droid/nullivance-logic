@@ -64,6 +64,7 @@ import Nullivance.RecognitionPartialReplayCost
 import Nullivance.RecognitionReplaySuspension
 import Nullivance.RecognitionPhaseImport
 import Nullivance.RecognitionPrefixBoot
+import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1532,6 +1533,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.bootReplayChunks_extension
 #print axioms Nullivance.Recognition.bootReplay_no_early_regression
 #print axioms Nullivance.Recognition.bootReplay_crossing_regression
+
+-- DR-0133: sourced compact initialization, semantic simulation and information loss.
+#print axioms Nullivance.Recognition.bootSummary_push_exact
+#print axioms Nullivance.Recognition.bootSummary_open_exact
+#print axioms Nullivance.Recognition.prepareCompact_exact
+#print axioms Nullivance.Recognition.supplyCompact_simulates
+#print axioms Nullivance.Recognition.compactReplayChunks_exact
+#print axioms Nullivance.Recognition.compactReplay_short
+#print axioms Nullivance.Recognition.compactReplay_handoff
+#print axioms Nullivance.Recognition.compactReplay_extension
+#print axioms Nullivance.Recognition.bootSources_bound
+#print axioms Nullivance.Recognition.bootSummary_collision
+#print axioms Nullivance.Recognition.bootSummary_future
+#print axioms Nullivance.Recognition.no_bootSummary_history_inverse
+#print axioms Nullivance.Recognition.bootSummary_provenance_regression
+#print axioms Nullivance.Recognition.bootSources_eight_attained
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
