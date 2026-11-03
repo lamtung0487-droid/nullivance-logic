@@ -62,6 +62,7 @@ import Nullivance.RecognitionResolutionReplay
 import Nullivance.RecognitionDemandReplay
 import Nullivance.RecognitionPartialReplayCost
 import Nullivance.RecognitionReplaySuspension
+import Nullivance.RecognitionPhaseImport
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1505,6 +1506,18 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.suspension_last_failure_regression
 #print axioms Nullivance.Recognition.suspension_no_double_test_regression
 #print axioms Nullivance.Recognition.suspension_after_paid_step_regression
+
+-- DR-0131: exact typed phase import and the impossibility of snapshot-only validation.
+#print axioms Nullivance.Recognition.phase_full_fields
+#print axioms Nullivance.Recognition.comparePhaseFields_spec
+#print axioms Nullivance.Recognition.comparePhaseFields_cost
+#print axioms Nullivance.Recognition.replayPhaseCheck_iff
+#print axioms Nullivance.Recognition.checkedFeedReplay_spec
+#print axioms Nullivance.Recognition.phaseImport_chunk_invariance
+#print axioms Nullivance.Recognition.checkedFeedReplay_extension
+#print axioms Nullivance.Recognition.pendingSnapshot_collision
+#print axioms Nullivance.Recognition.no_snapshot_only_exact_phase_import
+#print axioms Nullivance.Recognition.phaseImport_tamper_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
