@@ -61,6 +61,7 @@ import Nullivance.RecognitionResolutionComposition
 import Nullivance.RecognitionResolutionReplay
 import Nullivance.RecognitionDemandReplay
 import Nullivance.RecognitionPartialReplayCost
+import Nullivance.RecognitionReplaySuspension
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1491,6 +1492,19 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.partialReplay_empty_regression
 #print axioms Nullivance.Recognition.partialReplay_tight_regression
 #print axioms Nullivance.Recognition.partialReplay_complete_timeout_regression
+
+-- DR-0130: append-only delivery after a charged, suspended readiness test.
+#print axioms Nullivance.Recognition.creditReplay_add
+#print axioms Nullivance.Recognition.feedReplay_done
+#print axioms Nullivance.Recognition.feedReplay_credit
+#print axioms Nullivance.Recognition.feedReplay_append
+#print axioms Nullivance.Recognition.feedReplayChunks_flatten
+#print axioms Nullivance.Recognition.feedReplay_meter
+#print axioms Nullivance.Recognition.openReplay_chunks_spec
+#print axioms Nullivance.Recognition.openReplay_extension
+#print axioms Nullivance.Recognition.suspension_last_failure_regression
+#print axioms Nullivance.Recognition.suspension_no_double_test_regression
+#print axioms Nullivance.Recognition.suspension_after_paid_step_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress

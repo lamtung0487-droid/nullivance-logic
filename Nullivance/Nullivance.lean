@@ -96,6 +96,7 @@ import Nullivance.RecognitionResolutionComposition
 import Nullivance.RecognitionResolutionReplay
 import Nullivance.RecognitionDemandReplay
 import Nullivance.RecognitionPartialReplayCost
+import Nullivance.RecognitionReplaySuspension
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
