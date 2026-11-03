@@ -63,6 +63,7 @@ import Nullivance.RecognitionDemandReplay
 import Nullivance.RecognitionPartialReplayCost
 import Nullivance.RecognitionReplaySuspension
 import Nullivance.RecognitionPhaseImport
+import Nullivance.RecognitionPrefixBoot
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1518,6 +1519,19 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.pendingSnapshot_collision
 #print axioms Nullivance.Recognition.no_snapshot_only_exact_phase_import
 #print axioms Nullivance.Recognition.phaseImport_tamper_regression
+
+-- DR-0132: resumable initial prefix, exact buffer and canonical handoff.
+#print axioms Nullivance.Recognition.supplyPrefix_live
+#print axioms Nullivance.Recognition.supplyPrefix_append
+#print axioms Nullivance.Recognition.supplyPrefix_split
+#print axioms Nullivance.Recognition.bootReplayChunks_spec
+#print axioms Nullivance.Recognition.bootReplayChunks_short
+#print axioms Nullivance.Recognition.bootReplayChunks_partition
+#print axioms Nullivance.Recognition.bootReplay_buffer_invariant
+#print axioms Nullivance.Recognition.bootReplayChunks_at_split
+#print axioms Nullivance.Recognition.bootReplayChunks_extension
+#print axioms Nullivance.Recognition.bootReplay_no_early_regression
+#print axioms Nullivance.Recognition.bootReplay_crossing_regression
 #print axioms Nullivance.Recognition.thresholdObservationBudget_threshold
 #print axioms Nullivance.Recognition.rationalMargin_fullPrefix_refuted
 #print axioms Nullivance.Recognition.thresholdDeliveryModulus_progress
