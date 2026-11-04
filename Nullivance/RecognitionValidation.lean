@@ -67,6 +67,7 @@ import Nullivance.RecognitionPrefixBoot
 import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionBoundaryContact
 import Nullivance.RecognitionMixedThresholdStopping
+import Nullivance.RecognitionContactQueryLimit
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1551,6 +1552,14 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.deferredContact_common_fit
 #print axioms Nullivance.Recognition.deferredContact_ready
 #print axioms Nullivance.Recognition.deferredContact_first_hit
+#print axioms Nullivance.Recognition.bitContact_common_fit
+#print axioms Nullivance.Recognition.bitContact_allowance
+#print axioms Nullivance.Recognition.bitContact_precision
+#print axioms Nullivance.Recognition.bitContact_floor
+#print axioms Nullivance.Recognition.bitContact_eventual
+#print axioms Nullivance.Recognition.runContactQueries_local
+#print axioms Nullivance.Recognition.negativeContact_transcript_collision
+#print axioms Nullivance.Recognition.no_finite_negative_contact_recognizer
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
