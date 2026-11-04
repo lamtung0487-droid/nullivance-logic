@@ -66,6 +66,7 @@ import Nullivance.RecognitionPhaseImport
 import Nullivance.RecognitionPrefixBoot
 import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionBoundaryContact
+import Nullivance.RecognitionMixedThresholdStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1544,6 +1545,12 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.centeredBoundary_forces
 #print axioms Nullivance.Recognition.centeredBoundary_timeout
 #print axioms Nullivance.Recognition.noisy_contact_regression
+#print axioms Nullivance.Recognition.boundary_prefix_iff_index
+#print axioms Nullivance.Recognition.mixedThreshold_eventual_iff
+#print axioms Nullivance.Recognition.deferredContact_precision
+#print axioms Nullivance.Recognition.deferredContact_common_fit
+#print axioms Nullivance.Recognition.deferredContact_ready
+#print axioms Nullivance.Recognition.deferredContact_first_hit
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates

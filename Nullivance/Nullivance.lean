@@ -101,6 +101,7 @@ import Nullivance.RecognitionPhaseImport
 import Nullivance.RecognitionPrefixBoot
 import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionBoundaryContact
+import Nullivance.RecognitionMixedThresholdStopping
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
