@@ -68,6 +68,7 @@ import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionBoundaryContact
 import Nullivance.RecognitionMixedThresholdStopping
 import Nullivance.RecognitionContactQueryLimit
+import Nullivance.RecognitionFiniteContactGenerator
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1560,6 +1561,13 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.runContactQueries_local
 #print axioms Nullivance.Recognition.negativeContact_transcript_collision
 #print axioms Nullivance.Recognition.no_finite_negative_contact_recognizer
+#print axioms Nullivance.Recognition.generator_contact_cutoff
+#print axioms Nullivance.Recognition.generator_scan_some
+#print axioms Nullivance.Recognition.generator_scan_none
+#print axioms Nullivance.Recognition.generator_boundary_decision
+#print axioms Nullivance.Recognition.generator_first_boundary_hit
+#print axioms Nullivance.Recognition.generator_encoded_decision
+#print axioms Nullivance.Recognition.generator_cutoff_sharp
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates

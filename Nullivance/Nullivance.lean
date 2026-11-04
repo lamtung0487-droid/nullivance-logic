@@ -103,6 +103,7 @@ import Nullivance.RecognitionCompactBoot
 import Nullivance.RecognitionBoundaryContact
 import Nullivance.RecognitionMixedThresholdStopping
 import Nullivance.RecognitionContactQueryLimit
+import Nullivance.RecognitionFiniteContactGenerator
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
