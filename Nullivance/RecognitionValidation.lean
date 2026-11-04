@@ -65,6 +65,7 @@ import Nullivance.RecognitionReplaySuspension
 import Nullivance.RecognitionPhaseImport
 import Nullivance.RecognitionPrefixBoot
 import Nullivance.RecognitionCompactBoot
+import Nullivance.RecognitionBoundaryContact
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1536,6 +1537,13 @@ open Nullivance.Recognition
 
 -- DR-0133: sourced compact initialization, semantic simulation and information loss.
 #print axioms Nullivance.Recognition.bootSummary_push_exact
+#print axioms Nullivance.Recognition.intensityFloor_le_fitting
+#print axioms Nullivance.Recognition.boundary_ready_iff_contact
+#print axioms Nullivance.Recognition.boundary_contact_or_alternative
+#print axioms Nullivance.Recognition.centeredBoundary_precision
+#print axioms Nullivance.Recognition.centeredBoundary_forces
+#print axioms Nullivance.Recognition.centeredBoundary_timeout
+#print axioms Nullivance.Recognition.noisy_contact_regression
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
