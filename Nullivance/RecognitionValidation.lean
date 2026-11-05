@@ -73,6 +73,7 @@ import Nullivance.RecognitionGeneratorEquivalence
 import Nullivance.RecognitionGeneratorCertificate
 import Nullivance.RecognitionSymbolicGeneratorRelation
 import Nullivance.RecognitionAffineResidueChecker
+import Nullivance.RecognitionResidueTraceDecision
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1609,6 +1610,21 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.affineResidue_regression
 #print axioms Nullivance.Recognition.affineZeroSlope_regression
 #print axioms Nullivance.Recognition.affineReject_not_trace_difference
+
+#print axioms Nullivance.Recognition.residueQuotient_relation
+#print axioms Nullivance.Recognition.residueQuotient_trace
+#print axioms Nullivance.Recognition.residueQuotient_scan
+#print axioms Nullivance.Recognition.compareResidueTraces_exact
+#print axioms Nullivance.Recognition.compareResidueTraces_first_difference
+#print axioms Nullivance.Recognition.residueTrace_cutoff
+#print axioms Nullivance.Recognition.compareResidueTraces_scans
+#print axioms Nullivance.Recognition.compareResidueTracesCounted_exact
+#print axioms Nullivance.Recognition.compareResidueTraces_cost
+#print axioms Nullivance.Recognition.compareResidueTraces_contact
+#print axioms Nullivance.Recognition.residueTrace_unreachable_regression
+#print axioms Nullivance.Recognition.residueTrace_offset_regression
+#print axioms Nullivance.Recognition.residueTrace_stride_regression
+#print axioms Nullivance.Recognition.residueTrace_singleton_regression
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
