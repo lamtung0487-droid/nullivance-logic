@@ -72,6 +72,7 @@ import Nullivance.RecognitionFiniteContactGenerator
 import Nullivance.RecognitionGeneratorEquivalence
 import Nullivance.RecognitionGeneratorCertificate
 import Nullivance.RecognitionSymbolicGeneratorRelation
+import Nullivance.RecognitionAffineResidueChecker
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1601,6 +1602,13 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.advancingCounter_no_finite_list
 #print axioms Nullivance.Recognition.zeroScale_counterexample
 #print axioms Nullivance.Recognition.alternatingScaled_regression
+#print axioms Nullivance.Recognition.affineResidue_finite_iff
+#print axioms Nullivance.Recognition.checkAffineResidues_exact
+#print axioms Nullivance.Recognition.checkedAffine_scans
+#print axioms Nullivance.Recognition.checkedAffine_contact
+#print axioms Nullivance.Recognition.affineResidue_regression
+#print axioms Nullivance.Recognition.affineZeroSlope_regression
+#print axioms Nullivance.Recognition.affineReject_not_trace_difference
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates

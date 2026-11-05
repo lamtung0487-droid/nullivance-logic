@@ -107,6 +107,7 @@ import Nullivance.RecognitionFiniteContactGenerator
 import Nullivance.RecognitionGeneratorEquivalence
 import Nullivance.RecognitionGeneratorCertificate
 import Nullivance.RecognitionSymbolicGeneratorRelation
+import Nullivance.RecognitionAffineResidueChecker
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
