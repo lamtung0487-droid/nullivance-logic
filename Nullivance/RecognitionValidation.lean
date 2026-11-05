@@ -70,6 +70,7 @@ import Nullivance.RecognitionMixedThresholdStopping
 import Nullivance.RecognitionContactQueryLimit
 import Nullivance.RecognitionFiniteContactGenerator
 import Nullivance.RecognitionGeneratorEquivalence
+import Nullivance.RecognitionGeneratorCertificate
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1577,6 +1578,17 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.compareGenerators_transfers_contact
 #print axioms Nullivance.Recognition.compareGenerators_positive_regression
 #print axioms Nullivance.Recognition.firstHit_is_not_trace_equivalence
+#print axioms Nullivance.Recognition.checkGeneratorRelation_spec
+#print axioms Nullivance.Recognition.checkedRelation_orbit
+#print axioms Nullivance.Recognition.checkedRelation_trace
+#print axioms Nullivance.Recognition.generator_orbit_coverage
+#print axioms Nullivance.Recognition.canonicalRelation_covers
+#print axioms Nullivance.Recognition.canonicalRelation_exact
+#print axioms Nullivance.Recognition.generator_certificate_complete
+#print axioms Nullivance.Recognition.checkedRelation_contact
+#print axioms Nullivance.Recognition.relation_infinite_carrier_regression
+#print axioms Nullivance.Recognition.relation_forged_closure_regression
+#print axioms Nullivance.Recognition.relation_not_complete_on_infinite
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
