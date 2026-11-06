@@ -74,6 +74,7 @@ import Nullivance.RecognitionGeneratorCertificate
 import Nullivance.RecognitionSymbolicGeneratorRelation
 import Nullivance.RecognitionAffineResidueChecker
 import Nullivance.RecognitionResidueTraceDecision
+import Nullivance.RecognitionResidueCycleCutoff
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1625,6 +1626,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.residueTrace_offset_regression
 #print axioms Nullivance.Recognition.residueTrace_stride_regression
 #print axioms Nullivance.Recognition.residueTrace_singleton_regression
+
+#print axioms Nullivance.Recognition.residueCycle_pos
+#print axioms Nullivance.Recognition.residueCycle_divides
+#print axioms Nullivance.Recognition.residueCycleHorizon_bounds
+#print axioms Nullivance.Recognition.residueTrace_reduce
+#print axioms Nullivance.Recognition.residueCycle_cutoff
+#print axioms Nullivance.Recognition.compareResidueCycles_exact
+#print axioms Nullivance.Recognition.compareResidueCycles_first_difference
+#print axioms Nullivance.Recognition.compareResidueCycles_eq
+#print axioms Nullivance.Recognition.compareResidueCyclesCounted_exact
+#print axioms Nullivance.Recognition.compareResidueCycles_cost
+#print axioms Nullivance.Recognition.compareResidueCycles_cost_dominance
+#print axioms Nullivance.Recognition.residueCycle_saving_regression
+#print axioms Nullivance.Recognition.residueCycle_stationary_regression
+#print axioms Nullivance.Recognition.residueCycle_gcd_counterexample
+#print axioms Nullivance.Recognition.residueCycle_max_counterexample
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
