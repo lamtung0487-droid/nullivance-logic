@@ -77,6 +77,7 @@ import Nullivance.RecognitionResidueTraceDecision
 import Nullivance.RecognitionResidueCycleCutoff
 import Nullivance.RecognitionCycleSetupCost
 import Nullivance.RecognitionEuclidLogCost
+import Nullivance.RecognitionGuardedCycleSetup
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1666,6 +1667,16 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.preparedCycleWork_log_bound
 #print axioms Nullivance.Recognition.euclidLog_chain_regression
 #print axioms Nullivance.Recognition.euclidLog_zero_regression
+
+#print axioms Nullivance.Recognition.guardedCycles_equal_branch
+#print axioms Nullivance.Recognition.guardedCycles_different_branch
+#print axioms Nullivance.Recognition.guardedCycles_result
+#print axioms Nullivance.Recognition.guardedCycles_scan_cost
+#print axioms Nullivance.Recognition.guardedCycleWork_le
+#print axioms Nullivance.Recognition.guardedCycleWork_log_bound
+#print axioms Nullivance.Recognition.guardedCycles_immediate_regression
+#print axioms Nullivance.Recognition.guardedCycles_singleton_regression
+#print axioms Nullivance.Recognition.guardedCycles_later_regression
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
