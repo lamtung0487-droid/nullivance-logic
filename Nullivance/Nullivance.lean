@@ -110,6 +110,7 @@ import Nullivance.RecognitionSymbolicGeneratorRelation
 import Nullivance.RecognitionAffineResidueChecker
 import Nullivance.RecognitionResidueTraceDecision
 import Nullivance.RecognitionResidueCycleCutoff
+import Nullivance.RecognitionCycleSetupCost
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
