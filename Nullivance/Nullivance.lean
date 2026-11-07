@@ -114,6 +114,7 @@ import Nullivance.RecognitionCycleSetupCost
 import Nullivance.RecognitionEuclidLogCost
 import Nullivance.RecognitionGuardedCycleSetup
 import Nullivance.RecognitionPeriodicContact
+import Nullivance.RecognitionPeriodicQueryLimit
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost

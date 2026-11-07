@@ -79,6 +79,7 @@ import Nullivance.RecognitionCycleSetupCost
 import Nullivance.RecognitionEuclidLogCost
 import Nullivance.RecognitionGuardedCycleSetup
 import Nullivance.RecognitionPeriodicContact
+import Nullivance.RecognitionPeriodicQueryLimit
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1687,6 +1688,19 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.periodicContact_prefix_limit
 #print axioms Nullivance.Recognition.periodicContact_same_state
 #print axioms Nullivance.Recognition.periodicContact_regression
+
+#print axioms Nullivance.Recognition.latePeriodic_mark
+#print axioms Nullivance.Recognition.latePeriodic_cycle
+#print axioms Nullivance.Recognition.silentPeriodic_stream
+#print axioms Nullivance.Recognition.silentPeriodic_never
+#print axioms Nullivance.Recognition.latePeriodic_prefix
+#print axioms Nullivance.Recognition.latePeriodic_first
+#print axioms Nullivance.Recognition.latePeriodic_eventual
+#print axioms Nullivance.Recognition.periodicQuery_finite_collision
+#print axioms Nullivance.Recognition.periodicQuery_admissible_collision
+#print axioms Nullivance.Recognition.no_finite_negative_periodic_recognizer
+#print axioms Nullivance.Recognition.periodicQuery_sound_no_negative
+#print axioms Nullivance.Recognition.periodicQuery_edge_regression
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
