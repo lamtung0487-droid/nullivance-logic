@@ -78,6 +78,7 @@ import Nullivance.RecognitionResidueCycleCutoff
 import Nullivance.RecognitionCycleSetupCost
 import Nullivance.RecognitionEuclidLogCost
 import Nullivance.RecognitionGuardedCycleSetup
+import Nullivance.RecognitionPeriodicContact
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1677,6 +1678,15 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.guardedCycles_immediate_regression
 #print axioms Nullivance.Recognition.guardedCycles_singleton_regression
 #print axioms Nullivance.Recognition.guardedCycles_later_regression
+
+#print axioms Nullivance.Recognition.periodicContact_cutoff
+#print axioms Nullivance.Recognition.firstCycleContact_none
+#print axioms Nullivance.Recognition.periodicContact_boundary
+#print axioms Nullivance.Recognition.periodicContact_first_prefix
+#print axioms Nullivance.Recognition.periodicContact_encoded
+#print axioms Nullivance.Recognition.periodicContact_prefix_limit
+#print axioms Nullivance.Recognition.periodicContact_same_state
+#print axioms Nullivance.Recognition.periodicContact_regression
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
