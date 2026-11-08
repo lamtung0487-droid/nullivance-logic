@@ -80,6 +80,7 @@ import Nullivance.RecognitionEuclidLogCost
 import Nullivance.RecognitionGuardedCycleSetup
 import Nullivance.RecognitionPeriodicContact
 import Nullivance.RecognitionPeriodicQueryLimit
+import Nullivance.RecognitionBoundedPeriodObservation
 import Nullivance.RecognitionVerdictPersistence
 import Nullivance.RecognitionCertificateSearch
 import Nullivance.RecognitionSearchCost
@@ -1701,6 +1702,22 @@ open Nullivance.Recognition
 #print axioms Nullivance.Recognition.no_finite_negative_periodic_recognizer
 #print axioms Nullivance.Recognition.periodicQuery_sound_no_negative
 #print axioms Nullivance.Recognition.periodicQuery_edge_regression
+
+#print axioms Nullivance.Recognition.contactPeriodBound_positive
+#print axioms Nullivance.Recognition.contactPeriodBound_cutoff
+#print axioms Nullivance.Recognition.observedContact_state
+#print axioms Nullivance.Recognition.observedContact_mark
+#print axioms Nullivance.Recognition.scanObservedContact_some
+#print axioms Nullivance.Recognition.scanObservedContact_none
+#print axioms Nullivance.Recognition.scanObservedContact_permanent
+#print axioms Nullivance.Recognition.scanObservedContact_boundary
+#print axioms Nullivance.Recognition.scanObservedContact_first_prefix
+#print axioms Nullivance.Recognition.scanObservedContactCounted_exact
+#print axioms Nullivance.Recognition.scanObservedContactCounted_bound
+#print axioms Nullivance.Recognition.scanObservedContactCounted_boundary
+#print axioms Nullivance.Recognition.periodicContact_periodBound
+#print axioms Nullivance.Recognition.scanObservedContact_cutoff_sharp
+#print axioms Nullivance.Recognition.scanObservedContact_regression
 #print axioms Nullivance.Recognition.bootSummary_open_exact
 #print axioms Nullivance.Recognition.prepareCompact_exact
 #print axioms Nullivance.Recognition.supplyCompact_simulates
