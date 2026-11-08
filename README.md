@@ -5,7 +5,21 @@
 Nullivance is a research programme in mathematical logic with a Lean 4
 formalization. The repository contains a propositional two-channel logic, a
 finite-domain quantified extension, canonical mathematical documentation, and
-two reproducible manuscripts.
+two release manuscripts, and a subsequent research synthesis.
+
+## Research synthesis through DR-0149 (2026-11-08)
+
+The new [research snapshot index](RESEARCH_SNAPSHOT_DR0149.md) links the
+[19-page synthesis](papers/npl-research-2026/main.pdf),
+[Vietnamese overview](papers/npl-research-2026/TOM_TAT_VI.md),
+[claim-to-Lean scope audit](papers/npl-research-2026/claim-review.md), and
+[reproduction instructions](papers/npl-research-2026/README.md).
+It covers the subsequent equality and recognition developments through DR-0149
+without claiming unrestricted infinite-domain or cognitive completeness.
+The two v0.7.1 papers below remain historical companions. Their DOI does not
+identify the new snapshot. This consolidation has not been externally submitted.
+
+## Archived software release
 
 Release: **0.7.1** (2026-08-16). Contact: `lamtung0481@gmail.com`.
 

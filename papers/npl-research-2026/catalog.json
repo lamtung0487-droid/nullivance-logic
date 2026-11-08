@@ -1,0 +1,1535 @@
+[
+  {
+    "id": "DR-0001",
+    "title": "Propositional language of NPL",
+    "path": "docs/decisions/DR-0001-propositional-language.md",
+    "sha256": "18bb9ff6c7925a3e8c29da44982298adf6a6c0d589b73ab3502e819211e3635a",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0002",
+    "title": "Two-channel continuous semantics and connective clauses",
+    "path": "docs/decisions/DR-0002-two-channel-semantics.md",
+    "sha256": "68aa541dbea6a7ea907e54e1688d32f3894b63196431a2aa403205acf85da1f6",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0003",
+    "title": "Threshold projection, meta-signs, and the consequence relation",
+    "path": "docs/decisions/DR-0003-threshold-signs-consequence.md",
+    "sha256": "093873d8d7ea6a1ee604bee135f7e42c86af59299a071db98857f4c911437617",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0004",
+    "title": "Lean encoding choices and the continuous-layer gap",
+    "path": "docs/decisions/DR-0004-lean-encoding.md",
+    "sha256": "ae78535e2639a272a0006faf8dd29a799ea3c5f0b4f040abeed5ea690d0cca1c",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0005",
+    "title": "The four-signed tableau calculus is the canonical proof system",
+    "path": "docs/decisions/DR-0005-tableau-canonical.md",
+    "sha256": "039064ede6a8cf467d998c80f4942f1a55f9f61292dc6b2af60789c08b4186d8",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0006",
+    "title": "Formalizing the generative tier (Tier 1)",
+    "path": "docs/decisions/DR-0006-generative-tier.md",
+    "sha256": "044d872b5b893def53df202e5de3b42ca6d4a084aea1d6c71822131c035282c9",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/Generative.lean"
+    ]
+  },
+  {
+    "id": "DR-0007",
+    "title": "Finite-domain quantified NPL first",
+    "path": "docs/decisions/DR-0007-finite-domain-quantified-npl.md",
+    "sha256": "ce0f4e215bff203137785ecdeecd7960ec48290bda3cf7e787dcf711358ba38e",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0008",
+    "title": "Finite-domain quantified tableau first",
+    "path": "docs/decisions/DR-0008-finite-domain-quantified-tableau.md",
+    "sha256": "e0cb37b4485c9af9cb5410f076c3f40b1325e437eede57c5a3e1dc6371a71314",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0009",
+    "title": "Equality closure repair for finite-domain quantified tableau",
+    "path": "docs/decisions/DR-0009-finite-domain-equality-closure-repair.md",
+    "sha256": "66b9116ecada6b085e9ddbd213cb40962b71eae6809c13eec2fc1fe6e3beb019",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0010",
+    "title": "Finite grounding bridge for quantified completeness",
+    "path": "docs/decisions/DR-0010-finite-grounding-bridge.md",
+    "sha256": "9b199c4e0d589c51215743b3ae260dbe034013fed581cf691b245be59ae5bf23",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/FiniteFO.lean"
+    ]
+  },
+  {
+    "id": "DR-0011",
+    "title": "Full recursive extensional finite-domain tableau",
+    "path": "docs/decisions/DR-0011-extensional-closure-kernel.md",
+    "sha256": "6de3a71f3bd7cea427ab44d1c502e23c36dcbaff92dcadde578ce5c38c5efcc3",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0012",
+    "title": "Constrained grounding completeness for finite-domain tableau",
+    "path": "docs/decisions/DR-0012-constrained-grounding-completeness.md",
+    "sha256": "4df43f8903a93a0249761913dd41bb284970d05f48dc5fb8ebb020ec82c39bb9",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0013",
+    "title": "Core extensional tableau and replay trace",
+    "path": "docs/decisions/DR-0013-core-tableau-and-replay-trace.md",
+    "sha256": "bbdee190448ab3f8ba44fe2610924e88d6b3cb997f6a302a26f9a13fd0ed4a62",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0014",
+    "title": "Fixed-signature layer for finite quantified NPL",
+    "path": "docs/decisions/DR-0014-fixed-signature-layer.md",
+    "sha256": "ff9d827fb32f439e2a4026f1895a2054b4fcb85330ac9fa058af7258f1aff567",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0015",
+    "title": "Epistemic statuses for definitions and conventions",
+    "path": "docs/decisions/DR-0015-definition-status-semantics.md",
+    "sha256": "27ae94940a30e37adb39b9c5831033bfc0073a16a5ae9c69e32f3c39e8545b72",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0016",
+    "title": "Exact continuous-semantics encoding bridges",
+    "path": "docs/decisions/DR-0016-continuous-encoding-equivalence.md",
+    "sha256": "ec1fa164d138baae3526dba5d110bb6075c6d0e0b5e1aaf29546a1b0066a1892",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0017",
+    "title": "Verified operational reference search",
+    "path": "docs/decisions/DR-0017-operational-reference-search.md",
+    "sha256": "12d79879490ff04d0b136722f24619508e6172445b794da46f645f55eb1e133a",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/Operational.lean"
+    ]
+  },
+  {
+    "id": "DR-0018",
+    "title": "Progress-scheduler independence without fairness",
+    "path": "docs/decisions/DR-0018-progress-scheduler-independence.md",
+    "sha256": "dd99a09bb615d27df58aff9f48ec96443bd5540805a7522d7a764744a400f2e0",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0019",
+    "title": "Refutation of the head-sensitive replay bridge",
+    "path": "docs/decisions/DR-0019-replay-certificate-refutation.md",
+    "sha256": "8a6ec0f9c157cd9b6dccce81a5edff7e015ef5305c3626d6221bd48d7b0b3913",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0020",
+    "title": "Membership-selecting replay certificate",
+    "path": "docs/decisions/DR-0020-membership-replay-certificate.md",
+    "sha256": "0e06e2fc8cdaeb3ba432b600a424acc56bcd025342b0205a872c35c74715eb69",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/Metatheory.lean"
+    ]
+  },
+  {
+    "id": "DR-0021",
+    "title": "Arbitrary-domain quantified semantic foundation",
+    "path": "docs/decisions/DR-0021-arbitrary-domain-quantified-foundation.md",
+    "sha256": "66aa6516e823bc3dfea2daa6af7878dee9efbbf2ea01a7280c0bf141b3f390a1",
+    "explicit_lean_paths": []
+  },
+  {
+    "id": "DR-0022",
+    "title": "Collision-sensitive cost and finite-domain certificates",
+    "path": "docs/decisions/DR-0022-collision-and-finite-domain-certificates.md",
+    "sha256": "481226acea5f218dd1e51d2d720a63bb1e52528f821a628d2073e939acd61c95",
+    "explicit_lean_paths": [
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0023",
+    "title": "Open equality: assignment partitions and fresh capacity",
+    "path": "docs/decisions/DR-0023-open-equality-capacity.md",
+    "sha256": "bf9b144e4bccbd03729a9cd874d8c58b727a60fe3e629671e77c92ee56b10388",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/QuantifiedEqualityOpen.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0024",
+    "title": "Executable free-assignment encoding",
+    "path": "docs/decisions/DR-0024-executable-free-assignment-encoding.md",
+    "sha256": "42357f58fdb6629e59dd8d28e01712b32b10fffc8560664bdd129259b6d00e2c",
+    "explicit_lean_paths": [
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0025",
+    "title": "Compact open orbit initialization",
+    "path": "docs/decisions/DR-0025-compact-open-orbit-initialization.md",
+    "sha256": "c82bf98aae65e395bc80b59036b5d9a27cefaf3dab65f6107a1b0c42a23402a7",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/QuantifiedEqualityCompact.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0026",
+    "title": "Exact finite open equality and checked admission",
+    "path": "docs/decisions/DR-0026-exact-finite-open-equality.md",
+    "sha256": "254de1bbb07ed92d15c3d8ef47beb67bd426ea27f106aa15806436c1c82e6cd7",
+    "explicit_lean_paths": [
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0027",
+    "title": "Recognition, observation loss, and extension criteria",
+    "path": "docs/decisions/DR-0027-recognition-observability-boundary.md",
+    "sha256": "0f7600d24e5ce2674f877c9f69546a9b1a34883d15c77013420f25f0619abb87",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/Recognition.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0028",
+    "title": "Proposed scalar active probes and their boundaries",
+    "path": "docs/decisions/DR-0028-scalar-active-probes.md",
+    "sha256": "fba5fa81065c8a5c711c4d5f5518c17cf5048d35c9d681ae4f93d8d22da4913d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionProbes.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0029",
+    "title": "Bounded-noise recognition and a rational decoder",
+    "path": "docs/decisions/DR-0029-bounded-noise-recognition.md",
+    "sha256": "f4146a60c0bfc46459043924496060bba73426152f37f10002ff7fee010b9471",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0030",
+    "title": "Sound abstaining probe classifier without a margin promise",
+    "path": "docs/decisions/DR-0030-sound-abstaining-probe-classifier.md",
+    "sha256": "e0b1c39e44284f157e2813f615b3d3204cf62524c65f5599c617b959850f4a74",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0031",
+    "title": "Exact feasibility and completeness of the abstaining classifier",
+    "path": "docs/decisions/DR-0031-exact-feasibility-and-classifier-completeness.md",
+    "sha256": "7ed8f9b7b631787933a5c86d93a5fdcd7c7254804f5bb3be620aa8f3f3c400cc",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionIntervals.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0032",
+    "title": "Executable rational recognition witnesses",
+    "path": "docs/decisions/DR-0032-executable-rational-recognition-witnesses.md",
+    "sha256": "97c9d0249a69657f5bd16c1eea369db09cd577636e7c48d49e6eb36d576c972c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionWitnesses.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0033",
+    "title": "Exact same-state observation histories",
+    "path": "docs/decisions/DR-0033-exact-same-state-observation-histories.md",
+    "sha256": "9a17b916f030dbbabb8c6c8e38b3bd1b712d7dbc42a845baa3c3e97424e049dd",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionHistory.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0034",
+    "title": "Complete affirmation for finite observation histories",
+    "path": "docs/decisions/DR-0034-complete-affirmation-for-observation-histories.md",
+    "sha256": "b487c1988b7fe8a3b0429c4afb2967a39aa25905a465953680f4915d804d9f05",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0035",
+    "title": "Complete history classification and executable witnesses",
+    "path": "docs/decisions/DR-0035-complete-history-classification-and-witnesses.md",
+    "sha256": "4f14234265f9dbd0310af930c67e93d46399d506329de7da27fa8f279550cf5a",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionHistoryWitnesses.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0036",
+    "title": "Infinite histories need not yield finite determination",
+    "path": "docs/decisions/DR-0036-infinite-history-finite-prefix-obstruction.md",
+    "sha256": "b192593059fd5d4dfc50f44291902bf634fb2904e0ab5a2fdd8616963e936ed9",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionInfiniteHistory.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0037",
+    "title": "Compactness and sharp two-observation inconsistency certificates",
+    "path": "docs/decisions/DR-0037-compactness-and-two-observation-conflicts.md",
+    "sha256": "a9e3e95052debbefda7a70003042c47f9d932b026360c312e9afb9dfa7bea08d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCompactHistory.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0038",
+    "title": "Executable small conflict certificates",
+    "path": "docs/decisions/DR-0038-executable-small-conflict-certificates.md",
+    "sha256": "f9684cc3a965817053de60762fa6e41c258ad1a34eecbd988a321062a0b5868b",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0039",
+    "title": "Sourced linear history summaries and indexed conflict certificates",
+    "path": "docs/decisions/DR-0039-sourced-linear-history-summaries.md",
+    "sha256": "be413c41595d7242c7bdb8a497251735c44cbe0a91fdacbd3dbe3a355c82cd27",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSourcedConflict.lean",
+      "Nullivance/Nullivance/RecognitionSourcedHistory.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0040",
+    "title": "Finite recognition: attained boundaries versus limiting information",
+    "path": "docs/decisions/DR-0040-finite-recognition-stopping-criteria.md",
+    "sha256": "842417789a9ee3fc7361056a1f149d1d6c5a3d33e3dc3c4de1a1fa9f31a6d583",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCoordinateStopping.lean",
+      "Nullivance/Nullivance/RecognitionFiniteStopping.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0041",
+    "title": "Persistence of finite recognition certificates",
+    "path": "docs/decisions/DR-0041-verdict-persistence.md",
+    "sha256": "564282e9a38bd0fece173ee88dd07d3a443b4b1a5bff19713639899ad44e54c3",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionVerdictPersistence.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0042",
+    "title": "Executable bounded recognition-certificate search",
+    "path": "docs/decisions/DR-0042-bounded-certificate-search.md",
+    "sha256": "1bc475191dfbabd273b5e89f9e1b9ce67b0e9e6371a77b85119234d6f7aa8e66",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0043",
+    "title": "Earliest certificate and exact abstract test count",
+    "path": "docs/decisions/DR-0043-earliest-certificate-and-test-count.md",
+    "sha256": "33c080ef92ab337890f5c0b6ade716807d88fe24e7f3d8c60e0a0b81eec861fe",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0044",
+    "title": "Incremental, resumable recognition-certificate search",
+    "path": "docs/decisions/DR-0044-incremental-resumable-certificate-search.md",
+    "sha256": "bd4d2e50edfac8033074faa4a9a681efbc3516eed23b5534a39944703963a229",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0045",
+    "title": "Exact finite refutation and two-record certificates",
+    "path": "docs/decisions/DR-0045-exact-finite-refutation-and-small-certificates.md",
+    "sha256": "8e2754ab756e78c108e0c8fc8875a684cf4eb9a0b6c492f0874ebd7c5c090e09",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0046",
+    "title": "Endpoint classifier and composed comparison budget",
+    "path": "docs/decisions/DR-0046-endpoint-classifier-and-comparison-budget.md",
+    "sha256": "6743a2f3145b61b087e433b7f04698b5283c572b858ad10adb57655f79a704a2",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0047",
+    "title": "Executable indexed refutation certificates",
+    "path": "docs/decisions/DR-0047-indexed-refutation-certificates.md",
+    "sha256": "2080c019c9c271ada5c50010e0d6a65c448e0c00212f79a497b7560276d06925",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSourcedRefutation.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0048",
+    "title": "Refutation export from saved search state",
+    "path": "docs/decisions/DR-0048-cursor-refutation-export.md",
+    "sha256": "1506fefef3e7f7f1febc8c2ad2d76425f2b377f86097bb7594d42745ba908747",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCursorRefutation.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0049",
+    "title": "Search plus certificate-export comparison budget",
+    "path": "docs/decisions/DR-0049-export-comparison-budget.md",
+    "sha256": "7d691dbf7ff10bad4dae71845b4dee52a90fb4f119bbf66166a780cb8c459d77",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionExportCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0050",
+    "title": "Authenticated index-only source deduplication",
+    "path": "docs/decisions/DR-0050-authenticated-index-deduplication.md",
+    "sha256": "7d7cc1cb0ebb68a13d53062fa30e5f0bc0ee187a696b461e8d94c3aa5b16b5a6",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionIndexedDedup.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0051",
+    "title": "Finite stopping from a positive-intensity margin",
+    "path": "docs/decisions/DR-0051-positive-margin-stopping.md",
+    "sha256": "9f69e773d26fddfc8078eb455f95bd95dbc80c8297b4cd59308934ca32d5c3f3",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSeparationStopping.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0052",
+    "title": "Computable reciprocal-error stopping budget",
+    "path": "docs/decisions/DR-0052-reciprocal-error-budget.md",
+    "sha256": "9d1170332653bf47fe949db39d99c425803e6a6650a5c80cfb87dc51f3900724",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionRationalSchedule.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0053",
+    "title": "Affirmative stopping with attained clamps and theta separation",
+    "path": "docs/decisions/DR-0053-affirmation-stopping-budget.md",
+    "sha256": "7120117d12e7c08908745213f5239b463bc6ce3e83b6148cb81868dc48ee2a4f",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionAffirmationSchedule.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0054",
+    "title": "Authenticated finite affirmative certificates",
+    "path": "docs/decisions/DR-0054-sourced-affirmation.md",
+    "sha256": "27b4c61426e404fdf159ff1e9b60332381855911ac41e2cd4a4647ccbd0d7dc9",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0055",
+    "title": "Affirmative export from a saved search cursor",
+    "path": "docs/decisions/DR-0055-cursor-affirmation.md",
+    "sha256": "d47b06992030d83f0debac96771eeabd71038394bafc3efe33e25ba2d9d52d5c",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0056",
+    "title": "Counted affirmative export and search composition",
+    "path": "docs/decisions/DR-0056-affirmative-export-cost.md",
+    "sha256": "57a639b101129e5a96156e3e7538c70d7f449fc33eee1e40847a22064d3519b5",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0057",
+    "title": "Reusing affirmative guard comparisons",
+    "path": "docs/decisions/DR-0057-cached-affirmative-guard.md",
+    "sha256": "4613c69228830649ba0560efabdd4dc44f43ca28662114648e735cd8816420a3",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0058",
+    "title": "Authenticated index-only affirmative export",
+    "path": "docs/decisions/DR-0058-indexed-affirmative-export.md",
+    "sha256": "bbfd7c1aa59c8986757501106ad3cc0814a15f802dc2314602d3fa6f6d5d1de7",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0059",
+    "title": "Computable authentication of supplied source boxes",
+    "path": "docs/decisions/DR-0059-authenticated-box-interface.md",
+    "sha256": "8ed9d0e5d3ba2750c93c7887094d96e0a94a628c342a62307dcf5cf9c10b29d2",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0060",
+    "title": "Checked continuation from an imported cursor",
+    "path": "docs/decisions/DR-0060-checked-cursor-continuation.md",
+    "sha256": "fa1cc43279b6ec3b58d1ca5b9a2ba3d832f7296510f8dbe724394a9c04b7bc22",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0061",
+    "title": "Affirmative certificates after checked continuation",
+    "path": "docs/decisions/DR-0061-checked-affirmative-certificates.md",
+    "sha256": "eef4dfd081b02e804ef202b4b85f926e472fab83925a7c6cde8876c963d5d765",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0062",
+    "title": "Refutation certificates after checked continuation",
+    "path": "docs/decisions/DR-0062-checked-refutation-certificates.md",
+    "sha256": "b20006e3357ee1f37818d9be3a1f2cee3695a259d1bf39332accd55cc9098913",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0063",
+    "title": "Exact-one certificates and joint operational outcomes",
+    "path": "docs/decisions/DR-0063-joint-certificate-outcomes.md",
+    "sha256": "f906f18af25338397aa4d7889e8a8fdf52298807f5e5c254fd83601db1404010",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0064",
+    "title": "Validation-inclusive continuation counters",
+    "path": "docs/decisions/DR-0064-validation-search-cost.md",
+    "sha256": "9d6bebc5c6c414efe66cbfb160a298c66b0d77256c6f56345c41cbbd916dd1f5",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0065",
+    "title": "Counted index-only refutation and joint pipeline",
+    "path": "docs/decisions/DR-0065-counted-joint-pipeline.md",
+    "sha256": "560d4ca38680377da59929b2d6f2c64bd841eb802a56ea94758ca40bd259b94e",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0066",
+    "title": "Sharing final-export consistency checks",
+    "path": "docs/decisions/DR-0066-shared-export-consistency.md",
+    "sha256": "aae93faa00c8883a29a7e75215ee5c54b055c6f35b125b5a43d01733c1d017ea",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0067",
+    "title": "Field-level charged-node budget for cursor validation",
+    "path": "docs/decisions/DR-0067-cursor-field-comparison-budget.md",
+    "sha256": "ee1fbac56541a3cef77abba5371f9734706ec7fc8b81da0a842e95650c9539ef",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCursorFieldCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0068",
+    "title": "Thread field-level cursor charges through the joint pipeline",
+    "path": "docs/decisions/DR-0068-field-counted-joint-pipeline.md",
+    "sha256": "1255bf971df3b3d6e69fb95ff1264520cf4f1d9c6af81d1f51e9d61c56638152",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0069",
+    "title": "Explicit short-circuit equality for source records",
+    "path": "docs/decisions/DR-0069-short-circuit-source-equality.md",
+    "sha256": "65c548c77a74d54913fa8fe03a5ea683f37f905ac52a64ca1002a70ad4257dd7",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionShortCircuitEquality.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0070",
+    "title": "Source short-circuit comparison through checked joint certificates",
+    "path": "docs/decisions/DR-0070-short-circuit-joint-refinement.md",
+    "sha256": "5463993e2a0dec4fc37d8b425a8e03f7ad189b1889c7b7a1ea1126a9ca9b8e61",
+    "explicit_lean_paths": [
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0071",
+    "title": "No source short-circuit saving on an accepted cursor",
+    "path": "docs/decisions/DR-0071-accepted-path-no-short-savings.md",
+    "sha256": "3dffcd3ad64d4246905ca3b9d74044f0c40631f6451046929cdab6f2619afe1c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionAcceptedCostBoundary.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0072",
+    "title": "Finite digests alone cannot authenticate every saved cursor",
+    "path": "docs/decisions/DR-0072-finite-digest-authentication-limit.md",
+    "sha256": "9c302de47c4904ed2a77a9860d4aadea78b87992eaae6d6deb3bd7c894550bca",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionDigestLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0073",
+    "title": "Finite-digest failure persists for feasible alpha/Theta histories",
+    "path": "docs/decisions/DR-0073-feasible-history-digest-limit.md",
+    "sha256": "821d31af3735c2c50b9c3f74b86c8901274950bdd866685679134088c7bb45ad",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionFeasibleDigestLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0074",
+    "title": "Proof-carrying in-process cursor continuation",
+    "path": "docs/decisions/DR-0074-proof-carrying-in-process-resume.md",
+    "sha256": "d79805eaed28fa41adfe20ce6ea71d29c9e96f91ff3040fec408be2d0fe3b0dd",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionTrustedResume.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0075",
+    "title": "Checked entry from untrusted saved cursors",
+    "path": "docs/decisions/DR-0075-checked-trusted-import-boundary.md",
+    "sha256": "f642d51f58f32f388a7417b1637178ec300b3835a58f002ec5c1b3eaa65d128d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionTrustedImport.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0076",
+    "title": "Terminal-safe trusted sessions and cumulative schedule bound",
+    "path": "docs/decisions/DR-0076-trusted-session-lifecycle.md",
+    "sha256": "81fe68007174904ce3caa0f2bbdf2899c3702fdc072eee0aa3a379e00a9cfcb4",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionTrustedSession.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0077",
+    "title": "Checked import followed by a trusted finite schedule",
+    "path": "docs/decisions/DR-0077-imported-trusted-session.md",
+    "sha256": "5394731144a8c40d0c77c4682e5816af5439ed92cd6cf7e07fb8bcc2ccd70f2e",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionImportedSession.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0078",
+    "title": "Active-only checkpoint and revalidation boundary",
+    "path": "docs/decisions/DR-0078-active-checkpoint-boundary.md",
+    "sha256": "a8a544bc9044328c00bffd39f4b2046d35be81e5d2797710c5b5c2fa7d7c1a5f",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCheckpoint.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0079",
+    "title": "Canonical typed-byte checkpoint codec",
+    "path": "docs/decisions/DR-0079-canonical-checkpoint-byte-codec.md",
+    "sha256": "3cb4cad1c96df1625ddd2bab55dbbd8580fb43ce3c503cc5b39a9c9686d70286",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCheckpointBytes.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0080",
+    "title": "Versioned ByteArray checkpoint envelope and size gate",
+    "path": "docs/decisions/DR-0080-versioned-checkpoint-envelope.md",
+    "sha256": "4e9b56feb8cdced57f5ef0af3cdc27c426af93107b683b5ce01ab135c29abff6",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCheckpointEnvelope.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0081",
+    "title": "A first-stage numerical bound for checkpoint decoding",
+    "path": "docs/decisions/DR-0081-checkpoint-first-stage-cost.md",
+    "sha256": "9cb429eecd1f7c798edea1b456a2b3ba9817e9b1299018cde0a11edaf3636be7",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCheckpointDecodeCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0082",
+    "title": "A non-vacuous bridge from finite histories to factive knowledge",
+    "path": "docs/decisions/DR-0082-history-knowledge-bridge.md",
+    "sha256": "c3989959832ace1dac5d2f9d1573e7262ac77e19f1b2695ac8a0df785a63f2ab",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionHistoryKnowledge.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0083",
+    "title": "Conditional evidence-to-knowledge bridge and two obstructions",
+    "path": "docs/decisions/DR-0083-evidence-knowledge-boundary.md",
+    "sha256": "c51fb987ff2e5e69d1104aacb9472c2075104ea85006cbbfff460b030f0c0059",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionEvidenceBoundary.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0084",
+    "title": "Init-only FOUR reports cannot exactly detect quasivance",
+    "path": "docs/decisions/DR-0084-init-only-four-evidence-limit.md",
+    "sha256": "bfe71139523b8b93df0f665216c836ac24d7424d0ffdcd52aa24f71ed3a8b7f0",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionInitEvidenceLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0085",
+    "title": "Each of the two existing active probes is individually insufficient",
+    "path": "docs/decisions/DR-0085-partial-active-probe-limit.md",
+    "sha256": "c470cbebc1947d02799a3cdd40bbd72805d69ba1d63d10150233b3c0b862ddbc",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPartialProbeLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0086",
+    "title": "Finitely many positive FOUR thresholds remain insufficient",
+    "path": "docs/decisions/DR-0086-finite-positive-threshold-limit.md",
+    "sha256": "39a6869d20763b8c09778e3acaf950a15c00009deaf15872dd1452c4cacf4a9c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionProbes.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0087",
+    "title": "An infinite shrinking-threshold trace identifies zero intensity",
+    "path": "docs/decisions/DR-0087-infinite-threshold-zero-recognition.md",
+    "sha256": "92c3f8992c8cccfed05c9891bf8a2477a7131acc170b996f442bac786a610b31",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionInfiniteThresholdZero.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0088",
+    "title": "Whole countable threshold signature recognizes scalar quasivance",
+    "path": "docs/decisions/DR-0088-countable-threshold-quasivance.md",
+    "sha256": "fa9cc9b130d2047ef63481eecfb6749ee4432860b288c632ae05d2e35063f432",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCountableThreshold.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0089",
+    "title": "Three threshold levels suffice under an explicit scalar margin",
+    "path": "docs/decisions/DR-0089-finite-threshold-margin-recognition.md",
+    "sha256": "6973291ea2d04b33e10a64e3ac48c33304daa3d3a75b205603c330bbf01213c1",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdMargin.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0090",
+    "title": "Finite one-sided intensity refutation without a uniform margin",
+    "path": "docs/decisions/DR-0090-one-sided-finite-intensity-certificates.md",
+    "sha256": "ab10ea9f2be4c8f36dee8db812e477cbe2c3cc9e356412cc01afade5112ae151",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdPartial.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0091",
+    "title": "Finite witnesses of scalar structure nonneutrality",
+    "path": "docs/decisions/DR-0091-finite-structure-nonneutral-witnesses.md",
+    "sha256": "29035340dad348f2515272c819a7835d76206b726c0256545ddf18aeab7502e2",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdStructure.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0092",
+    "title": "No finite prefix affirms scalar quasivance",
+    "path": "docs/decisions/DR-0092-no-finite-countable-prefix-affirmation.md",
+    "sha256": "38e6f8959f4e5fddc9d2d49dd38715babbc8df3919bf799ef18b1aea6b295f80",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdPrefixLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0093",
+    "title": "A neutral nonquasivant boundary cannot be refuted by finite prefixes",
+    "path": "docs/decisions/DR-0093-neutral-boundary-finite-prefix-limit.md",
+    "sha256": "35888cb5a7e84ac7c32061490b1a7f8f22180f3f67974d75ec901d01c973b447",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdNeutralLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0094",
+    "title": "Every zero-intensity scalar prefix admits a quasivant state",
+    "path": "docs/decisions/DR-0094-zero-intensity-finite-prefix-fibers.md",
+    "sha256": "81fae33a5103648d010af81df859669243d51ce2882be943d9d6b9244bdf8ab6",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdZeroSlice.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0095",
+    "title": "Exact eventual finite-prefix refutation criterion",
+    "path": "docs/decisions/DR-0095-exact-finite-prefix-refutation.md",
+    "sha256": "34e05939790ce984ea0cade77bbdb8f1550398c9bfccb5230e96af3879c05713",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdExactRefutation.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0096",
+    "title": "The zero-length full prefix already has a refutation bit",
+    "path": "docs/decisions/DR-0096-half-threshold-zero-prefix.md",
+    "sha256": "7c30b36ec85be0c4de09b6648871ac5fbefb26aaff5388427203029b37b328ff",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdHalfPrefix.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0097",
+    "title": "Exact refutation criterion for every full finite prefix",
+    "path": "docs/decisions/DR-0097-exact-full-finite-prefix-refutation.md",
+    "sha256": "37173e035ee426bf585db00ab11c1ffb626bbae0d3cd9234b65784b3a110113c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdFullPrefix.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0098",
+    "title": "Compressing full-prefix intensity refutation",
+    "path": "docs/decisions/DR-0098-finite-prefix-intensity-compression.md",
+    "sha256": "4008e5d2258e1592e8ce61341e7c6ceb3f2c7e10205218b381197de996600fd6",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdPrefixCompression.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0099",
+    "title": "Single-threshold summary of finite-prefix refutation",
+    "path": "docs/decisions/DR-0099-single-threshold-prefix-refutation.md",
+    "sha256": "2442062978c5b3a07ff2272ccefc451024dcf869d3616eedd68325df4dc220ec",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdEndpoint.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0100",
+    "title": "Supplied-list refutation and exact traversal cost",
+    "path": "docs/decisions/DR-0100-supplied-prefix-list-cost.md",
+    "sha256": "8ed4dd086eadc4d3ad6372f2506722ab2a9a4b626eb11c24a5883a4f4e222f9e",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdListCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0101",
+    "title": "Incremental threshold endpoint and update cost",
+    "path": "docs/decisions/DR-0101-incremental-threshold-endpoint.md",
+    "sha256": "d83bcb07c86cc18667977bdd7410e98f34aeb8d93cc6ca2111be1229cc2d8604",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdIncremental.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0102",
+    "title": "Imported threshold-cache validation and replay cost",
+    "path": "docs/decisions/DR-0102-threshold-cache-validation.md",
+    "sha256": "b45bc077245f9e4a08284d7b9154aa7e25daa16b6e21fdd30cdd7580f290767c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdCacheCheck.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0103",
+    "title": "Proof-carrying threshold import and preserved update invariant",
+    "path": "docs/decisions/DR-0103-proof-carrying-threshold-import.md",
+    "sha256": "f1ec08cb629a2df4fdf1045602e9a87b503568c52cad8fd1661194852cf1b793",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdCheckedImport.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0104",
+    "title": "Checked import followed by a finite online trace",
+    "path": "docs/decisions/DR-0104-checked-online-trace-cost.md",
+    "sha256": "ef3ce66ec0e8489476be067c885596d7bcbf73694b49018a2961c00626e4f6b2",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdOnlineTrace.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0105",
+    "title": "First-hit threshold stopping and scalar persistence",
+    "path": "docs/decisions/DR-0105-threshold-first-hit-stopping.md",
+    "sha256": "8869f958396b3973c4187d46521a29f97e7eec66eabcc34a5cc7861093bef4ac",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdFirstHit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0106",
+    "title": "Checked stopping, chunk continuation and explicit offset cost",
+    "path": "docs/decisions/DR-0106-checked-stop-resume-pipeline.md",
+    "sha256": "499e56f7f8d5bbe75968f7a8752e1d48e838d51979608d124c69427ee63fe944",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdStopResume.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0107",
+    "title": "Retained consumption and repeated-chunk cost",
+    "path": "docs/decisions/DR-0107-retained-consumption-chunk-cost.md",
+    "sha256": "70dcf831832f0a5393bdfecaaafc76c3b9bacd35aaa8dfc194dee266b7580c0b",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdConsumed.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0108",
+    "title": "Checked import followed by certified chunk stopping",
+    "path": "docs/decisions/DR-0108-checked-import-chunk-composition.md",
+    "sha256": "e3cbd87521279f02cd51b7371ecdaa66f708be278073451812304538d2c2907a",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdImportedChunks.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0109",
+    "title": "Validation of stopping-checkpoint metadata",
+    "path": "docs/decisions/DR-0109-stopping-checkpoint-validation.md",
+    "sha256": "c2d6d17e6875c8e6a555a9efd3d144463d49ac8c041e98dc7bce74c8a54e2d2b",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdStopCheckpoint.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0110",
+    "title": "Continuing an accepted stopping certificate",
+    "path": "docs/decisions/DR-0110-certified-checkpoint-continuation.md",
+    "sha256": "28167a2af0fa16edfc5400f697c7fa245f01a580baaf0ebd8ea119208847d500",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdCheckpointResume.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0111",
+    "title": "Finite continuation sessions and a separate cost ledger",
+    "path": "docs/decisions/DR-0111-finite-session-cost-ledger.md",
+    "sha256": "11451dea7efe3c02f63b3b1dfbfb3228c5bcabd8b8297cd5d397548c8e56c119",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdSessionLedger.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0112",
+    "title": "Ordered delivery bridges finite sessions to eventual refutation",
+    "path": "docs/decisions/DR-0112-ordered-delivery-eventual-refutation.md",
+    "sha256": "b9b988c526037ecf790444e981c892442e746e8909e38464a06e0abccfe8b347",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdDelivery.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0113",
+    "title": "Explicit rational-margin observation and delivery budgets",
+    "path": "docs/decisions/DR-0113-rational-margin-delivery-budget.md",
+    "sha256": "537a4fbab1cdbeb9f4562b48100e3138d493d2cca47593cc410ebada7a5dd97c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdBudget.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0114",
+    "title": "Feasibility-guarded threshold certificates from error histories",
+    "path": "docs/decisions/DR-0114-error-history-threshold-certificates.md",
+    "sha256": "8f210ecf1b1ed0e42e2020ff810b6d04afbc836afc1317d4298aa0ebed0502c0",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionThresholdCertificates.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0115",
+    "title": "Searching partial intensity certificates without false completion",
+    "path": "docs/decisions/DR-0115-partial-threshold-certificate-search.md",
+    "sha256": "550797df248e50309654bcae2ccaa6a12e7257cfefd21ddeb3c2df57b7687ade",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPartialThresholdSearch.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0116",
+    "title": "Lazy certificates and safe replay after observation refinement",
+    "path": "docs/decisions/DR-0116-lazy-threshold-refinement-replay.md",
+    "sha256": "87662b948302c2f7b3eb161158a78f520528a6711cc4f3b459f07582af98c013",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionLazyThresholdSearch.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0117",
+    "title": "Shared materialized summaries for partial threshold replay",
+    "path": "docs/decisions/DR-0117-shared-summary-threshold-comparisons.md",
+    "sha256": "d1d58755f0c97f1df42160c3c36cad2026ea62b81d3d3b874dfdfd02f8e0658d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSharedThresholdSummary.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0118",
+    "title": "Length-carrying summaries and finite-session cost",
+    "path": "docs/decisions/DR-0118-length-carrying-summary-sessions.md",
+    "sha256": "954f76007a85671d026eca6d9ecd67d8da90294fbad796bb8b519fec6a8a97de",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSummarySessions.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0119",
+    "title": "Reusing resolved thresholds under feasible refinement",
+    "path": "docs/decisions/DR-0119-selective-threshold-certificate-refresh.md",
+    "sha256": "00f74ce9946178e59d6ce8ae2944d461578bc07e9af006062e73ce0910f0a788",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSelectiveThresholdRefresh.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0120",
+    "title": "Counted selective-cache initialization and finite sessions",
+    "path": "docs/decisions/DR-0120-selective-cache-lifecycle-sessions.md",
+    "sha256": "1e323de6c9c71ac1d5231493e4566c8153bcccea4d8745071ec87e290c8241b7",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSelectiveCacheLifecycle.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0121",
+    "title": "Checked import of the combined selective cache",
+    "path": "docs/decisions/DR-0121-selective-cache-checked-import.md",
+    "sha256": "37b363a1443c394e64216af9e7baac84c387ba38f6bb14083b0d3d3dcdbbbe25",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSelectiveCacheImport.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0122",
+    "title": "Finite unknown-exit potential and qualitative stabilization",
+    "path": "docs/decisions/DR-0122-selective-progress-and-stabilization.md",
+    "sha256": "489fc3f0fbff9ef3aa27c6191ab65b7317427a1bb5cf4b9c0de2d778adcead4d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSelectiveProgress.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0123",
+    "title": "Precision-delivery deadlines for separated intensity thresholds",
+    "path": "docs/decisions/DR-0123-error-resolution-deadlines.md",
+    "sha256": "af8389475f855871fc75d51a4d863cb6568f547facd76ee9af96402ecfc8a1fc",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionErrorResolutionDeadline.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0124",
+    "title": "Adaptive prefix resolution without a prior margin",
+    "path": "docs/decisions/DR-0124-adaptive-resolution-without-prior-margin.md",
+    "sha256": "e25daa83ba6791bc53d810250ef2290c195f54ca7bbc62ab3916d78b42ee7ab2",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionAdaptiveResolution.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0125",
+    "title": "Incremental all-threshold resolution search",
+    "path": "docs/decisions/DR-0125-incremental-resolution-search.md",
+    "sha256": "49029bda175560cfdbc827ec5c11c15a24368b55bccbc21076c07105d4c636f4",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionIncrementalResolution.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0126",
+    "title": "Exact cache and cost composition across search budgets",
+    "path": "docs/decisions/DR-0126-resolution-budget-composition.md",
+    "sha256": "f970305d94f2d0a171047c2cde4dd7fb605f96e469c94d22ec30b38da5cdfe5c",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionResolutionComposition.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0127",
+    "title": "Checking an imported resolution run against finite source data",
+    "path": "docs/decisions/DR-0127-whole-run-replay.md",
+    "sha256": "f15d869cf1826a31cd528ff7d0119f387f258d86c6ed6fc2f8559a6144e0fd9a",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionResolutionReplay.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0128",
+    "title": "Replaying only the observations a completed search needs",
+    "path": "docs/decisions/DR-0128-read-on-demand-replay.md",
+    "sha256": "f91c4ae5e4118bb57c165f41e8f75f0b416924da6044f6a693d1354f9fe9c5fd",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionDemandReplay.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0129",
+    "title": "Charged work of a replay that runs out of observations",
+    "path": "docs/decisions/DR-0129-incomplete-replay-cost.md",
+    "sha256": "81585cf195b2a9ab5322491a129771d07330503c0a051a4f38b3411f463aa8c9",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPartialReplayCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0130",
+    "title": "Resume replay after an observation shortage",
+    "path": "docs/decisions/DR-0130-resume-replay-after-shortage.md",
+    "sha256": "a6a3fe9e9d100654158a5c9262ef0234476ff09a930b1188914c9921ef7f7b92",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionReplaySuspension.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0131",
+    "title": "What must be checked before resuming an imported pending phase?",
+    "path": "docs/decisions/DR-0131-typed-phase-import.md",
+    "sha256": "e12b53d9a266a061631213a6f9f7d3694d66129f225ac190a4ccde7fbd0f3b49",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPhaseImport.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0132",
+    "title": "Receive the starting prefix incrementally",
+    "path": "docs/decisions/DR-0132-resumable-initial-prefix.md",
+    "sha256": "86d626592680241688fcd17249ced928f40f6c5c6d4c405e3d3d756865bcfbf1",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPrefixBoot.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0133",
+    "title": "A sufficient sourced summary for incomplete initialization",
+    "path": "docs/decisions/DR-0133-compact-prefix-summary.md",
+    "sha256": "637c87e8091123b69308af9a3c8a6b96368216e49ee20b0561203363a14c5656",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCompactBoot.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0134",
+    "title": "When does a finite history decide an exact intensity boundary?",
+    "path": "docs/decisions/DR-0134-exact-intensity-boundary-contact.md",
+    "sha256": "7c0f985e2820f562a7cbbccbbcb64a3681b4a952c47b5f52cd58d33c97bfb1d9",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionBoundaryContact.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0135",
+    "title": "Exact eventual stopping for a finite list of intensity thresholds",
+    "path": "docs/decisions/DR-0135-mixed-threshold-eventual-stopping.md",
+    "sha256": "1df8a9d4542b570095f29779ed4b85f834f9ff23ba984158cef94c65f45035cf",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionMixedThresholdStopping.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0136",
+    "title": "No finite observational certificate of permanent non-resolution in general",
+    "path": "docs/decisions/DR-0136-finite-query-limit-for-eventual-contact.md",
+    "sha256": "cb8106292fba51437602bf6c1c8d30c5a21cee0b3a129c9406cba6339167f0f0",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionContactQueryLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0137",
+    "title": "A sharp cutoff given a finite generator of boundary contacts",
+    "path": "docs/decisions/DR-0137-finite-generator-boundary-cutoff.md",
+    "sha256": "43c7dc9e557fe03ea991a4f6878c1b8025d8c63a7ab5e4a7744e263e720df0cd",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionFiniteContactGenerator.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0138",
+    "title": "Finite validation of a candidate contact generator",
+    "path": "docs/decisions/DR-0138-checked-finite-generator-equivalence.md",
+    "sha256": "8f9bd1205808b5e6d96cb1ccaa1d3ebb4e494023904eaed0febc9d916b6bb315",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionGeneratorEquivalence.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0139",
+    "title": "Checkable finite relation certificates for generator traces",
+    "path": "docs/decisions/DR-0139-finite-relation-generator-certificates.md",
+    "sha256": "e8b4d92edcfd28bed3d7ce1fc9ca6b37cf53c8cdd381d66670f35d15874b42e2",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionGeneratorCertificate.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0140",
+    "title": "Proof-carrying symbolic relations for infinite counter generators",
+    "path": "docs/decisions/DR-0140-symbolic-generator-relations.md",
+    "sha256": "f575d306667c97b183e0e97f3769156122f8870c1219246b3cc6c50fbd6abe0b",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionSymbolicGeneratorRelation.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0141",
+    "title": "An executable checker for affine relations of periodic counters",
+    "path": "docs/decisions/DR-0141-executable-affine-residue-checker.md",
+    "sha256": "04885749c55e748fa0a46f2b0e1354a6d6951fa2af2e440284953048d3ee68dd",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionAffineResidueChecker.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0142",
+    "title": "Exact trace decision through a finite residue quotient",
+    "path": "docs/decisions/DR-0142-reachable-residue-trace-decision.md",
+    "sha256": "97850a75269da2f54afaf769279457ee810fa7d9d12675f71055184d9095575f",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionResidueTraceDecision.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0143",
+    "title": "Stride-sensitive synchronized cycle cutoff",
+    "path": "docs/decisions/DR-0143-stride-sensitive-cycle-cutoff.md",
+    "sha256": "655b26d9d9cd702ef058b431118730b60e26a23028ccaad50d28292dbc2bdb7d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionResidueCycleCutoff.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0144",
+    "title": "Verified arithmetic setup and scanner work",
+    "path": "docs/decisions/DR-0144-verified-cycle-setup-work.md",
+    "sha256": "329d3a469986d889f73ed928c7510ddcf29f9ab402f9d08be00bc8d1c5982151",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionCycleSetupCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0145",
+    "title": "Logarithmic Euclidean remainder-count bounds",
+    "path": "docs/decisions/DR-0145-logarithmic-euclidean-step-bound.md",
+    "sha256": "b6c481ced8ba4f761d4c087316086134c90fe86210dc4d100c89cab4e25ebcc0",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionEuclidLogCost.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0146",
+    "title": "Skip cycle preparation on an immediate disagreement",
+    "path": "docs/decisions/DR-0146-guarded-cycle-preparation.md",
+    "sha256": "2d736fcfc9c2816d09e8cdd9cebb06820f473ae7798a16d51d92d278a502b3db",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionGuardedCycleSetup.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0147",
+    "title": "Periodic contact decision and the unknown-period prefix limit",
+    "path": "docs/decisions/DR-0147-periodic-contact-and-prefix-limit.md",
+    "sha256": "ea35b982825f7602dff0664e8c75d703dbc769843c36295cc2567546995dd74b",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPeriodicContact.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0148",
+    "title": "Adaptive querying does not remove the unknown-period limit",
+    "path": "docs/decisions/DR-0148-periodic-adaptive-query-limit.md",
+    "sha256": "a4c83691b4ad74baeba421d0f08c51a79243c862af78a3ef90b3f779e636431d",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionPeriodicQueryLimit.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  },
+  {
+    "id": "DR-0149",
+    "title": "Observation-only decision under a certified period bound",
+    "path": "docs/decisions/DR-0149-observation-decision-with-period-bound.md",
+    "sha256": "b27765189c4633a57bbc0ec0b697ed817ba949b6e48683ec5017bc35ae3260f9",
+    "explicit_lean_paths": [
+      "Nullivance/Nullivance/RecognitionBoundedPeriodObservation.lean",
+      "Nullivance/RecognitionValidation.lean",
+      "Nullivance/ResearchValidation.lean"
+    ]
+  }
+]

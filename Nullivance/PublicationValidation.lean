@@ -1,0 +1,215 @@
+import Nullivance
+
+-- Generated from the publication manuscript.
+-- Types and transitive axiom dependencies, not merely name existence.
+set_option pp.universes false
+
+#check Nullivance.Continuous.exact_projection
+#print axioms Nullivance.Continuous.exact_projection
+
+#check Nullivance.FiniteFO.qDerivesExtCore_iff_qconsequence4Sig
+#print axioms Nullivance.FiniteFO.qDerivesExtCore_iff_qconsequence4Sig
+
+#check Nullivance.Generative.GenState.init_mem
+#print axioms Nullivance.Generative.GenState.init_mem
+
+#check Nullivance.InfiniteFO.checkedFiniteOpenEquality_sound
+#print axioms Nullivance.InfiniteFO.checkedFiniteOpenEquality_sound
+
+#check Nullivance.InfiniteFO.decideFiniteOpenEquality_correct
+#print axioms Nullivance.InfiniteFO.decideFiniteOpenEquality_correct
+
+#check Nullivance.InfiniteFO.decideFreshCompactOpenEquality_finite_capacity_correct
+#print axioms Nullivance.InfiniteFO.decideFreshCompactOpenEquality_finite_capacity_correct
+
+#check Nullivance.InfiniteFO.decideQuantifiedEqualityHashed_finite_correct
+#print axioms Nullivance.InfiniteFO.decideQuantifiedEqualityHashed_finite_correct
+
+#check Nullivance.InfiniteFO.decideQuantifiedEqualityHashed_infinite_correct
+#print axioms Nullivance.InfiniteFO.decideQuantifiedEqualityHashed_infinite_correct
+
+#check Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_amortized_state_cost_bounds
+#print axioms Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_amortized_state_cost_bounds
+
+#check Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_correct
+#print axioms Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_correct
+
+#check Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_eq_misses
+#print axioms Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_eq_misses
+
+#check Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_le_syntax_mul_bell
+#print axioms Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_le_syntax_mul_bell
+
+#check Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_le_syntax_mul_factorial
+#print axioms Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_le_syntax_mul_factorial
+
+#check Nullivance.Metatheory.Closes.unsat
+#print axioms Nullivance.Metatheory.Closes.unsat
+
+#check Nullivance.Metatheory.closes_of_unsat
+#print axioms Nullivance.Metatheory.closes_of_unsat
+
+#check Nullivance.Metatheory.derives_iff_consequenceC
+#print axioms Nullivance.Metatheory.derives_iff_consequenceC
+
+#check Nullivance.Recognition.activeProbeSignature_eq
+#print axioms Nullivance.Recognition.activeProbeSignature_eq
+
+#check Nullivance.Recognition.activeProbeSignature_injective
+#print axioms Nullivance.Recognition.activeProbeSignature_injective
+
+#check Nullivance.Recognition.bootSources_bound
+#print axioms Nullivance.Recognition.bootSources_bound
+
+#check Nullivance.Recognition.bootSources_eight_attained
+#print axioms Nullivance.Recognition.bootSources_eight_attained
+
+#check Nullivance.Recognition.bothSupport_no_unconditional_knowledge
+#print axioms Nullivance.Recognition.bothSupport_no_unconditional_knowledge
+
+#check Nullivance.Recognition.boundary_contact_or_alternative
+#print axioms Nullivance.Recognition.boundary_contact_or_alternative
+
+#check Nullivance.Recognition.boundary_ready_iff_contact
+#print axioms Nullivance.Recognition.boundary_ready_iff_contact
+
+#check Nullivance.Recognition.boxWitnessCandidates_represent
+#print axioms Nullivance.Recognition.boxWitnessCandidates_represent
+
+#check Nullivance.Recognition.centeredBoundary_timeout
+#print axioms Nullivance.Recognition.centeredBoundary_timeout
+
+#check Nullivance.Recognition.checkThresholdCacheCounted_accepted
+#print axioms Nullivance.Recognition.checkThresholdCacheCounted_accepted
+
+#check Nullivance.Recognition.checkThresholdCache_spec
+#print axioms Nullivance.Recognition.checkThresholdCache_spec
+
+#check Nullivance.Recognition.checked_cache_nonrealizable_counterexample
+#print axioms Nullivance.Recognition.checked_cache_nonrealizable_counterexample
+
+#check Nullivance.Recognition.classifyHistory_complete
+#print axioms Nullivance.Recognition.classifyHistory_complete
+
+#check Nullivance.Recognition.compactReplay_extension
+#print axioms Nullivance.Recognition.compactReplay_extension
+
+#check Nullivance.Recognition.compareResidueCycles_exact
+#print axioms Nullivance.Recognition.compareResidueCycles_exact
+
+#check Nullivance.Recognition.contactPeriodBound_cutoff
+#print axioms Nullivance.Recognition.contactPeriodBound_cutoff
+
+#check Nullivance.Recognition.contactPeriodBound_positive
+#print axioms Nullivance.Recognition.contactPeriodBound_positive
+
+#check Nullivance.Recognition.countableThreshold_recognizes_quasivance
+#print axioms Nullivance.Recognition.countableThreshold_recognizes_quasivance
+
+#check Nullivance.Recognition.decodeCursorEnvelope_encode
+#print axioms Nullivance.Recognition.decodeCursorEnvelope_encode
+
+#check Nullivance.Recognition.euclidCounted_log_bound
+#print axioms Nullivance.Recognition.euclidCounted_log_bound
+
+#check Nullivance.Recognition.every_frame_silent_ambiguity
+#print axioms Nullivance.Recognition.every_frame_silent_ambiguity
+
+#check Nullivance.Recognition.exportHistoryWitness_realizes
+#print axioms Nullivance.Recognition.exportHistoryWitness_realizes
+
+#check Nullivance.Recognition.finite_digest_cannot_justify_import
+#print axioms Nullivance.Recognition.finite_digest_cannot_justify_import
+
+#check Nullivance.Recognition.finite_positive_thresholds_not_recognizable
+#print axioms Nullivance.Recognition.finite_positive_thresholds_not_recognizable
+
+#check Nullivance.Recognition.guardedCycles_result
+#print axioms Nullivance.Recognition.guardedCycles_result
+
+#check Nullivance.Recognition.historyFeasible_iff_exists
+#print axioms Nullivance.Recognition.historyFeasible_iff_exists
+
+#check Nullivance.Recognition.importTrustedCounted_spec
+#print axioms Nullivance.Recognition.importTrustedCounted_spec
+
+#check Nullivance.Recognition.importTrusted_isSome
+#print axioms Nullivance.Recognition.importTrusted_isSome
+
+#check Nullivance.Recognition.importTrusted_output
+#print axioms Nullivance.Recognition.importTrusted_output
+
+#check Nullivance.Recognition.joint_neutrality_refutation_regression
+#print axioms Nullivance.Recognition.joint_neutrality_refutation_regression
+
+#check Nullivance.Recognition.no_bootSummary_history_inverse
+#print axioms Nullivance.Recognition.no_bootSummary_history_inverse
+
+#check Nullivance.Recognition.no_finite_negative_periodic_recognizer
+#print axioms Nullivance.Recognition.no_finite_negative_periodic_recognizer
+
+#check Nullivance.Recognition.noisy_contact_regression
+#print axioms Nullivance.Recognition.noisy_contact_regression
+
+#check Nullivance.Recognition.periodicQuery_admissible_collision
+#print axioms Nullivance.Recognition.periodicQuery_admissible_collision
+
+#check Nullivance.Recognition.preparedCycleWork_log_bound
+#print axioms Nullivance.Recognition.preparedCycleWork_log_bound
+
+#check Nullivance.Recognition.recognizable_iff_fiber_constant
+#print axioms Nullivance.Recognition.recognizable_iff_fiber_constant
+
+#check Nullivance.Recognition.recognizable_of_postprocess
+#print axioms Nullivance.Recognition.recognizable_of_postprocess
+
+#check Nullivance.Recognition.recognizable_tests_iff_separates
+#print axioms Nullivance.Recognition.recognizable_tests_iff_separates
+
+#check Nullivance.Recognition.restoreActiveEnvelopeCounted_success
+#print axioms Nullivance.Recognition.restoreActiveEnvelopeCounted_success
+
+#check Nullivance.Recognition.scanObservedContactCounted_boundary
+#print axioms Nullivance.Recognition.scanObservedContactCounted_boundary
+
+#check Nullivance.Recognition.scanObservedContactCounted_exact
+#print axioms Nullivance.Recognition.scanObservedContactCounted_exact
+
+#check Nullivance.Recognition.scanObservedContact_boundary
+#print axioms Nullivance.Recognition.scanObservedContact_boundary
+
+#check Nullivance.Recognition.scanObservedContact_cutoff_sharp
+#print axioms Nullivance.Recognition.scanObservedContact_cutoff_sharp
+
+#check Nullivance.Recognition.scanObservedContact_first_prefix
+#print axioms Nullivance.Recognition.scanObservedContact_first_prefix
+
+#check Nullivance.Recognition.scanObservedContact_permanent
+#print axioms Nullivance.Recognition.scanObservedContact_permanent
+
+#check Nullivance.Recognition.scanObservedContact_some
+#print axioms Nullivance.Recognition.scanObservedContact_some
+
+#check Nullivance.Recognition.separated_stream_adaptive_resolution
+#print axioms Nullivance.Recognition.separated_stream_adaptive_resolution
+
+#check Nullivance.Recognition.stable_evolution_indistinguishable
+#print axioms Nullivance.Recognition.stable_evolution_indistinguishable
+
+#check Nullivance.Recognition.stream_exists_iff_all_prefixes_feasible
+#print axioms Nullivance.Recognition.stream_exists_iff_all_prefixes_feasible
+
+#check Nullivance.Recognition.stream_exists_iff_pairwise_feasible
+#print axioms Nullivance.Recognition.stream_exists_iff_pairwise_feasible
+
+#check Nullivance.Recognition.stream_infeasible_iff_two_observation_certificate
+#print axioms Nullivance.Recognition.stream_infeasible_iff_two_observation_certificate
+
+#check Nullivance.Recognition.summarizeProbes_exact
+#print axioms Nullivance.Recognition.summarizeProbes_exact
+
+#check Nullivance.Recognition.truthSupport_known_of_adequate
+#print axioms Nullivance.Recognition.truthSupport_known_of_adequate
+
+#check Nullivance.Recognition.two_observation_bound_is_sharp
+#print axioms Nullivance.Recognition.two_observation_bound_is_sharp

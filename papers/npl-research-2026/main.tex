@@ -1,0 +1,870 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,booktabs,longtable,array,geometry,microtype}
+\geometry{margin=27mm}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={Nullivance Logic: Formal Semantics, Quantified Equality, and Certified Recognition},pdfauthor={Trinh Tung Lam},pdfsubject={Research synthesis through DR-0149; scoped Lean 4 verification}}
+\setlength{\emergencystretch}{3em}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\leanref}[1]{\par\smallskip\noindent{\footnotesize Lean anchor: \nolinkurl{#1}.}\par\smallskip}
+\newcommand{\dr}[1]{DR-#1}
+\newcommand{\Four}{\mathbf{4}}
+\newcommand{\Qv}{\mathsf{Q}}
+\newcommand{\Fits}{\mathsf{Fits}}
+\newcommand{\Known}{\mathsf{Known}}
+\newcommand{\none}{\mathsf{none}}
+\newcommand{\some}{\mathsf{some}}
+\title{Nullivance Logic:\\Formal Semantics, Quantified Equality,\\and Certified Recognition}
+\author{Trinh Tung Lam\\\small\href{mailto:lamtung0481@gmail.com}{lamtung0481@gmail.com}}
+\date{Research snapshot, 8 November 2026\\\small Synthesis through DR-0149}
+\begin{document}
+\maketitle
+\begin{abstract}
+We consolidate the Nullivance research artifact from its two-channel logical
+semantics to its observation-relative recognition layer. The propositional
+core has exact threshold projection and a sound and complete signed tableau.
+A separate finite-domain quantified calculus and exact pure-equality procedures
+cover specified finite and infinite carriers; these results do not establish
+completeness for unrestricted quantified Nullivance. The optional generative
+layer represents each support channel by intensity and structure. Its initial
+two-coordinate observation provably loses distinctions needed for latent
+quasivance recognition. On an enriched scalar probe model, finite rational
+histories admit exact feasibility, four-way classification, witnesses, and
+source-indexed certificates. Checked imports and counted resumable algorithms
+preserve those contracts across explicitly defined boundaries. Infinite-history
+results distinguish compatibility, recognizability, and finite stopping.
+At an exact intensity threshold, finite resolution is equivalent to an observed
+endpoint contact. Even periodic contact patterns admit no complete finite
+negative observation-only procedure without a bound. With a certified upper
+bound $B$ on a positive contact period, the implemented scanner decides contact
+within $B$ tests, with exact selected-operation counts. We state the hypotheses,
+counterexamples, computational qualifications, and remaining obligations, and
+provide machine-resolved theorem anchors, a complete design-record catalog,
+and a pinned source artifact. This is a mathematical and software-verification
+report, not empirical validation of cognition or a claim of a complete theory
+of recognition.
+\end{abstract}
+\noindent\textbf{Keywords:} non-classical logic; formal verification; equality;
+observability; recognition; certificates; Lean 4.
+\par\medskip
+\noindent\textbf{Version boundary.} Mathematical source baseline:
+\nolinkurl{48bd5f4260fd7982176d7a2060be4e956e1fd49c}.
+Lean and mathlib: 4.32.1. This new synthesis supplements, rather than silently
+replaces, the two August 2026 v0.7.1 papers. The older Zenodo DOI identifies
+that older release, not this snapshot. No new DOI or peer-review status is
+asserted here.
+\clearpage
+\tableofcontents
+\newpage
+
+\section{What is established, and in which sense?}
+\label{sec:scope}
+Three different objects must be kept separate. The first is a logic of
+independent support for and against propositions. The second is a generative
+model for the values supplied to that logic. The third is an observation model
+in which an observer attempts to recover specified properties of a latent
+state. A theorem about one object is not automatically a theorem about the
+others. In particular, evidence in both channels is permitted by the logic;
+factive knowledge of a proposition and its negation is not.
+
+This report presents the current results in dependency order, not as 149
+independent discoveries. Design records are chronological accounts of changes;
+an obligation listed as open in an early record may be discharged later.
+Appendix~\ref{app:catalog} enumerates every record through \dr{0149}, with
+byte-level identities in the accompanying catalog. The authoritative formal
+statements are the Lean declarations, including their typeclass and semantic
+hypotheses. The prose below gives mathematical arguments and scope checks for
+the main results; it does not claim that a reference-name check automatically
+verifies a natural-language paraphrase.
+
+\begin{center}\small
+\begin{tabular}{p{.26\linewidth}p{.64\linewidth}}
+\toprule
+Layer & Established scope; important exclusion\\\midrule
+Propositional core & Signed tableau soundness/completeness and exact threshold
+projection; no interpretation as a physical law.\\
+Quantification & Finite-domain core tableau; finite/infinite pure-equality
+algorithms; not arbitrary-predicate infinite-domain completeness.\\
+Recognition & Exact properties of specified observations of a fixed scalar
+state; not unrestricted perception, changing-state cognition, or learning.\\
+Algorithms & Correctness and explicitly charged operations of named programs;
+not a universal wall-clock, memory, or bit-complexity bound.\\
+Publication evidence & Compiling proof artifact, dependency audits, source
+manifest, and reproducibility instructions; not external peer review.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The original motivation concerns a distinction between what is manifested and
+what is present in an underlying description. The research translates that
+intuition into definitions and tests its consequences. Definitions stipulate a
+model; proofs establish consequences of that model. Neither establishes that
+the model describes a human mind or a physical instrument. Proposed applications
+must supply an independently justified observation map and error assumptions.
+
+\section{Two-channel semantics and the propositional core}
+An atomic proposition receives a pair $(t,f)\in[0,1]^2$. These coordinates
+are independent support values, not complementary probabilities. For values
+$x=(t,f)$ and $y=(u,v)$, the primitive operations are
+\[
+ \neg x=(f,t),\quad x\wedge y=(\min(t,u),\max(f,v)),\quad
+ x\vee y=(\max(t,u),\min(f,v)),
+\]
+and harmonization (consensus) is $x\oplus y=(\min(t,u),\min(f,v))$.
+A threshold $0<\tau\le1$ records whether each coordinate is at least $\tau$.
+The four resulting Boolean pairs are $\mathrm{N}=(0,0)$, $\mathrm{T}=(1,0)$,
+$\mathrm{F}=(0,1)$, and $\mathrm{B}=(1,1)$. Here zero and one in a Boolean
+pair denote bits. The signs $T^+,T^-,F^+,F^-$ assert, respectively, positive
+truth support, its absence, positive falsity support, and its absence at the
+specified threshold. Absence of support is not identified with support for
+the opposite proposition.
+
+\begin{example}
+At $\tau=1/2$, $(0.8,0.7)$ projects to B, whereas $(0.2,0.1)$ projects to N.
+The first can represent conflicting reports; the second insufficient reports.
+Neither description says that an observer knows both a fact and its negation.
+The same proposition can have different reports without changing the
+mathematical meanings of the two channels.
+\end{example}
+
+\begin{theorem}[Exact propositional projection]
+Thresholding the continuous evaluation of a formula gives exactly its
+four-valued evaluation under thresholded atomic values.
+\end{theorem}
+\begin{proof}
+Induct on the formula. Swapping coordinates commutes with thresholding.
+For two reals, a minimum is at least $\tau$ iff both operands are; a maximum
+is at least $\tau$ iff at least one is. These identities establish all three
+binary cases coordinate by coordinate. This argument uses finite min/max,
+not an unattained supremum of an infinite family.
+\end{proof}
+\leanref{Nullivance.Continuous.exact_projection}
+
+The analytic signed tableau closes precisely the unsatisfiable finite signed
+branches. The corresponding consequence theorem transfers to the continuous
+semantics by exact projection. The artifact also supplies executable reference
+checking, countermodel extraction on failure, and compactness/strong-completeness
+results for infinite premise sets. The last phrase concerns \emph{sets of
+propositional premises}; it does not mean arbitrary quantified object domains.
+\leanref{Nullivance.Metatheory.Closes.unsat}
+\leanref{Nullivance.Metatheory.closes_of_unsat}
+\leanref{Nullivance.Metatheory.derives_iff_consequenceC}
+
+Paraconsistency means that contradictory support need not entail an arbitrary
+unrelated proposition. It does not make every inference permissible. The
+two v0.7.1 companion papers contain the detailed core calculus and finite-domain
+tableau exposition. Some statements marked \emph{[paper]} there, including the
+stated complexity/positioning results, are not relabeled machine-verified in
+this synthesis. The mathematical core deliberately builds on established
+four-valued and bilattice ideas \cite{belnap1977useful,dunn1976intuitive,fitting1991bilattices}.
+The availability of a Lean formalization alone does not establish historical
+novelty of those ideas.
+
+\section{Quantifiers: finite results, infinite obstructions, and equality}
+\subsection{Finite-domain proof theory}
+The finite-domain work treats a function-free quantified language with crisp
+equality and a nonempty finite domain. The macro-free extensional core tableau
+has a soundness and completeness theorem. Equality substitution and replay
+require their actual admissibility conditions; earlier proposed replay routes
+were corrected rather than left as assumed lemmas. Records \dr{0007}--\dr{0010}
+and the finite-domain companion distinguish those failed routes from the
+proved final calculus. A refuted auxiliary conjecture does not refute the
+subsequently repaired theorem.
+\leanref{Nullivance.FiniteFO.qDerivesExtCore_iff_qconsequence4Sig}
+
+\subsection{Why finite projection is insufficient for all infinite domains}
+Consider truth values $a_n<\tau$ increasing to $\tau$. The existential truth
+coordinate may be $\sup_n a_n=\tau$, so its continuous threshold bit is true,
+although every individual threshold bit is false. Moving projection through
+this supremum is invalid. Positive results therefore require stated witness
+attainment, threshold regularity, or suitable compactness and semicontinuity
+hypotheses. Equality depending on a bound variable also matters: an arbitrary
+crisp equality predicate need not have the topological regularity that an
+informal continuity argument assigns to it.
+
+The abstract analyses track constant, crisp, and upper-semicontinuous
+coordinates, then coordinate relations and exact complementarity. These are
+sound sufficient recognizers, not complete recognizers for every semantic
+property. Boolean normalization by ROBDD removes a particular syntactic
+limitation: equivalent Boolean combinations need not have the same syntax
+tree. But a propositional ROBDD treats equality atoms as independent unless
+the equality theory is added. For example, reflexivity of $x=x$ and transitive
+consequences of $x=y,y=z$ are theory facts, not arbitrary Boolean tautologies.
+Reduced ordered decision diagrams are an established Boolean representation
+\cite{bryant1986graph}; the present artifact verifies their use in its own
+pipeline, not their invention.
+
+\subsection{Exact equality procedures}
+The equality branch adds equivalence classes, disequality constraints,
+binder-aware assignment updates, and fresh-element capacity. Universal and
+existential choices are represented by existing classes and, when possible,
+a fresh class. Forgetting which variables are currently bound can merge
+semantically different calls; the cache keys therefore retain the necessary
+scope/capacity information. A cutoff argument replaces infinitely many
+indistinguishable choices by finitely many equality types.
+
+The resulting total decision procedures are exact for the stated
+\emph{pure-equality fragment}. For closed formulas the artifact proves
+correctness on infinite carriers and on nonempty finite carriers with the
+appropriate capacity. It does not decide arbitrary predicates on an infinite
+domain. The later open-formula interfaces evaluate a \emph{supplied assignment},
+not automatically every assignment.
+\leanref{Nullivance.InfiniteFO.decideQuantifiedEqualityHashed_infinite_correct}
+\leanref{Nullivance.InfiniteFO.decideQuantifiedEqualityHashed_finite_correct}
+
+For an open formula of quantifier rank $r$, let $c$ be the number of distinct
+values assigned to its relevant free variables. Compact encodings use their
+equality classes and an explicit fresh pool. The sufficient finite capacity
+condition is $r+c\le |D|$; when it fails, the checked finite interface can
+use a supplied complete duplicate-free enumeration of the actual domain.
+The validation of the enumeration and fragment is part of the interface.
+Rejection of an unsupported input is not a false truth value.
+The conservative compact representative construction uses $r+c+1$ elements;
+no minimality of that count is asserted here. Enumerating validity across all
+free assignments remains separate from evaluating one assignment.
+\leanref{Nullivance.InfiniteFO.decideFiniteOpenEquality_correct}
+\leanref{Nullivance.InfiniteFO.checkedFiniteOpenEquality_sound}
+\leanref{Nullivance.InfiniteFO.decideFreshCompactOpenEquality_finite_capacity_correct}
+
+\subsection{Memoization and what the cost theorems measure}
+The optimized evaluator is proved equivalent to its reference recursion;
+the table is threaded through recursive orbit expansion. Its invariant
+identifies distinct stored states with misses from the specified empty-table
+execution. Syntax-sensitive Bell-number and factorial bounds then control
+the number of unique keys. The exact bound parameters and closure conditions
+are retained in the following source anchors, not suppressed into an
+unqualified ``polynomial-time'' claim.
+Writing $r$ for quantifier rank and $|\varphi|$ for syntax-node count, the
+empty-root specialization proves
+\[
+ U=\mathsf{misses}\le |\varphi|\,B_r\le |\varphi|\,r!,
+\]
+where $B_r$ is the artifact's equality-partition (Bell) count at that root.
+The stronger depth-sensitive envelope is available in the source; the simple
+display is an upper bound, not the exact count of every run.
+\leanref{Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_correct}
+\leanref{Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_eq_misses}
+\leanref{Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_le_syntax_mul_bell}
+\leanref{Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_unique_states_le_syntax_mul_factorial}
+
+For the pinned Lean implementation, a bucket-doubling potential bounds
+rehash work linearly in the number $U$ of inserted unique states. In the
+instrumented model, rehashed entries are bounded by $3U$ and the counted
+hash operations by $A+4U$, where $A$ is the counted request quantity in the
+formal cost specification. Collision-chain comparison costs retain their
+dependence on chain length; no random hash distribution is postulated.
+The displayed amortized operation bounds hold for the instrumented root run;
+the syntax/Bell envelope specializes the parameter to quantifier rank.
+Semantic correctness additionally requires the stated fragment and closure
+conditions. These costs exclude the bit cost of a large key,
+rational arithmetic, allocation, and the entire surrounding ROBDD algorithm.
+\leanref{Nullivance.InfiniteFO.runQuantifiedEqualityOrbitHashed_amortized_state_cost_bounds}
+
+\section{The generative layer: intensity is not observation}
+A generative frame has a positive structure dimension $d$, a stability map
+$\Phi:[0,1]^d\to[0,1]$, flip symmetry
+$\Phi(1-\Theta)=\Phi(\Theta)$, and neutral value
+$\Phi(1/2,\ldots,1/2)=1$. A channel contains an intensity $\alpha\in[0,1]$
+and a structure $\Theta\in[0,1]^d$. Its effective output is
+$\alpha\Phi(\Theta)$. A state has two channels and initializes the core value as
+\[
+ \mathsf{init}(s)=
+ (\alpha_+\Phi(\Theta_+),\alpha_-\Phi(\Theta_-)).
+\]
+One concrete admissible family uses the geometric mean of componentwise
+$1-2|\theta-1/2|$. This is a model definition, not a measured biological law.
+\leanref{Nullivance.Generative.GenState.init_mem}
+
+\begin{definition}[The specified latent predicate]
+A channel is quasivant when $\alpha=0$ and its structure is not neutral.
+A state is quasivant, written $\Qv(s)$, when both channels are quasivant.
+\end{definition}
+This exact conjunction is important. Small positive intensity is not zero;
+a neutral structure is not nonneutral; one quasivant channel is not two.
+All quasivant states initialize to $(0,0)$, but the converse fails.
+
+\begin{proposition}[Silent ambiguity in every admitted frame]
+There are a quasivant state and a nonquasivant state with identical initial
+observations, for every admitted generative frame.
+\end{proposition}
+\begin{proof}
+Set both intensities to zero. In one state set both structures constantly to
+zero, and in the other constantly to $1/2$. Positive dimension ensures these
+structures differ. The first state satisfies the defined predicate and the
+second does not. Multiplication by zero makes both observations $(0,0)$,
+independently of the admitted stability map.
+\end{proof}
+\leanref{Nullivance.Recognition.every_frame_silent_ambiguity}
+This refutes universal recovery of this latent predicate from init alone.
+It neither disproves the existence of structured latent states nor requires
+changing the logical core.
+
+\section{Recognition as recoverability from observations}
+Let $o:S\to O$ be an observation map and $P:S\to\mathsf{Prop}$ a property.
+Exact recognizability means that a decoder $d:O\to\mathsf{Prop}$ exists with
+$d(o(s))\leftrightarrow P(s)$ for every state.
+\begin{theorem}[Fiber criterion]
+Such a decoder exists iff $P$ is constant on each observation fiber:
+\[
+ o(s)=o(t)\ \Longrightarrow\ (P(s)\leftrightarrow P(t)).
+\]
+\end{theorem}
+\begin{proof}
+A decoder gives the forward implication immediately. Conversely define
+$d(y)$ by the existence of a state $s$ with $o(s)=y$ and $P(s)$. At any
+actual observation $o(t)$, fiber constancy makes this equivalent to $P(t)$.
+This constructs a mathematical predicate, not necessarily a computable test.
+\end{proof}
+\leanref{Nullivance.Recognition.recognizable_iff_fiber_constant}
+
+Postprocessing cannot restore distinctions already removed by the observation.
+Extra observations can preserve or improve recoverability. A family of probes
+supports recognition iff it separates every pair disagreeing on the target
+property; observing an entire possibly infinite signature is not the same
+as finding a finite stopping rule.
+\leanref{Nullivance.Recognition.recognizable_of_postprocess}
+\leanref{Nullivance.Recognition.recognizable_tests_iff_separates}
+
+If deterministic dynamics preserve observational equality at each next step,
+induction preserves it along the whole trace. Merely appending a time axis
+does not then recover the lost distinction. This is a conditional result about
+observation-stable dynamics, not an impossibility for all interventions.
+A coordinate-swap example shows how an intervention can reveal a hidden bit
+when that stability condition is absent.
+\leanref{Nullivance.Recognition.stable_evolution_indistinguishable}
+
+Factive knowledge is separately specified by
+$\Known_o(P,s)\leftrightarrow\forall t,\ o(t)=o(s)\Rightarrow P(t)$.
+The actual state is a compatible alternative, so knowledge implies truth.
+Four-valued support is not automatically knowledge. Even T alone is
+insufficient without a sound connection to the target, and B cannot be
+promoted factively to both a proposition and its negation. A positive bridge
+requires adequacy of reports and constancy on the observation fiber.
+\leanref{Nullivance.Recognition.truthSupport_known_of_adequate}
+\leanref{Nullivance.Recognition.bothSupport_no_unconditional_knowledge}
+These hypotheses are application obligations, not facts silently supplied by
+the Nullivance connectives.
+
+\section{Scalar probes, noise, and exact finite histories}
+\label{sec:histories}
+The constructive recognition branch specializes the generative frame to four
+scalar coordinates $(\alpha_+,\alpha_-,\theta_+,\theta_-)\in[0,1]^4$ and
+an enriched probe interface. Probe readings expose information absent from
+init alone; this additional observation model is not derived by decoding init.
+Concretely, the intensity intervention replaces structure by neutral and
+retains intensity, so its response is exactly $\alpha$. In the canonical
+one-dimensional frame, the structure intervention sets intensity to one and
+halves the original structure coordinate; its response is exactly $\theta$.
+These experiments operate on separate copies of the same original state.
+Their combined exact-real signature is injective, hence information-theoretically
+sufficient for any property of that state. The signature is not an executable
+decision procedure for every predicate over real numbers, and the proposed
+interventions have not been implemented as physical experiments.
+\leanref{Nullivance.Recognition.activeProbeSignature_eq}
+\leanref{Nullivance.Recognition.activeProbeSignature_injective}
+The scalar target is
+\[
+ \Qv(s)\ \leftrightarrow\ \alpha_+=0\land\alpha_-=0
+ \land\theta_+\ne1/2\land\theta_-\ne1/2.
+\]
+A rational observation records a rational allowance $\epsilon$ and four
+rational coordinates $y_i$. Compatibility is the stated coordinatewise error
+contract, together with the admitted unit bounds and allowance conditions.
+All observations in one history must fit \emph{the same} latent state.
+
+For a well-formed finite history, compatible coordinates lie in a rectangular
+box with endpoints
+\[
+ L_i=\max\bigl(0,\max_j(y_{ij}-\epsilon_j)\bigr),\qquad
+ U_i=\min\bigl(1,\min_j(y_{ij}+\epsilon_j)\bigr).
+\]
+The empty history starts with $[0,1]^4$. Malformed allowances and empty
+intersections are handled by the implemented feasibility checks; the formula
+above is not permission to ignore input validity.
+\leanref{Nullivance.Recognition.summarizeProbes_exact}
+\leanref{Nullivance.Recognition.historyFeasible_iff_exists}
+
+\begin{theorem}[Exact finite classification]
+Every finite input history receives precisely one of: invalid (no compatible
+state), affirmed (nonempty and all compatible states quasivant), refuted
+(nonempty and all compatible states nonquasivant), or undetermined (compatible
+states of both kinds).
+\end{theorem}
+\begin{proof}
+For each coordinate retain the two interval endpoints and its distinguished
+marker: zero for intensity, $1/2$ for structure. This gives $3^4=81$ candidate
+entries, not necessarily distinct or feasible. Search only candidates passing
+all bounds and the requested truth value of $\Qv$. Every real compatible state
+has a candidate preserving the four equalities that determine $\Qv$; conversely
+each accepted candidate embeds into an admitted state. The two existence
+flags determine the four disjoint cases. Feasibility prevents vacuous
+affirmation on inconsistent data.
+\end{proof}
+\leanref{Nullivance.Recognition.boxWitnessCandidates_represent}
+\leanref{Nullivance.Recognition.exportHistoryWitness_realizes}
+\leanref{Nullivance.Recognition.classifyHistory_complete}
+
+The rational witness is actual exported data, not a claim that an arbitrary
+real hidden state can be computed. Completeness here concerns this predicate
+and independent coordinate boxes. Correlated nonlinear constraints would
+require another representation theorem. Permuting or duplicating observations
+does not alter the compatible set; the artifact proves the corresponding
+implementation invariances.
+
+\begin{example}[Combining ambiguous records]
+With allowance $1/10$, readouts $((0,0),(2/5,0))$ and
+$((0,0),(3/5,0))$ are separately undetermined. Together their positive-structure
+interval is exactly $[1/2,1/2]$. Every common state has a neutral positive
+structure, so the combined verdict is refuted, not invalid.
+\end{example}
+\leanref{Nullivance.Recognition.joint_neutrality_refutation_regression}
+The example illustrates intersection of evidence about one state; it does not
+model an unannounced change of state between readings.
+
+\section{Infinite histories and small certificates}
+For the same scalar, closed, independent-coordinate model, a single state
+fits a countable stream iff every finite prefix is feasible. In fact it is
+enough that every pair of records has a common fitting state.
+\begin{proof}[Argument for the compatibility result]
+Pairwise feasibility implies each lower endpoint is at most every upper
+endpoint in the same coordinate. Take the supremum of all lower endpoints.
+The set is nonempty and bounded above by an upper endpoint from record zero.
+Its supremum lies between all the lower and upper endpoints and in $[0,1]$.
+The four coordinates assemble one admitted state fitting the entire stream.
+The reverse directions follow by restricting a fitting state.
+\end{proof}
+\leanref{Nullivance.Recognition.stream_exists_iff_all_prefixes_feasible}
+\leanref{Nullivance.Recognition.stream_exists_iff_pairwise_feasible}
+Thus inconsistency has a certificate of at most two observations. Two is
+sharp: exact positive-intensity readings zero and one are individually feasible
+but jointly inconsistent. This is a rectangular-constraint result, not a new
+unrestricted compactness theorem. Certificate size does not bound where the
+records occur or how long the observer waits.
+\leanref{Nullivance.Recognition.stream_infeasible_iff_two_observation_certificate}
+\leanref{Nullivance.Recognition.two_observation_bound_is_sharp}
+
+Compatibility compactness must not be confused with finite certification of
+every universal property. An infinite shrinking history can force a boundary
+value while every finite prefix still admits alternatives. The development
+therefore preserves explicit non-stopping examples, instead of assuming that
+infinite evidence always becomes finite evidence.
+
+The certificate branch makes these distinctions operational. Endpoint summaries
+carry the original observations responsible for extremal bounds. Conflict,
+affirmative, and refutation certificates are checked against source positions.
+Feasibility is retained for non-vacuous positive or negative conclusions.
+An actual source index is more informative than an unattributed value: a
+numerically correct endpoint alone does not authenticate its claimed origin.
+Records \dr{0038}--\dr{0071} develop extraction, indexed provenance, joint
+pipelines, cursor-field costs, and short-circuit equality refinement. Each
+cost theorem refers to its own instrumented implementation; output equivalence
+alone is not used to transfer an unproved runtime bound.
+
+\section{Imported memory, trusted continuation, and serialization}
+\label{sec:memory}
+A saved cursor includes its next position and a sourced summary. On import,
+the externally supplied object is not assumed to match the underlying records.
+The checked entry recomputes the prefix summary and compares it with the
+imported value. It returns a proof-carrying handle precisely when
+\nolinkurl{CursorMatches} holds. This invariant concerns equality to the summary
+of the designated source prefix; it is not cryptographic proof that an external
+provider reported physical truth.
+\leanref{Nullivance.Recognition.importTrusted_isSome}
+\leanref{Nullivance.Recognition.importTrusted_output}
+
+\begin{proposition}[Counted import]
+For cursor position $n$, the specified counted importer equals the checked
+import result together with $8n$ rational-order nodes and one whole-box equality
+call, whether it accepts or rejects.
+\end{proposition}
+\leanref{Nullivance.Recognition.importTrustedCounted_spec}
+The unit ``one equality call'' is deliberately not one machine instruction:
+later refinements count fields and short-circuit behavior separately. Once
+accepted, an in-process proof-carrying continuation preserves the invariant
+without rescanning the old prefix at every step. The stream is fixed during
+these proofs. Mutating the source after validation is outside the contract.
+
+A finite digest cannot universally replace exact checking: any map from the
+relevant infinite family into a finite digest space collides. The formal
+counterexample includes feasible histories, so the obstruction is not merely
+malformed data. This is an impossibility of \emph{unconditional exact inference}
+from a finite digest, not a refutation of probabilistic cryptographic security
+under a specified threat model.
+\leanref{Nullivance.Recognition.finite_digest_cannot_justify_import}
+
+Records \dr{0076}--\dr{0081} specify session lifecycle and checked byte/envelope
+boundaries. A Lean structure carrying a proof is not by itself a sealed runtime
+capability: proof fields are erased. Reimporting raw data requires checking
+again or an explicitly specified trusted-storage assumption. The later cache,
+checkpoint, and typed-phase imports likewise validate the relevant semantic
+invariants rather than treating serialization success as semantic correctness.
+The project does not yet prove a general secure distributed-storage system.
+\leanref{Nullivance.Recognition.decodeCursorEnvelope_encode}
+\leanref{Nullivance.Recognition.restoreActiveEnvelopeCounted_success}
+The separate threshold-endpoint cache validator also has an exact acceptance
+specification relative to rebuilding from supplied threshold data. Its accepted
+path costs $2n+11$ selected operations when $n<2$, and $2n+18$ otherwise.
+The model charges list-constructor inspections, stage-tag inspections, and
+Boolean gates; its comparison circuit is charged without short-circuit savings.
+This is a different cost unit from
+the rational-order nodes of sourced-history import. Acceptance does not imply
+that arbitrary supplied threshold data are realizable by an underlying state,
+nor that two full histories are equal.
+\leanref{Nullivance.Recognition.checkThresholdCache_spec}
+\leanref{Nullivance.Recognition.checkThresholdCacheCounted_accepted}
+\leanref{Nullivance.Recognition.checked_cache_nonrealizable_counterexample}
+
+\section{Threshold observations and finite information limits}
+There are two distinct information models: exact or bounded-error scalar
+readings, and observations restricted to threshold bits. Finitely many positive
+thresholds cannot in general distinguish exact zero from every sufficiently
+small positive intensity. An appropriate infinite countable threshold family
+can determine zero as a mathematical property of the entire signature, but
+this does not produce a finite algorithm affirming zero in every case.
+The quasivance predicate additionally requires both structures to be nonneutral.
+An intensity-only result cannot settle that conjunction.
+\leanref{Nullivance.Recognition.finite_positive_thresholds_not_recognizable}
+\leanref{Nullivance.Recognition.countableThreshold_recognizes_quasivance}
+
+Records \dr{0084}--\dr{0099} explicitly analyze init-only and partial-probe
+losses, finite versus countable threshold signatures, margin assumptions,
+neutrality boundaries, finite refutation, and endpoint compression.
+The finite-prefix classifier retains its distinction between invalid,
+affirmed, refuted, and undetermined. A below-threshold status is not equality
+to zero and is not automatically affirmation of quasivance. Conversely an
+above-positive-threshold certificate refutes quasivance by witnessing positive
+intensity in at least one channel.
+
+Records \dr{0100}--\dr{0123} move from those statements to supplied-list costs,
+incremental summaries, checked imported caches, first-hit stopping,
+consumed-prefix accounting, chunk composition, checkpoint continuation,
+session ledgers, ordered delivery, and explicit precision deadlines.
+``Eventually delivered'' is a hypothesis about records received by the
+algorithm, not a theorem that a physical sensor will supply them.
+Selective refresh preserves resolved results only under the proved refinement
+and feasibility conditions. Successful chunk composition does not authorize
+reordering records or skipping the source-prefix checks.
+
+\section{Adaptive resolution and the exact boundary}
+\label{sec:boundary}
+Let $I(s)=\max(\alpha_+,\alpha_-)$. A finite list of positive rational
+thresholds is separated from this value when $I(s)\ne\tau$ for each listed
+$\tau$. Such a finite separated list admits a common positive rational margin.
+Existence of that margin is a proof fact, not a decoder extracting it from
+arbitrary observations. With the specified delivery of arbitrarily fine
+precision, the bounded reference search eventually finds a prefix resolving
+all requested thresholds. It does not receive the latent state, margin, or
+delivery schedule as executable inputs.
+\leanref{Nullivance.Recognition.separated_stream_adaptive_resolution}
+
+The search starting at prefix length $a$ with fuel $b$ tests lengths
+$a,\ldots,a+b-1$. It returns the first ready prefix or $\none$. Here
+$\none$ means no success within that window, not a negative theorem about the
+latent state. Zero fuel tests nothing. Empty threshold lists still require
+feasibility. Records \dr{0125}--\dr{0133} refine this reference search into
+incremental, whole-run and read-on-demand replay, including shortage, resume,
+typed phase import, and compact initial-prefix summaries. These refinements
+preserve the reference first-success result and separately account for the
+operations in their instrumented implementations.
+The compact initialization summary retains eight rational endpoints and at
+most eight occupied observation/index slots. This bound is attained for that
+representation; it is not a lower bound for every algorithm. Equal sourced
+summaries give equal future phases for fixed requests, fuel, and a common
+ordered suffix. They do not determine the original history: different records
+can yield the same summary. Thus a correct resumable memory is not a lossless
+archive of research data.
+\leanref{Nullivance.Recognition.compactReplay_extension}
+\leanref{Nullivance.Recognition.bootSources_bound}
+\leanref{Nullivance.Recognition.bootSources_eight_attained}
+\leanref{Nullivance.Recognition.no_bootSummary_history_inverse}
+
+\subsection{A necessary and sufficient finite boundary criterion}
+For one observation $r_j=(\epsilon_j,y_j)$ define its intensity floor
+\[
+ f(r_j)=\max(y_{+,j}-\epsilon_j,\ y_{-,j}-\epsilon_j).
+\]
+Every fitting state's maximum intensity is at least this floor. Suppose a
+common fitting state has $I(s)=\tau>0$. Then a finite history resolves this
+threshold iff some observed floor equals $\tau$.
+\leanref{Nullivance.Recognition.boundary_ready_iff_contact}
+\begin{proof}
+The feasible box certifies ``at least $\tau$'' precisely when one lower intensity
+bound reaches $\tau$. Its initial value zero cannot do so because $\tau>0$.
+Every later lower bound is the maximum of prior lower bounds and observed
+lower endpoints. Each such endpoint is at most the fitting intensity, hence
+the largest floor is at most $I(s)=\tau$. Reaching the threshold therefore
+means equality at an observed floor. A below verdict is excluded by the
+given fitting boundary state. If there is no contact, the simultaneous lower
+corner of the feasible box has both intensities below $\tau$ and is itself
+a fitting state. The finite history then admits both a boundary state and
+a below-threshold alternative.
+\end{proof}
+\leanref{Nullivance.Recognition.boundary_contact_or_alternative}
+
+For a threshold in $(0,1]$, constant centered intensity readings with allowances
+$1/(j+1)$ can force $I=\tau$ in the whole infinite stream while every finite
+search times out: each floor remains strictly below $\tau$. Arbitrarily fine
+precision alone is therefore insufficient for universal finite boundary
+resolution. Conversely the reading $y_+=3/4$ with allowance $1/4$ has floor
+$1/2$ and certifies at least $1/2$. Exact zero noise is not necessary.
+\leanref{Nullivance.Recognition.centeredBoundary_timeout}
+\leanref{Nullivance.Recognition.noisy_contact_regression}
+The successful noisy reading certifies an inequality, not exact equality to
+$1/2$. Equality is an assumption of the boundary analysis, not a conclusion
+silently inferred from that reading.
+
+\section{Finite generators, equivalence, and counted cycle bounds}
+A contact generator consists of a start state, a deterministic next-state
+function, and a Boolean mark. With a finite state space of size $D$, if a
+mark is ever reached then one is reached before step $D$. A bounded scanner
+returns the first marked position; exhaustion is a permanent negative only
+when the applicable cutoff theorem has been established.
+
+Generator descriptions can provide information absent from sampled traces.
+The development includes finite-product trace comparison, checked finite
+relations, symbolic simulation relations, and residue-counter encodings.
+A symbolic relation certificate can establish equality of all output traces,
+but existence of such a relation is not an algorithm discovering it.
+Similarly an affine-residue checker is complete for the proposed affine
+invariant it checks, not for every pair of trace-equivalent generators.
+Unreachable states can invalidate that invariant without changing reachable
+output behavior.
+
+For a residue counter with modulus $P>0$ and stride $s$, the reachable cycle
+length is $c=P/\gcd(P,s)$. In particular stride zero gives $c=1$, not zero.
+Two such traces with cycle lengths $c,d$ can be compared through
+$L=\operatorname{lcm}(c,d)$, bounded by the earlier product cutoff.
+The counted comparison preserves the exact earliest mismatch.
+Records \dr{0144}--\dr{0146} explicitly instrument a Euclidean algorithm for
+setup, prove a logarithmic remainder-step bound by two-step halving, and
+avoid setup entirely when the first marks already differ.
+
+For the specified setup, if
+$S=\log_2 P+\log_2 Q+\log_2 c$ with natural-number logarithms,
+the proved selected-work envelope is $2S+13+2L$.
+This counts the named remainder/division/product/mark/transition operations.
+It is not the bit complexity of Euclid or the runtime of any uninstrumented
+built-in gcd implementation. A large-number division has not been proved to
+cost one processor step. Equivalence to a faster-looking algorithm does not
+change this scope.
+\leanref{Nullivance.Recognition.compareResidueCycles_exact}
+\leanref{Nullivance.Recognition.euclidCounted_log_bound}
+\leanref{Nullivance.Recognition.preparedCycleWork_log_bound}
+\leanref{Nullivance.Recognition.guardedCycles_result}
+
+\section{Periodicity without a bound is still insufficient}
+\label{sec:negative}
+In \dr{0147}--\dr{0148}, periodicity refers to the Boolean contact pattern,
+not necessarily the full rational observation stream. A residue-generator
+description enables a cutoff calculation. Merely promising some unknown
+period to an observation-only algorithm does not supply that calculation.
+
+\begin{theorem}[Finite negative query obstruction]
+There is no deterministic observation-only strategy that finitely returns a
+sound negative answer exactly on every never-contacting stream in the
+specified periodic encoding family, without being supplied a period bound.
+Queries may be adaptive, repeated, or out of order.
+\end{theorem}
+\begin{proof}[Finite-transcript argument]
+Run the strategy on the silent encoded counter. Any terminating negative run
+has queried finitely many indices. Choose $N$ larger than all of them. A
+late-contact periodic counter with cycle $N+1$ agrees on every queried
+observation but first contacts at $N$. Determinism preserves the same
+transcript and negative answer, contradicting soundness on this later-contact
+stream. The encoding maintains a common admitted scalar state and the stated
+precision properties, so the counterexample is inside the modeled class.
+\end{proof}
+\leanref{Nullivance.Recognition.periodicQuery_admissible_collision}
+\leanref{Nullivance.Recognition.no_finite_negative_periodic_recognizer}
+This is not a theorem about randomized algorithms, arbitrary source-code
+analysis, or uncomputability of every particular generator. It also does not
+say positive contacts are undiscoverable: a finite observed contact is a
+positive certificate. The obstruction concerns universally conclusive finite
+\emph{negative} observation-only decisions under the stated interface.
+
+\section{DR-0149: decision with a certified period bound}
+\label{sec:149}
+Define $C(n)$ by $f(r_n)=\tau$. The new assumption is
+\[
+ \mathsf{ContactPeriodBound}(r,\tau,B):\quad
+ \exists P>0,\quad P\le B\ \land\ \forall n,
+ \bigl(C(n+P)\leftrightarrow C(n)\bigr).
+\]
+This is an all-index semantic promise, not a Boolean test performed on the
+first $B$ samples. The executable scanner receives $r,\tau,B$, not the
+period or generator description. It checks indices $0,\ldots,B-1$ in order
+and stops at the first contact.
+
+\begin{theorem}[Certified cutoff and scanner specification]
+Under the period-bound promise, contact ever occurs iff it occurs at some
+$k<B$. The scanner returns $\some(k)$ exactly when $k<B$, $C(k)$, and
+no earlier index contacts; it returns $\none$ exactly when contact never
+occurs. The first-hit specification needs no periodicity assumption; the
+permanent-negative specification does.
+\end{theorem}
+\begin{proof}
+If a contact exists, take its least index $m$. If $m\ge P$, periodicity yields
+a contact at $m-P<m$, a contradiction. Hence $m<P\le B$. The reverse
+implication is immediate. The bounded scanner's first-hit and finite-exhaustion
+specifications follow from its recursive mark test. Composing finite
+exhaustion with the cutoff yields the permanent-negative statement.
+\end{proof}
+\leanref{Nullivance.Recognition.contactPeriodBound_cutoff}
+\leanref{Nullivance.Recognition.scanObservedContact_some}
+\leanref{Nullivance.Recognition.scanObservedContact_permanent}
+
+If all observations fit one admitted scalar state with $I(s)=\tau>0$, the
+negative answer is equivalent to the canonical threshold procedure never
+finding a ready prefix. A first contact at $k$ gives its first successful
+prefix $k+1$, tested with budget $B+1$ because the empty prefix is included.
+No precision-delivery assumption is required for this exact-boundary bridge.
+The negative result means ``no finite boundary certificate in this procedure,''
+not ``the intensity is below $\tau$'': the theorem assumes equality.
+\leanref{Nullivance.Recognition.scanObservedContact_boundary}
+\leanref{Nullivance.Recognition.scanObservedContact_first_prefix}
+
+\begin{theorem}[Exact selected-operation counts]
+The counted scanner returns the same result as the scanner. At a first hit
+$k$, it charges $(k+1,k)$ contact tests and successor transitions. At exhaustion
+it charges $(B,B)$. Both counters are at most $B$.
+\end{theorem}
+\begin{proof}
+Instantiate the counted generator scanner with the actual rational floor
+equality as its mark operation and natural successor as its step. Each failed
+test advances once, including the final failing transition on exhaustion;
+a successful test does not advance. The exact recurrence gives the two
+cases and, since $k<B$, the bounds.
+\end{proof}
+\leanref{Nullivance.Recognition.scanObservedContactCounted_exact}
+\leanref{Nullivance.Recognition.scanObservedContactCounted_boundary}
+This charges the operations of the actual wrapper, not a cost inferred merely
+from output equivalence. It excludes sample production, rational bit arithmetic,
+allocation, and compiler-level callback behavior. Computability is relative to
+an evaluable stream; an arbitrary mathematical function is not a hardware
+sensor driver.
+
+The late-contact family proves sharpness of this leading-prefix bound:
+with period $N+1$, $N$ observations return no hit, whereas $N+1$ observations
+first hit at $N$. This is not an adaptive-query lower bound for the bounded
+class. Budget zero is executable and returns no hit with zero work, but it
+cannot satisfy the positive-period promise. Testing a few samples for apparent
+periodicity does not justify promoting exhaustion to a permanent negative.
+\leanref{Nullivance.Recognition.scanObservedContact_cutoff_sharp}
+\leanref{Nullivance.Recognition.contactPeriodBound_positive}
+
+\section{Audit interpretation and reproducibility}
+\label{sec:repro}
+The verification uses Lean 4 \cite{demoura2021lean}. The companion artifact
+pins the mathematical baseline, Lean toolchain,
+mathlib commit, and all dependency revisions in the Lake manifest. Its
+\nolinkurl{SOURCE_MANIFEST.sha256} covers packaged files; a separate digest
+covers the source ZIP. Hashes detect byte changes relative to that manifest;
+they are not proofs of scientific truth or external signing credentials.
+
+The verification script runs the library build, both research validation
+entry points, and the report-specific declaration/type/dependency audit.
+It rejects proof holes and nonstandard axioms in the report's theorem anchors.
+The complete validation logs remain available for inspection. Legacy executable
+regressions that use a native decision bridge must not be confused with the
+structural mathematical proofs: any such dependency is disclosed in the
+validation inventory rather than erased from the record. The latest
+recognition boundary results use kernel-checked proofs and standard Lean
+logical dependencies only.
+
+The expected standard logical dependencies are \nolinkurl{propext},
+\nolinkurl{Classical.choice}, and \nolinkurl{Quot.sound}, or subsets.
+``No added axioms'' does not mean that classical mathematics has no foundational
+assumptions. Axiom audits inspect the dependency closure of a declaration;
+source-token scans alone would not suffice.
+
+The theorem-anchor audit prints full elaborated types. This permits checking
+that, for example, a theorem is conditional on \nolinkurl{StreamFits} and
+\nolinkurl{ContactPeriodBound}, rather than simply checking that its name
+exists. The publication review additionally inspects definitions, algorithm
+inputs, cost units, and counterexamples. The associated audit report states
+which checks were actually executed and does not label a cache-assisted
+extracted build as a cold dependency rebuild.
+
+To reproduce, install the pinned toolchain and LaTeX prerequisites, use the
+packaged instructions, and run from \nolinkurl{Nullivance/}:
+\begin{verbatim}
+lake build
+lake env lean ResearchValidation.lean
+lake env lean RecognitionValidation.lean
+lake env lean PublicationValidation.lean
+\end{verbatim}
+The last file is generated from the exact theorem anchors in this report.
+The package also contains the manuscript source, bibliography, and generated
+catalog, so rebuilding the report does not require private chat records or
+local drive paths. Source-only reproduction may need network access to obtain
+the pinned dependencies. No credentials, agent conversation logs, or worktree
+administration files belong in this publication artifact.
+
+\section{Remaining research obligations and responsible interpretation}
+The next theoretical obligation after \dr{0149} is to obtain or validate a
+usable period or tail certificate from an independently justified application
+source. It cannot in general be manufactured from the same finite observations
+whose negative result needs justification. Generator-description verification
+and assumptions about a physical generating process are different tasks.
+
+Other boundaries remain: unrestricted infinite-domain quantified completeness;
+validity across all assignments beyond the supplied-assignment equality
+interfaces; arbitrary structural dimensions and changing-state observations;
+concrete adequate evidence maps; correlated observation errors; combined
+serialization and application-security contracts; bit complexity and physical
+resource bounds; and empirical validation of any cognitive interpretation.
+Some narrower obligations have already been closed by later records. This
+list therefore describes current scope rather than repeating every historic
+``next step'' as if it were still open.
+
+Potential applications include checking whether an observation interface
+supports a requested distinction, returning explicit alternatives when it
+does not, validating cached summaries against source data, and reporting
+certified stopping only under justified assumptions. These are mathematically
+motivated opportunities, not measured superiority over existing systems.
+No benchmark or human/AI cognitive experiment is reported here.
+
+The main research contribution of this snapshot is a traceable formal chain:
+precise semantics; scoped completeness and equality algorithms; observation
+loss counterexamples; exact finite recognition under a specified probe model;
+source-backed, checked implementations; and a matched impossibility/positive
+cutoff pair for periodic boundary contact. Historical novelty requires a
+separate, current comparison with relevant logic, epistemic, verification,
+and system-identification literature. We do not claim that these general
+ideas originated with this artifact or that the complete problem of
+recognition has been solved.
+
+\section*{Availability and author declarations}
+The project repository is
+\url{https://github.com/lamtung0487-droid/nullivance-logic}.
+The attached source archive identifies this snapshot independently of whether
+that repository has subsequently advanced. The artifact is distributed under
+the project's CC BY 4.0 license. The author contact is given on the title page.
+No new publication identifier is assigned in this manuscript.
+Any submission-platform declarations about affiliations, funding, competing
+interests, or detailed tool assistance require the author's confirmation;
+they are not inferred from the proof artifact. This report itself does not
+assert external peer review or empirical certification.
+
+\appendix
+\section{Complete chronological coverage through DR-0149}
+\label{app:catalog}
+The following catalog preserves every design-record identifier and title in
+the source baseline. It is a coverage index, not 149 claims of novelty or a
+claim that every historical proposed statement was proved. Records include
+definitions, counterexamples, repaired proof routes, algorithms, and cost
+refinements. The accompanying machine-readable catalog lists original record
+paths, SHA-256 identities, and explicitly mentioned Lean files when present.
+Historical verification counts in those records are not substituted for the
+fresh publication checks.
+\input{catalog.tex}
+
+\bibliographystyle{plain}
+\bibliography{snapshot-references}
+\end{document}
