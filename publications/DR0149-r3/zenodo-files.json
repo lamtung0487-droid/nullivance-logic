@@ -1,0 +1,62 @@
+[
+  {
+    "name": "01_Nullivance_Research_Overview_and_Recognition_DR0149-r3.pdf",
+    "size": 460217,
+    "sha256": "abd76e7391e133ad52e5c3cd3edcdf133bcc610a483cd2ae0005a952412b146a",
+    "md5": "248477dbaefea143ab6958ce43b92647"
+  },
+  {
+    "name": "02_Nullivance_Propositional_Foundations_DR0149-r3.pdf",
+    "size": 551469,
+    "sha256": "5e6286c44388c99b4e4c85135830129b0659e3bebc3d3ef1cdab4d71a214d047",
+    "md5": "8776b1ca464d05a1959a768c2c73a25e"
+  },
+  {
+    "name": "03_Nullivance_Finite_Domain_Quantified_Logic_DR0149-r3.pdf",
+    "size": 541195,
+    "sha256": "cf7ca2d31e4e8d1f100c1c3d4904935b4b665ebc9b7189b84cf0922b7aa32b92",
+    "md5": "365791f30fc16b1d118ba25e70c9cef0"
+  },
+  {
+    "name": "10_Nullivance_Lean4_and_Report_Sources_DR0149-r3.zip",
+    "size": 2706010,
+    "sha256": "1f6baf23ec56ee4c79c671757ded3c6e02026272bfe9b7ce025230b1c2c650bf",
+    "md5": "0749a9133e4562686831ac23b11c8b96"
+  },
+  {
+    "name": "10_Nullivance_Lean4_and_Report_Sources_DR0149-r3.zip.sha256",
+    "size": 119,
+    "sha256": "f0ed81dd501193dd2deba238c1f783f3a70e35abf88b0dc8c22a11195d781d36",
+    "md5": "69408f9db8cbdc13722057e1dc78c43e"
+  },
+  {
+    "name": "80_README_VI_DR0149-r3.md",
+    "size": 3554,
+    "sha256": "dfde172d3b88734226f769d75b20f2c8a286428cd7c6bfeed7005402d0f529c2",
+    "md5": "13ed0b4519d8002c7b83f3e77b1b2705"
+  },
+  {
+    "name": "81_VERSION_HISTORY_DR0149-r3.md",
+    "size": 3062,
+    "sha256": "c713986401f1bfc7fa4eae913712586909528b39015db75183573626efae38d1",
+    "md5": "bebf25cc09d1fbc4732d2136622cea84"
+  },
+  {
+    "name": "82_VERIFICATION_REPORT_DR0149-r3.md",
+    "size": 4959,
+    "sha256": "70aef4f90193dfc1196682704ad550ca988e7f18b725f39fd76a5b5022929fc1",
+    "md5": "c12f61354666de0c32936c3538de6ef9"
+  },
+  {
+    "name": "90_Nullivance_Verification_Evidence_DR0149-r3.zip",
+    "size": 187506,
+    "sha256": "7141fdb76a2eada363b984f0bf42707be4ca952bc5bcdd6c59d2203b1a1ab2d7",
+    "md5": "0e618710cab3bf92221f4810e99440c6"
+  },
+  {
+    "name": "SHA256SUMS.txt",
+    "size": 1026,
+    "sha256": "1c548b89f87aabf7965ad4aa9dba845a22cc1ce8db9cfde49fd6648c4f259c86",
+    "md5": "9a6718128426be66a2a94c9d3d1c99da"
+  }
+]

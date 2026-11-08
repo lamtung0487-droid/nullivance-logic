@@ -1,30 +1,27 @@
-# Bản tổng hợp Nullivance đến DR-0149 — 08-11-2026
+# Nullivance research collection — DR0149-r3
 
-## Đọc từ đây
+**Read the research, not the log archive.**
 
-- Báo cáo tổng hợp tiếng Anh: [main.pdf](papers/npl-research-2026/main.pdf).
-- Giải thích dễ hiểu bằng tiếng Việt: [TOM_TAT_VI.md](papers/npl-research-2026/TOM_TAT_VI.md).
-- Bảng kiểm toán phát biểu–giả thiết–Lean: [claim-review.md](papers/npl-research-2026/claim-review.md).
-- Hướng dẫn dựng lại và đóng gói: [README](papers/npl-research-2026/README.md).
-- Mục lục 149 bản ghi: [catalog.json](papers/npl-research-2026/catalog.json).
+- [Part I: Research Overview and Certified Recognition](papers/npl-research-2026/main.pdf)
+- [Part II: Propositional Foundations](papers/npl-core/main.pdf)
+- [Part III: Finite-Domain Quantified Logic](papers/npl-finite-fo/main.pdf)
+- [Vietnamese explanation](papers/npl-research-2026/TOM_TAT_VI.md)
+- [Version history and corrections](papers/npl-research-2026/VERSION_HISTORY.md)
+- [Hypothesis/Lean correspondence](papers/npl-research-2026/claim-review.md)
+- [Reproduction instructions](papers/npl-research-2026/README.md)
 
-Đây là bản tổng hợp mới của mốc toán học
-`48bd5f4260fd7982176d7a2060be4e956e1fd49c`, không thay ngầm hai bài v0.7.1
-đã lưu trước đó. Không thay đổi tiên đề hay các định nghĩa/chứng minh gốc.
-Không tuyên bố đã hoàn chỉnh toàn bộ logic lượng từ vô hạn hoặc lý thuyết
-nhận thức. Giả thiết, phản ví dụ và các nghĩa vụ còn mở được trình bày riêng.
+All three current manuscripts carry DR0149-r3 (9 November 2026). The mathematical
+baseline remains through DR-0149; this revision improves exposition, provenance,
+citation positioning and verification of the collection. It is not a claim to
+have completed unrestricted infinite-domain logic, cognition or empirical validation.
 
-Theo chỉ dẫn mới nhất của tác giả: **chỉ tổng hợp, kiểm tra và lưu trữ nội bộ;
-không đăng aiXiv, không nộp bài, không push hay phát hành bên ngoài.**
+The concept DOI [10.5281/zenodo.18309848](https://doi.org/10.5281/zenodo.18309848)
+identifies the whole version family. The exact edition is
+[DR0149-r3, 10.5281/zenodo.24058589](https://doi.org/10.5281/zenodo.24058589).
+See the [published-file manifest and evidence](publications/DR0149-r3/README.md).
+Historical v0.7.1 and DR0149-r2 records remain separately identifiable.
+A changed PDF must not be cited as an unchanged v0.7.1 file.
 
-## Tái lập
-
-Tại thư mục gốc dự án:
-
-```powershell
-pwsh -NoProfile -File scripts/Verify-ResearchPublication.ps1
-```
-
-Log sinh ở `output/publication-dr0149/`. Gói nguồn được tạo trong `dist/`, có
-SHA-256 cho từng tệp và cho ZIP. Gói là ảnh chụp nghiên cứu có thể tái lập;
-không thay thế kho Git và các bản sao lưu đầy đủ của dự án.
+The report source and algorithms are in the source ZIP; selected checking logs
+are a separate evidence supplement. A complete successful receipt, not this
+index, determines whether a package has passed verification.

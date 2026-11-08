@@ -17,7 +17,7 @@ for package in manifest['packages']:
                    'matches':actual==package['rev'], 'tracked_clean':not dirty})
 out = root/'output/publication-dr0149'
 out.mkdir(parents=True,exist_ok=True)
-(out/'dependency-pins.json').write_text(json.dumps(checks,indent=2)+'\n',encoding='utf-8')
+(out/'dependency-pins.json').write_text(json.dumps(checks,indent=2)+'\n',encoding='utf-8', newline='\n')
 if not all(c['matches'] and c['tracked_clean'] for c in checks):
     raise SystemExit('Dependency revision/cleanliness mismatch; see dependency-pins.json')
 print(f'All {len(checks)} dependency revisions match; tracked dependency files are clean.')

@@ -2,20 +2,20 @@ cff-version: 1.2.0
 message: >-
   If you use this formal development, cite the software release and the
   manuscript relevant to your result.
-title: "Nullivance Logic: formal development and reproducible manuscripts"
+title: "Nullivance Logic: Foundations, Quantified Reasoning, and Certified Recognition"
 type: software
 authors:
   - family-names: Trinh
     given-names: Tung Lam
     email: lamtung0481@gmail.com
-version: 0.7.1
-date-released: 2026-08-16
+version: DR0149-r3
+date-released: 2026-11-09
 license: CC-BY-4.0
 repository-code: "https://github.com/lamtung0487-droid/nullivance-logic"
-url: "https://doi.org/10.5281/zenodo.21964600"
+url: "https://doi.org/10.5281/zenodo.18309848"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.21964600"
+    value: "10.5281/zenodo.18309848"
 keywords:
   - nullivance logic
   - paraconsistent logic
@@ -23,5 +23,7 @@ keywords:
   - analytic tableaux
   - Lean 4
 abstract: >-
-  A Lean 4 formalization and two reproducible manuscripts for the
-  propositional and finite-domain quantified layers of nullivance logic.
+  A three-part research collection with Lean 4 sources through DR-0149:
+  an overview and scoped recognition theory, propositional foundations,
+  and finite-domain quantified logic. The DOI identifies the version family;
+  select the DR0149-r3 record when citing this collection specifically.

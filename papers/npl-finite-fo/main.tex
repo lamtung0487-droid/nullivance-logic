@@ -1,5 +1,5 @@
 % =========================================================================
-% NPL finite-domain quantified paper — release v0.7.1 (2026-08-16).
+% Revised presentation in research collection DR0149-r3; mathematics unchanged.
 % Release normalization: stable Lean/mathlib pair, self-contained replay definition,
 % refreshed related work, synchronized artifact and reproducibility metadata.
 % v0.7.1: citation corrections; public repository and archival DOI synchronization.
@@ -18,7 +18,10 @@
 % declarations in the Nullivance artifact.
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
 % =========================================================================
-\documentclass[11pt]{article}
+\documentclass[11pt,a4paper]{article}
+\input{release.tex}
+\usepackage[margin=27mm]{geometry}
+\usepackage{xurl}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -70,15 +73,17 @@
 \title{Finite-Domain Quantified Nullivance Logic:\\
 A Machine-Checked Completeness Theorem\\
 for a Macro-Free Extensional Tableau\thanks{%
-Release v0.7.1 (August 2026). Companion to \emph{Nullivance Propositional Logic:
+\PublicationPart. Collection revision \PublicationVersion\ (\PublicationDate).
+Mathematical content is retained from the August 2026 paper; this edition
+updates its presentation and artifact references. Companion to \emph{Nullivance Propositional Logic:
 Threshold-Signed Consequence on the Unit Square with a Machine-Checked
 Completeness Theorem}. Results
 marked [L] are verified sorry-free in the Lean~4 artifact described in
 Appendix~\ref{app:lean}. Related-work positioning is backed by a dated,
-source-by-source literature record supplied with the artifact; novelty claims
-are search-scoped.}}
+source-by-source literature comparison; no priority claim is made for this
+collection edition.}}
 \author{Trinh Tung Lam\thanks{Contact: \texttt{lamtung0481@gmail.com}.}}
-\date{August 2026 --- release v0.7.1}
+\date{\PublicationDate\\\small \PublicationPart\ --- \PublicationVersion}
 
 \begin{document}
 \maketitle
@@ -87,7 +92,7 @@ are search-scoped.}}
 We extend nullivance propositional logic (NPL) --- a paraconsistent,
 two-channel logic on the unit square with a harmonization connective $\hmz$
 and four threshold signs $\Tp,\Tm,\Fp,\Fm$ --- by finite-domain quantifiers.
-The language is function-free first-order over a fixed signature with crisp equality; models
+The language has no function symbols and uses a fixed signature with crisp equality; models
 interpret predicates over a fixed finite nonempty domain by values in the
 four-element matrix $\FOUR$, and the finite universal (existential)
 quantifier takes the pointwise minimum (maximum) on the truth channel and
@@ -873,16 +878,18 @@ framework instantiated for Gentzen and tableau variants of classical logic
 of soundness and certificate checking for a classical first-order tableau
 \cite{rosain2026tableauxrocq}; it does not claim a many-valued completeness
 result. Formalized paraconsistent metatheory also predates this work
-\cite{villadsen2017formalizing}. Our updated literature pass (2026-08-16) found no
-machine-checked completeness theorem for a many-valued quantified tableau
-calculus. This supports only the search-scoped conclusion that, to our
-knowledge, the present development appears to be the first.
+\cite{villadsen2017formalizing}. The contribution established here is the
+machine-checked completeness theorem for this specified many-valued calculus.
+An earlier search dated 2026-08-16 does not establish priority at the date of
+this revised collection; no claim of being the first is made.
 
 \section{Open problems}\label{sec:open}
 
 (1)~\emph{Infinite domains}: the projection argument fails at unattained
 suprema (\cref{rem:infinite}); a quantified NPL over infinite domains
 needs either attained-extrema semantics or a genuinely different bridge.
+Part I reports later exact procedures for the pure-equality fragment;
+these do not settle the unrestricted problem stated here.
 (2)~\emph{Function symbols and non-crisp equality}: the present language
 is function-free and its equality never takes glut or gap values; both
 restrictions are design choices worth revisiting.
@@ -902,15 +909,15 @@ The results of this paper are verified in the \lean{Nullivance} Lean~4
 library, principally module \lean{Nullivance.FiniteFO}, and share the
 artifact of the companion paper. \textbf{Availability.} The complete source
 artifact is supplied with this release, including citation/license
-metadata, exact dependency locks, both manuscripts, and verification scripts.
-The tagged source archive is available from
-\href{https://github.com/lamtung0487-droid/nullivance-logic/releases/tag/v0.7.1}{GitHub release v0.7.1}
-and archived under DOI
-\href{https://doi.org/10.5281/zenodo.21964600}{10.5281/zenodo.21964600}.
+metadata, exact dependency locks, all three manuscripts, and verification scripts.
+Select the record labeled \PublicationVersion\ in the version family
+\href{https://doi.org/10.5281/zenodo.18309848}{10.5281/zenodo.18309848}.
+The \href{https://doi.org/10.5281/zenodo.21964600}{v0.7.1 edition}
+remains a separate historical artifact.
 \textbf{Toolchain.}
 Lean~4 (\texttt{leanprover/lean4:v4.32.1}) and mathlib \texttt{v4.32.1} at
 commit \texttt{520045ab14e26149ee970e2e617ca04b09bde5d6}; run
-\texttt{scripts/Verify-Release.ps1}. \textbf{Coverage policy.} The build is
+\texttt{scripts/Verify-ResearchPublication.ps1}. \textbf{Coverage policy.} The build is
 \texttt{sorry}-free. The headline theorems are stated directly against
 \lean{QClosesExtCore}; replay-certificate results use the separately defined
 proof-object predicates of \cref{def:replay} and project into that core.

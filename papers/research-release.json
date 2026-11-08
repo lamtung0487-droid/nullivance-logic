@@ -1,0 +1,15 @@
+{
+  "version": "DR0149-r3",
+  "date": "2026-11-09",
+  "display_date": "9 November 2026",
+  "through": "DR-0149",
+  "title": "Nullivance Logic: Foundations, Quantified Reasoning, and Certified Recognition",
+  "mathematical_baseline": "48bd5f4260fd7982176d7a2060be4e956e1fd49c",
+  "concept_doi": "10.5281/zenodo.18309848",
+  "prior_record": "https://zenodo.org/records/24057709",
+  "parts": [
+    {"folder": "npl-research-2026", "label": "Part I: Research Overview and Certified Recognition", "filename": "01_Nullivance_Research_Overview_and_Recognition_DR0149-r3.pdf"},
+    {"folder": "npl-core", "label": "Part II: Propositional Foundations", "filename": "02_Nullivance_Propositional_Foundations_DR0149-r3.pdf"},
+    {"folder": "npl-finite-fo", "label": "Part III: Finite-Domain Quantified Logic", "filename": "03_Nullivance_Finite_Domain_Quantified_Logic_DR0149-r3.pdf"}
+  ]
+}

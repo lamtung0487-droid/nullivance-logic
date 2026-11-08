@@ -49,7 +49,7 @@ def strip_lean_comments_strings(s):
 
 anchors = json.loads((ROOT / 'papers/npl-research-2026/anchors.json').read_text())
 logs = {}
-for kind in ['research-validation', 'recognition-validation', 'publication-validation']:
+for kind in ['research-validation', 'recognition-validation', 'publication-validation', 'companion-validation']:
     body = read_log(OUT / f'{kind}.log')
     if re.search(r'\berror(?:\(|:)|sorryAx', body):
         raise SystemExit(f'Failed Lean log: {kind}')
@@ -60,7 +60,7 @@ for kind in ['research-validation', 'recognition-validation', 'publication-valid
 publication = logs['publication-validation']
 if set(publication) != set(anchors):
     raise SystemExit(f'Anchor coverage mismatch: {set(anchors)^set(publication)}')
-for name, axioms in publication.items():
+for name, axioms in {**publication, **logs['companion-validation']}.items():
     if set(axioms) - STANDARD:
         raise SystemExit(f'Nonstandard publication dependency: {name}: {axioms}')
 
@@ -87,7 +87,7 @@ for kind, entries in logs.items():
         if re.search(r'\berror(?:\(|:)|sorryAx', body) or dependencies(body) != entries:
             raise SystemExit(f'Extracted dependency audit mismatch: {kind}')
         extracted[kind] = len(entries)
-result = {'snapshot': 'DR-0149', 'date': '2026-11-08',
+result = {'snapshot': 'DR-0149', 'date': '2026-11-09',
           'baseline': '48bd5f4260fd7982176d7a2060be4e956e1fd49c',
           'counts': {k: len(v) for k,v in logs.items()},
           'standard_axioms_allowed_for_report': sorted(STANDARD),
@@ -101,7 +101,7 @@ result = {'snapshot': 'DR-0149', 'date': '2026-11-08',
                            'papers/npl-research-2026/snapshot-references.bib',
                            'papers/npl-research-2026/catalog.json',
                            'papers/npl-research-2026/anchors.json']]}
-(OUT / 'audit-inventory.json').write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8')
+(OUT / 'audit-inventory.json').write_text(json.dumps(result, indent=2)+'\n', encoding='utf-8', newline='\n')
 print(json.dumps({'counts': result['counts'], 'lean_sources': len(sources),
                   'native_source_occurrences': len(native),
                   'nonstandard_audited_dependencies': {k:len(v) for k,v in nonstandard.items()}}, indent=2))

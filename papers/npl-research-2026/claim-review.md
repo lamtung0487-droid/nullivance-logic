@@ -1,6 +1,6 @@
 # Claim-to-proof and scope review — DR-0149 snapshot
 
-Date: 2026-11-08. Mathematical baseline:
+Editorial revision: DR0149-r3, 2026-11-09. Original review: 2026-11-08. Mathematical baseline:
 `48bd5f4260fd7982176d7a2060be4e956e1fd49c`.
 
 This is an internal artifact/prose audit, **not external academic peer review**.
@@ -62,15 +62,19 @@ qualified anchor beside each main mathematical statement.
    of original histories. None silently entails the others.
 5. The periodic negative conclusion is explicitly about absence of a finite
    canonical boundary certificate, not lower latent intensity.
-6. The old papers and archived DOI are not relabeled as the current snapshot.
+6. Correction in r3: the bundled core PDF had changed while retaining the old
+   cover label. All current companions now carry DR0149-r3; old online records
+   remain unchanged. Version history distinguishes substantive and editorial changes.
 7. Visual/text review caught the legacy BibTeX parsing of Belnap's suffix as
    a first name (rendered “Jr. Belnap, Nuel D.”). The new report uses a separate
-   five-entry bibliography with `Belnap, Jr., Nuel D.`, protected Lean/Boolean
-   capitalization, and clickable DOI notes. Historical files are unchanged.
+   bibliography (now eight entries) with `Belnap, Jr., Nuel D.`, protected Lean/Boolean
+   capitalization, and clickable DOI notes. Visual review of the companion PDF
+   found the same suffix issue in the shared bibliography; r3 fixes that entry
+   there as well. The historical online files are unchanged.
 
 ## Citations used by the new report
 
-Only five entries are cited; the shared legacy bibliography is not claimed to
+The original five entries below retain their previous metadata checks; the shared legacy bibliography is not claimed to
 have been entirely re-audited in this pass. No copied abstract or long quotation
 is used. The manuscript makes no priority claim based on this short list.
 
@@ -82,14 +86,48 @@ is used. The manuscript makes no priority claim based on this short list.
 | Bryant 1986, *Graph-Based Algorithms for Boolean Function Manipulation* | Author-hosted corrected version, `https://www.cs.cmu.edu/~bryant/pubdir/ieeetc86.pdf` | Author/title and original IEEE C-35(8), 677–691, August 1986 verified from title-page publication note; supports established ordered/reduced Boolean representations. |
 | de Moura and Ullrich 2021, *The Lean 4 Theorem Prover and Programming Language* | Springer DOI `10.1007/978-3-030-79876-5_37` | Authors/title, CADE 28, LNCS 12699, 625–635, 2021 match. |
 
-Broader epistemic/system-identification and abstract-interpretation literature
-comparison is still necessary before a journal submission makes novelty claims.
-The current instruction is consolidation only; no external submission occurs.
+## Added comparison in r3
+
+- Halpern and Moses (1990), Journal of the ACM 37(3), 549–587:
+  author-deposited https://arxiv.org/abs/cs/0006009 and its full HTML, especially
+  the local-information interpretation and factivity. Used only to position the
+  single-observer compatible-state reading, not to claim a new epistemic paradigm.
+- Jaulin and Walter (1993), Automatica 29(4), 1053–1064,
+  DOI 10.1016/0005-1098(93)90106-4: author-hosted
+  https://www.ensta-bretagne.fr/jaulin/paper_automatica93.pdf, title and introductory
+  sections. Supports the bounded-error feasible-set comparison; our coordinatewise
+  exact boxes are not a general nonlinear SIVIA algorithm.
+- Cousot and Cousot (1977), POPL, 238–252, DOI 10.1145/512950.512973:
+  publisher metadata and author-hosted paper
+  https://www.di.ens.fr/~cousot/publications.www/CousotCousot-POPL-77-ACM-p238--252-1977.pdf.
+  Cited for the established sound-abstraction methodology, not as a claimed formal
+  reduction of this project to their full framework.
+
+The overview now cites eight sources; the companions retain their broader shared
+bibliography. This is targeted positioning, not an exhaustive novelty search.
+No dated search is promoted to a current first-in-the-literature assertion.
+
+## r3 translation checks
+
+The added introduction separates consequence, state recovery, and finite stopping;
+it does not add a theorem about physical cognition. The four new numerical boxes
+illustrate `ExactHistoryVerdict`: zero intensity with nonneutral structure,
+strictly positive intensity, a box admitting both, and an empty intersection.
+They are explanatory arithmetic cases, not a new empirical dataset. The counted
+import proof sketch was compared with `RecognitionTrustedImport.lean`: its exact
+cost is `(8*c.next, 1)`, including rejection. The bounded-period exposition was
+compared with `RecognitionBoundedPeriodObservation.lean`: all-index periodicity is
+a supplied proposition, positive-hit correctness does not require it, and a
+negative finite search requires it before becoming a permanent negative.
+
+The 149 companion references include definitions as well as theorems; they are
+not 149 new results. Both the companion and overview audits print dependency
+closures. They supplement, and do not replace, the prose/hypothesis review above.
 
 ## Reproduction record
 
 See the packaged `verification/` logs, `audit-inventory.json`, and
-`verification-summary.json` for actual command outcomes and hashes. A cached
+`verification-receipt.json` for actual command outcomes and hashes. A cached
 dependency build is explicitly distinguished from rebuilding project sources
 in an extracted archive. This audit adds documentation/checking scripts only;
 the original logic definitions and proofs are unchanged.

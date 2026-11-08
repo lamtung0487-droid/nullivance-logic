@@ -1,5 +1,10 @@
 # Verification results — research synthesis through DR-0149
 
+Historical verification record (pre-r3). The counts and decisions below describe
+that run, not the revised collection. Current evidence is the receipt and bound
+logs in verification/verification-receipt.json; r3 rebuilds all three PDFs and
+also checks CompanionValidation.lean.
+
 Snapshot date: 2026-11-08. Mathematical baseline:
 `48bd5f4260fd7982176d7a2060be4e956e1fd49c`.
 

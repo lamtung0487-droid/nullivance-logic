@@ -1,6 +1,6 @@
 # Tóm tắt nghiên cứu Nullivance đến DR-0149
 
-Bản tổng hợp ngày 08-11-2026. Đây là kết quả toán học trong các mô hình đã định
+Bộ nghiên cứu DR0149-r3, biên tập ngày 09-11-2026; mốc toán học đến DR-0149. Đây là kết quả toán học trong các mô hình đã định
 nghĩa, không phải tuyên bố đã giải quyết toàn bộ nhận thức con người.
 
 ## Ta đã xây được gì?
@@ -57,4 +57,6 @@ thiết. Các vấn đề nhận biết tổng quát, trạng thái thay đổi,
 chi phí theo số bit và tính mới so với toàn bộ văn liệu vẫn cần nghiên cứu.
 
 Bản tiếng Anh `main.pdf` trình bày chi tiết, có liên kết tên định lý Lean và
-mục lục đủ DR-0001–DR-0149. Không đăng lên aiXiv hoặc dịch vụ khác trong đợt này.
+mục lục đủ DR-0001–DR-0149. Đọc phần I trước, rồi phần II về nền mệnh đề và phần III về lượng từ hữu hạn.
+Ba PDF cùng nhãn DR0149-r3; ZIP mã nguồn và ZIP nhật ký kiểm chứng là tài liệu
+bổ sung, không thay thế bài nghiên cứu. Các bản Zenodo cũ được giữ nguyên.

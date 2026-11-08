@@ -3,42 +3,42 @@
     "id": "DR-0001",
     "title": "Propositional language of NPL",
     "path": "docs/decisions/DR-0001-propositional-language.md",
-    "sha256": "18bb9ff6c7925a3e8c29da44982298adf6a6c0d589b73ab3502e819211e3635a",
+    "sha256": "45d90ec348875e285480f55a1f7bcbc045fc59702d58a4f93eae0e650277887b",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0002",
     "title": "Two-channel continuous semantics and connective clauses",
     "path": "docs/decisions/DR-0002-two-channel-semantics.md",
-    "sha256": "68aa541dbea6a7ea907e54e1688d32f3894b63196431a2aa403205acf85da1f6",
+    "sha256": "88e97d9d63f53153480f76a5bfbf9026dde7538b7ac0de44bcffd62801958e18",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0003",
     "title": "Threshold projection, meta-signs, and the consequence relation",
     "path": "docs/decisions/DR-0003-threshold-signs-consequence.md",
-    "sha256": "093873d8d7ea6a1ee604bee135f7e42c86af59299a071db98857f4c911437617",
+    "sha256": "44690489429b69d294fc477ce363f4d23688ddd85fa52c7d0dcfd7f0fe50061a",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0004",
     "title": "Lean encoding choices and the continuous-layer gap",
     "path": "docs/decisions/DR-0004-lean-encoding.md",
-    "sha256": "ae78535e2639a272a0006faf8dd29a799ea3c5f0b4f040abeed5ea690d0cca1c",
+    "sha256": "8b3328d2126b5f38a28804b401dbccbcbaa6b2e852396d626059891073bf03b8",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0005",
     "title": "The four-signed tableau calculus is the canonical proof system",
     "path": "docs/decisions/DR-0005-tableau-canonical.md",
-    "sha256": "039064ede6a8cf467d998c80f4942f1a55f9f61292dc6b2af60789c08b4186d8",
+    "sha256": "b692cd6e4093fcffa8d8afdf4bbaa83d9810cdc29cf29e43a99c29fff6d77ba1",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0006",
     "title": "Formalizing the generative tier (Tier 1)",
     "path": "docs/decisions/DR-0006-generative-tier.md",
-    "sha256": "044d872b5b893def53df202e5de3b42ca6d4a084aea1d6c71822131c035282c9",
+    "sha256": "c7b4c8eef78567a67dfb72b6ad9b036e02e2745e2dc9be15dc43d81a63b0885f",
     "explicit_lean_paths": [
       "Nullivance/Nullivance/Generative.lean"
     ]
@@ -47,28 +47,28 @@
     "id": "DR-0007",
     "title": "Finite-domain quantified NPL first",
     "path": "docs/decisions/DR-0007-finite-domain-quantified-npl.md",
-    "sha256": "ce0f4e215bff203137785ecdeecd7960ec48290bda3cf7e787dcf711358ba38e",
+    "sha256": "f79c779eab7a8686e5e542c50439f19bf8d0002c810b89008d01b8e5ecc5024e",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0008",
     "title": "Finite-domain quantified tableau first",
     "path": "docs/decisions/DR-0008-finite-domain-quantified-tableau.md",
-    "sha256": "e0cb37b4485c9af9cb5410f076c3f40b1325e437eede57c5a3e1dc6371a71314",
+    "sha256": "ea1cc6ba42a15e9db6ad6d771a510eb141da5164608a8cee2b36e1b2e1e01fee",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0009",
     "title": "Equality closure repair for finite-domain quantified tableau",
     "path": "docs/decisions/DR-0009-finite-domain-equality-closure-repair.md",
-    "sha256": "66b9116ecada6b085e9ddbd213cb40962b71eae6809c13eec2fc1fe6e3beb019",
+    "sha256": "736e5e0b67bfafbd0118eb444045dc9a226aac02f7675b7bfdd89ecd031d0961",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0010",
     "title": "Finite grounding bridge for quantified completeness",
     "path": "docs/decisions/DR-0010-finite-grounding-bridge.md",
-    "sha256": "9b199c4e0d589c51215743b3ae260dbe034013fed581cf691b245be59ae5bf23",
+    "sha256": "0b38fe84b68de6e863aa49878a91fec0d0f0de8015302ba544133dfa93bc26fd",
     "explicit_lean_paths": [
       "Nullivance/Nullivance/FiniteFO.lean"
     ]
@@ -77,21 +77,21 @@
     "id": "DR-0011",
     "title": "Full recursive extensional finite-domain tableau",
     "path": "docs/decisions/DR-0011-extensional-closure-kernel.md",
-    "sha256": "6de3a71f3bd7cea427ab44d1c502e23c36dcbaff92dcadde578ce5c38c5efcc3",
+    "sha256": "54bfdaad7828d8f5facdb6b6702654565b26adb973751bd24a1dfde854ae7d45",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0012",
     "title": "Constrained grounding completeness for finite-domain tableau",
     "path": "docs/decisions/DR-0012-constrained-grounding-completeness.md",
-    "sha256": "4df43f8903a93a0249761913dd41bb284970d05f48dc5fb8ebb020ec82c39bb9",
+    "sha256": "ed0b243a3854c7206df10b704ceef4510ce1cdb0b714d786d85fca14a7147cb0",
     "explicit_lean_paths": []
   },
   {
     "id": "DR-0013",
     "title": "Core extensional tableau and replay trace",
     "path": "docs/decisions/DR-0013-core-tableau-and-replay-trace.md",
-    "sha256": "bbdee190448ab3f8ba44fe2610924e88d6b3cb997f6a302a26f9a13fd0ed4a62",
+    "sha256": "6bb769c8cd955e3fa716a2fab37c76ab22c3927d81ce172c366569499b85f7dc",
     "explicit_lean_paths": []
   },
   {

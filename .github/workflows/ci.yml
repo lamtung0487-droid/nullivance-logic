@@ -8,37 +8,30 @@ permissions:
   contents: read
 
 jobs:
-  lean:
+  publication:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v7
+      - name: Install publication dependencies
+        run: >-
+          sudo apt-get update && sudo apt-get install -y
+          python3 texlive-latex-base texlive-latex-extra
+          texlive-fonts-recommended lmodern poppler-utils
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: Nullivance
           build: true
           use-mathlib-cache: true
-          # lean-action's nanoda wrapper currently expects a legacy [package]
-          # table and cannot infer the module from Lake's current TOML syntax.
-          # The repository gate below independently rejects proof holes and
-          # undeclared/custom axioms after the complete Lake build succeeds.
-      - name: Metadata, status, and source gates
-        shell: pwsh
-        run: ./scripts/Verify-Release.ps1 -SkipLeanBuild -SkipPdfBuild
-
-  papers:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - name: Install LaTeX dependencies
-        run: >-
-          sudo apt-get update && sudo apt-get install -y
-          texlive-latex-base texlive-latex-extra texlive-fonts-recommended
-      - name: Build both manuscripts
-        shell: pwsh
-        run: ./scripts/Build-Papers.ps1
+      - name: Verify the complete research collection
+        run: python3 scripts/Verify-ResearchPublication.py
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
-          name: nullivance-manuscripts
+          name: nullivance-publication-checks
+          if-no-files-found: warn
           path: |
+            output/publication-dr0149/
             papers/npl-core/main.pdf
             papers/npl-finite-fo/main.pdf
+            papers/npl-research-2026/main.pdf
